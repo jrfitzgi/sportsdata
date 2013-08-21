@@ -1,0 +1,58 @@
+﻿@using NhlStatsQuery;
+
+@{
+    ViewBag.Title = "Nhl Attendance";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+            </p>
+        </div>
+    </section>
+}
+
+<form id="SelectSeason" method="post" action="~/attendance/nhl">
+    @*<form id="SelectSeason" method="post">*@
+    @{
+        List<HockeySeason> seasons = new List<HockeySeason>();
+        seasons.Add(new HockeySeason("2014", "2013-2014"));
+        seasons.Add(new HockeySeason("2013", "2012-2013"));
+        seasons.Add(new HockeySeason("2012", "2011-2012"));
+        seasons.Add(new HockeySeason("2011", "2010-2011"));
+        seasons.Add(new HockeySeason("2010", "2009-2010"));
+        seasons.Add(new HockeySeason("2009", "2008-2009"));
+        seasons.Add(new HockeySeason("2008", "2007-2008"));
+        seasons.Add(new HockeySeason("2007", "2006-2007"));
+        seasons.Add(new HockeySeason("2006", "2005-2006"));
+        seasons.Add(new HockeySeason("2005", "2004-2005"));
+        seasons.Add(new HockeySeason("2004", "2003-2004"));
+        seasons.Add(new HockeySeason("2003", "2002-2003"));
+        seasons.Add(new HockeySeason("2002", "2001-2002"));
+        seasons.Add(new HockeySeason("2001", "2000-2001"));
+        seasons.Add(new HockeySeason("2000", "1999-2000"));
+        seasons.Add(new HockeySeason("1999", "1998-1999"));
+        seasons.Add(new HockeySeason("1998", "1997-1998"));
+
+        ViewData["SeasonList"] = new SelectList(seasons, "OneYearName", "TwoYearName", ViewBag.Season);
+        @Html.DropDownList("SeasonList");
+        
+    }
+
+    <input type="submit" name="ShowResults" value="Show Results">
+    
+    @{       
+        if (ViewBag.GetLatest == true)
+        {
+        <input type="submit" name="Update" value="Update" />
+        }  
+    }
+
+</form>
+
+@Html.Raw(@ViewBag.Table)
+
