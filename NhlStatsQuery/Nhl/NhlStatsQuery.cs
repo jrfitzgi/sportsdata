@@ -10,7 +10,7 @@ using System.Web.UI.HtmlControls;
 
 using HtmlAgilityPack;
 
-namespace NhlStatsQuery
+namespace SportsData.Nhl.Query
 {
     /// <summary>
     /// Represents a query that will be used to retrieve stats from a url
@@ -75,7 +75,7 @@ namespace NhlStatsQuery
                 NhlStatsQuery.GetAndStoreStats(season);
             }
 
-            NhlStatsContext db = new NhlStatsContext();
+            NhlAttendanceContext db = new NhlAttendanceContext();
 
             int intSeason = Convert.ToInt32(season);
             var results = (from g in db.GameSummaries
@@ -97,7 +97,7 @@ namespace NhlStatsQuery
             table.Rows.Add(BuildHeaderRow(intSeason));
 
             // Add rows to the table 
-            foreach (GameSummary gameSummary in results)
+            foreach (NhlGameSummary gameSummary in results)
             {
                 table.Rows.Add(BuildRow(gameSummary));
             }

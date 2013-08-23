@@ -318,9 +318,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NhlStatsQuery\NhlStatsQuery.csproj">
+    <ProjectReference Include="..\NhlStatsQuery\SportsDataQuery.csproj">
       <Project>{bdb38e09-d95e-442c-bcda-8c4986a3bb14}</Project>
-      <Name>NhlStatsQuery</Name>
+      <Name>SportsDataQuery</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

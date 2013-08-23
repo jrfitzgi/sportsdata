@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhlStats", "NhlStats\NhlStats.csproj", "{BC330909-A442-4B9D-AFC1-1EFA610E962A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsData", "NhlStats\SportsData.csproj", "{BC330909-A442-4B9D-AFC1-1EFA610E962A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhlStatsQuery", "NhlStatsQuery\NhlStatsQuery.csproj", "{BDB38E09-D95E-442C-BCDA-8C4986A3BB14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsDataQuery", "NhlStatsQuery\SportsDataQuery.csproj", "{BDB38E09-D95E-442C-BCDA-8C4986A3BB14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

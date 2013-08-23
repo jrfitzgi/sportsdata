@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-using NhlStatsQuery;
+using SportsData.Nhl.Query;
 
 namespace NhlStats.Areas.Attendance.Controllers
 {
@@ -33,7 +33,7 @@ namespace NhlStats.Areas.Attendance.Controllers
                     performUpdate = true;
                 }
 
-                ViewBag.Table = NhlStatsQuery.NhlStatsQuery.GetStatsFromDb(season, performUpdate);
+                ViewBag.Table = SportsData.Nhl.Query.NhlStatsQuery.GetStatsFromDb(season, performUpdate);
                 ViewBag.PerformUpdate = false;
             }
 

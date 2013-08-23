@@ -8,23 +8,23 @@ using System.Data.Entity.Migrations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-using NhlStatsQuery;
+using SportsData.Nhl.Query;
 
-namespace NhlStatsQuery.Migrations
+namespace SportsData.Nhl.Query.Migrations
 {
     //using System;
     //using System.Data.Entity;
     //using System.Data.Entity.Migrations;
     //using System.Linq;
 
-    public class Configuration : DbMigrationsConfiguration<NhlStatsContext>
+    public class Configuration : DbMigrationsConfiguration<NhlAttendanceContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(NhlStatsContext context)
+        protected override void Seed(NhlAttendanceContext context)
         {
             //  This method will be called after migrating to the latest version.
 

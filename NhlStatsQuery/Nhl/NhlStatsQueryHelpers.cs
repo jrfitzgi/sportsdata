@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-//using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 
 using HtmlAgilityPack;
 
-namespace NhlStatsQuery
+namespace SportsData.Nhl.Query
 {
     public class HockeySeason
     {
@@ -34,9 +31,9 @@ namespace NhlStatsQuery
         {
             HtmlNodeCollection tds = tr.SelectNodes("./td");
 
-            using (NhlStatsContext db = new NhlStatsContext())
+            using (NhlAttendanceContext db = new NhlAttendanceContext())
             {
-                GameSummary gameSummary = new GameSummary();
+                NhlGameSummary gameSummary = new NhlGameSummary();
                 gameSummary.Date = Convert.ToDateTime(tds[0].InnerText.Replace("'", "/"));
                 gameSummary.Home = tds[3].InnerText;
 
@@ -49,7 +46,7 @@ namespace NhlStatsQuery
                     return;
                 }
 
-                gameSummary.Season = GameSummary.GetSeason(gameSummary.Date).Item2;
+                gameSummary.Season = NhlGameSummary.GetSeason(gameSummary.Date).Item2;
                 gameSummary.GameType = gameType;
                 gameSummary.Visitor = tds[1].InnerText;
                 gameSummary.VisitorScore = ConvertStringToInt(tds[2].InnerText);
@@ -74,7 +71,7 @@ namespace NhlStatsQuery
 
         private static int GetNumResultsInDb(int season, int gameType)
         {
-            NhlStatsContext db = new NhlStatsContext();
+            NhlAttendanceContext db = new NhlAttendanceContext();
 
             int intSeason = Convert.ToInt32(season);
             var results = (from g in db.GameSummaries
@@ -100,7 +97,7 @@ namespace NhlStatsQuery
             }
         }
 
-        private static HtmlTableRow BuildRow(GameSummary gameSummary)
+        private static HtmlTableRow BuildRow(NhlGameSummary gameSummary)
         {
             HtmlTableRow htmlRow = new HtmlTableRow();
 
@@ -111,7 +108,7 @@ namespace NhlStatsQuery
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();
-            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(GameSummary.GameTypes), gameSummary.GameType)));
+            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlGameSummary.GameTypes), gameSummary.GameType)));
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();

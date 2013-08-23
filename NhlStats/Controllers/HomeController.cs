@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-using NhlStatsQuery;
+using SportsData.Nhl.Query;
 
 namespace NhlStats.Controllers
 {

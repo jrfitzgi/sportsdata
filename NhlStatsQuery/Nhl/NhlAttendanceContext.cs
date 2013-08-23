@@ -5,65 +5,26 @@ using System.Linq;
 using System.Text;
 using System.Data.Entity;
 
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-//using System.Globalization;
-//using System.Web.Mvc;
-//using System.Web.Security;
 
-namespace NhlStatsQuery
+namespace SportsData.Nhl
 {
-    public class NhlStatsContext : DbContext
+    public class NhlAttendanceContext : DbContext
     {
-
-        public NhlStatsContext()
+        public NhlAttendanceContext()
             : base("DefaultConnection")
         {
-            Database.SetInitializer<NhlStatsContext>(new CreateDatabaseIfNotExists<NhlStatsContext>());   
+            Database.SetInitializer<NhlAttendanceContext>(new CreateDatabaseIfNotExists<NhlAttendanceContext>());   
             //Database.SetInitializer<NhlStatsContext>(new DropCreateDatabaseAlways<NhlStatsContext>());   
         }
 
-        public DbSet<GameSummary> GameSummaries { get; set; }
+        public DbSet<NhlGameSummary> GameSummaries { get; set; }
     }
 
-    [Table("GameSummary")]
-    public class GameSummary
+    [Table("NhlGameSummary")]
+    public class NhlGameSummary : GameSummary
     {
-        public enum GameTypes
-        {
-            PreSeason = 1,
-            RegularSeason = 2,
-            Playoff = 3
-        }
-
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [Required]
-        public int Season { get; set; }
-
-        [Required]
-        public DateTime Date { get; set; }
-
-        [Required]
-        public int GameType { get; set; }
-
-        [Required]
-        public string Visitor { get; set; }
-
-        [Required]
-        [Display(Name = "Visitor Score")]
-        public int VisitorScore { get; set; }
-
-        [Required]
-        public string Home { get; set; }
-
-        [Required]
-        [Display(Name = "Home Score")]
-        public int HomeScore { get; set; }
-
         [Display(Name = "O/S")]
         public string OS { get; set; }
 
@@ -105,10 +66,9 @@ namespace NhlStatsQuery
         [Display(Name = "Home: PIM")]
         public int HomePIM { get; set; }
 
-        [Required]
-        [Display(Name = "Attendance")]
-        public int Att { get; set; }
-
+        /// <summary>
+        /// Gets the NHL season in YYYN-YYYM format, where M = N+1. Eg. 2012-2013.
+        /// </summary>
         public static Tuple<int, int> GetSeason(DateTime date)
         {
 

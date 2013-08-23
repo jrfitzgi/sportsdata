@@ -7,7 +7,7 @@
     <ProjectGuid>{BDB38E09-D95E-442C-BCDA-8C4986A3BB14}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NhlStatsQuery</RootNamespace>
+    <RootNamespace>SportsData.Nhl.Query</RootNamespace>
     <AssemblyName>NhlStatsQuery</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -49,7 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NhlStatsQueryHelpers.cs" />
+    <Compile Include="GameSummaryBase.cs" />
+    <Compile Include="Mlb\MlbAttendanceContext.cs" />
+    <Compile Include="Nhl\NhlStatsQueryHelpers.cs" />
     <Compile Include="Migrations\201302032124566_RenameKey.cs" />
     <Compile Include="Migrations\201302032124566_RenameKey.Designer.cs">
       <DependentUpon>201302032124566_RenameKey.cs</DependentUpon>
@@ -63,8 +65,8 @@
       <DependentUpon>201302092255129_ChangeIdToDateHomeTeam.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="NhlStatsContext.cs" />
-    <Compile Include="NhlStatsQuery.cs" />
+    <Compile Include="Nhl\NhlAttendanceContext.cs" />
+    <Compile Include="Nhl\NhlStatsQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +87,7 @@
       <DependentUpon>201302092255129_ChangeIdToDateHomeTeam.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
