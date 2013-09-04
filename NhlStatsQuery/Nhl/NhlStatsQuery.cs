@@ -75,10 +75,10 @@ namespace SportsData.Nhl.Query
                 NhlStatsQuery.GetAndStoreStats(season);
             }
 
-            NhlAttendanceContext db = new NhlAttendanceContext();
+            SportsDataContext db = new SportsDataContext();
 
             int intSeason = Convert.ToInt32(season);
-            var results = (from g in db.GameSummaries
+            var results = (from g in db.NhlGameSummaries
                            where g.Season == intSeason
                            orderby g.Date descending
                            select g);

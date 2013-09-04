@@ -31,13 +31,13 @@ namespace SportsData.Nhl.Query
         {
             HtmlNodeCollection tds = tr.SelectNodes("./td");
 
-            using (NhlAttendanceContext db = new NhlAttendanceContext())
+            using (SportsDataContext db = new SportsDataContext())
             {
                 NhlGameSummary gameSummary = new NhlGameSummary();
                 gameSummary.Date = Convert.ToDateTime(tds[0].InnerText.Replace("'", "/"));
                 gameSummary.Home = tds[3].InnerText;
 
-                var result = from g in db.GameSummaries
+                var result = from g in db.NhlGameSummaries
                              where g.Date == gameSummary.Date && g.Home == gameSummary.Home
                              select g;
                 if (result.Any())
@@ -64,17 +64,17 @@ namespace SportsData.Nhl.Query
                 gameSummary.HomePIM = ConvertStringToInt(tds[15].InnerText);
                 gameSummary.Att = ConvertStringToInt(tds[16].InnerText.Replace(",", String.Empty));
 
-                db.GameSummaries.Add(gameSummary);
+                db.NhlGameSummaries.Add(gameSummary);
                 db.SaveChanges();
             }
         }
 
         private static int GetNumResultsInDb(int season, int gameType)
         {
-            NhlAttendanceContext db = new NhlAttendanceContext();
+            SportsDataContext db = new SportsDataContext();
 
             int intSeason = Convert.ToInt32(season);
-            var results = (from g in db.GameSummaries
+            var results = (from g in db.NhlGameSummaries
                            where g.Season == intSeason && g.GameType == gameType
                            orderby g.Date descending
                            select g);
@@ -108,7 +108,7 @@ namespace SportsData.Nhl.Query
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();
-            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlGameSummary.GameTypes), gameSummary.GameType)));
+            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlGameSummary.SeasonType), gameSummary.GameType)));
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();

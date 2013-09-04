@@ -8,36 +8,59 @@ using System.Data.Entity.Migrations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using SportsData.Nhl;
 using SportsData.Nhl.Query;
+using SportsData.Mlb;
+
 
 namespace SportsData.Nhl.Query.Migrations
 {
-    //using System;
-    //using System.Data.Entity;
-    //using System.Data.Entity.Migrations;
-    //using System.Linq;
-
-    public class Configuration : DbMigrationsConfiguration<NhlAttendanceContext>
+    public class Configuration : DbMigrationsConfiguration<SportsDataContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(NhlAttendanceContext context)
+        protected override void Seed(SportsDataContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            context.MlbTeams.AddOrUpdate(
+                t => t.ShortName,
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = "Arizona Cardinals"},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""},
+                new MlbTeam { ShortName = MlbTeamShortName.ARI, LongName = ""}
+                );
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+
         }
     }
 }

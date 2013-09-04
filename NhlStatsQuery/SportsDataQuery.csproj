@@ -50,22 +50,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameSummaryBase.cs" />
-    <Compile Include="Mlb\MlbAttendanceContext.cs" />
+    <Compile Include="Mlb\MlbModels.cs" />
+    <Compile Include="SportsDataContext.cs" />
+    <Compile Include="Mlb\MlbAttendanceQuery.cs" />
     <Compile Include="Nhl\NhlStatsQueryHelpers.cs" />
-    <Compile Include="Migrations\201302032124566_RenameKey.cs" />
-    <Compile Include="Migrations\201302032124566_RenameKey.Designer.cs">
+    <Compile Include="UnusedMigrations\201302032124566_RenameKey.cs" />
+    <Compile Include="UnusedMigrations\201302032124566_RenameKey.Designer.cs">
       <DependentUpon>201302032124566_RenameKey.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201302040732383_AllStats.cs" />
-    <Compile Include="Migrations\201302040732383_AllStats.Designer.cs">
+    <Compile Include="UnusedMigrations\201302040732383_AllStats.cs" />
+    <Compile Include="UnusedMigrations\201302040732383_AllStats.Designer.cs">
       <DependentUpon>201302040732383_AllStats.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201302092255129_ChangeIdToDateHomeTeam.cs" />
-    <Compile Include="Migrations\201302092255129_ChangeIdToDateHomeTeam.Designer.cs">
+    <Compile Include="UnusedMigrations\201302092255129_ChangeIdToDateHomeTeam.cs" />
+    <Compile Include="UnusedMigrations\201302092255129_ChangeIdToDateHomeTeam.Designer.cs">
       <DependentUpon>201302092255129_ChangeIdToDateHomeTeam.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Nhl\NhlAttendanceContext.cs" />
+    <Compile Include="Nhl\NhlModels.cs" />
     <Compile Include="Nhl\NhlStatsQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -77,13 +79,13 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201302032124566_RenameKey.resx">
+    <EmbeddedResource Include="UnusedMigrations\201302032124566_RenameKey.resx">
       <DependentUpon>201302032124566_RenameKey.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201302040732383_AllStats.resx">
+    <EmbeddedResource Include="UnusedMigrations\201302040732383_AllStats.resx">
       <DependentUpon>201302040732383_AllStats.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201302092255129_ChangeIdToDateHomeTeam.resx">
+    <EmbeddedResource Include="UnusedMigrations\201302092255129_ChangeIdToDateHomeTeam.resx">
       <DependentUpon>201302092255129_ChangeIdToDateHomeTeam.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

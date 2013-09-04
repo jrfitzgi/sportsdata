@@ -13,7 +13,7 @@ namespace SportsData
     [Table("GameSummary")]
     public class GameSummary
     {
-        public enum GameTypes
+        public enum SeasonType
         {
             PreSeason = 1,
             RegularSeason = 2,
