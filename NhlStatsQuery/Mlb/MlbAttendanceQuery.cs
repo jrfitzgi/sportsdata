@@ -1,60 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 using HtmlAgilityPack;
-using SportsData;
 
-namespace SportsData.Mlb.Query
+namespace SportsData.Mlb
 {
-    //public class HockeySeason
-    //{
-    //    public string OneYearName { get; set; }
-    //    public string TwoYearName { get; set; }
-
-    //    public HockeySeason(string oneYearName, string twoYearName)
-    //    {
-    //        this.OneYearName = oneYearName;
-    //        this.TwoYearName = twoYearName;
-    //    }
-    //}
-
     public class MlbAttendanceQuery
     {
-        private enum MlbSeasonType
+        private const string baseAddress = "http://espn.go.com/";
+        private const string preSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/seasontype/1"; // team short name, year
+        private const string regSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/half/{2}"; // team short name, year, half (1 or 2)
+        private const string postSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/seasontype/3"; // team short name, year
+
+        public static List<MlbGameSummary> GetSeason(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
         {
-            Spring = 1,
-            Regular = 2,
-            PostSeason = 3,
+            return MlbAttendanceQuery.GetPage(mlbSeasonType, mlbTeam, seasonYear);
         }
 
-        //private Dictionary<MlbTeam, string> MlbTeams
-        //{
-        //}
-
-        private static string GetPage(MlbSeasonType mlbSeasonType, int gameType, int pageNum)
+        private static List<MlbGameSummary> GetPage(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
         {
-            //string uriString = String.Format(queryFormatString, season, gameType, pageNum);
-            //Uri uri = new Uri(uriString);
+            // Construct the url
+            string urlString = String.Format(preSeasonFormatString, mlbTeam.ToString(), seasonYear);
+            Uri url = new Uri(urlString, UriKind.Relative);
 
-            //HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
-            //request.Method = "GET";
+            // Make an http request
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(MlbAttendanceQuery.baseAddress);
 
-            //WebResponse response = request.GetResponse();
+            Task<string> httpResponseMessage = httpClient.GetStringAsync(url);
+            string responseString = httpResponseMessage.Result;
 
-            //string responseString;
-            //Stream s = response.GetResponseStream();
-            //StreamReader sr = new StreamReader(s);
-            //responseString = sr.ReadToEnd();
+            HtmlDocument document = new HtmlDocument();
+            document.LoadHtml(responseString);
 
-            //return responseString;
+            HtmlNode tableNode = document.DocumentNode.SelectSingleNode(@"//table[@class='tablehead']");
+            HtmlNodeCollection rows = tableNode.SelectNodes(@".//tr[contains(@class,'evenrow') or contains(@class,'oddrow')]");
 
-            return null;
+            List<MlbGameSummary> games = MlbAttendanceQuery.ParseRows(rows, mlbTeam, seasonYear);
+
+            return games;
+        }
+
+        private static List<MlbGameSummary> ParseRows(HtmlNodeCollection rows, MlbTeamShortName mlbTeam, int seasonYear)
+        {
+            List<MlbGameSummary> games = new List<MlbGameSummary>();
+            foreach (HtmlNode row in rows)
+            {
+                HtmlNodeCollection columns = row.SelectNodes(@".//td");
+                MlbGameSummary game = MlbAttendanceQuery.ParseRow(columns, mlbTeam, seasonYear);
+                if (null != game)
+                {
+                    games.Add(game);
+                }
+            }
+
+            return games;
+        }
+
+        private static MlbGameSummary ParseRow(HtmlNodeCollection columns, MlbTeamShortName mlbTeam, int seasonYear, bool includeHomeGamesOnly = true)
+        {
+            MlbGameSummary game = new MlbGameSummary();
+
+            // Date
+            HtmlNode dateNode = columns[0];
+            DateTime date = Convert.ToDateTime(dateNode.InnerText + " " + seasonYear);
+            game.Date = date;
+
+            // Determine the Opponent
+            // Only include home games if specified
+            HtmlNode opponentNode = columns[1];
+
+            HtmlNode opponentTeamNode = opponentNode.SelectSingleNode(@".//li[@class='team-name']");
+            string opponentTeamCity = opponentTeamNode.InnerText;
+
+            HtmlNode gameStatusNode = opponentNode.SelectSingleNode(@".//li[@class='game-status']");
+            if (gameStatusNode.InnerText.Equals("@") && includeHomeGamesOnly)
+            {
+                return null;
+            }
+
+            // Determine home and away teams
+            if (gameStatusNode.InnerText.Equals("@"))
+            {
+                // away game
+                game.Home = MlbAttendanceQuery.LookupShortName(opponentTeamCity).ToString();
+                game.Visitor = mlbTeam.ToString();
+            }
+            else
+            {
+                // home game
+                game.Home = mlbTeam.ToString();
+                game.Visitor = MlbAttendanceQuery.LookupShortName(opponentTeamCity).ToString();
+            }
+
+
+
+
+            return game;
+        }
+
+        private static MlbTeamShortName LookupShortName(string city)
+        {
+            SportsDataContext db = new SportsDataContext();
+            MlbTeamShortName shortName = db.MlbTeams.Where(x => x.City.Equals(city, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault().ShortNameId;
+            return shortName;
         }
 
         //protected static void SaveRowsToDb(HtmlNode node, int gameType)

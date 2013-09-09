@@ -108,7 +108,7 @@ namespace SportsData.Nhl.Query
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();
-            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlGameSummary.SeasonType), gameSummary.GameType)));
+            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlSeasonType), gameSummary.GameType)));
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();

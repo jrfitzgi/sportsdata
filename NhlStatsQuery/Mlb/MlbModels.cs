@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Data.Entity;
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Mlb
@@ -44,16 +37,32 @@ namespace SportsData.Mlb
         WSH,
     }
 
+    public enum MlbSeasonType
+    {
+        Spring = 1,
+        Regular = 2,
+        PostSeason = 3,
+    }
+
     [Table("MlbTeams")]
     public class MlbTeam
     {
         [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public MlbTeamShortName ShortNameId { get; set; }
 
-        public MlbTeamShortName ShortName { get; set; }
+        public string ShortName { get; set; }
 
-        public string LongName { get; set; }
+        public string City { get; set; }
+
+        public string Name {get; set;}
+
+        public string FullName
+        {
+            get
+            {
+                return this.City + " " + this.Name;
+            }
+        }
     }
 
     [Table("MlbGameSummary")]
