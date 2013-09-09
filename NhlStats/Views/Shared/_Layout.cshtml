@@ -22,8 +22,8 @@
                         <ul id="menu">
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             
-                            <li>@Html.ActionLink("NHL Attendance", "Index", "Attendance/Nhl")</li>
-                            <li>@Html.ActionLink("MLB Attendance", "Index", "Attendance/Mlb")</li>
+                            <li>@Html.ActionLink("NHL Attendance", "Index", "Nhl", new { Area = "Attendance" }, new {})</li>
+                            <li>@Html.ActionLink("MLB Attendance", "Index", "Mlb", new { Area = "Attendance" }, new {})</li>
 
 @*                            <li>@Html.ActionLink("About", "About", "Home")</li>
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@

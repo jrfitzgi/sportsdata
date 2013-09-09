@@ -13,8 +13,8 @@ namespace SportsData
             //: base("ProdConnection")
         {
             //Database.SetInitializer<SportsDataContext>(new DropCreateDatabaseAlways<SportsDataContext>()); // Not really needed
-            Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());  // Use to drop db
-            //Database.SetInitializer<SportsDataContext>(new CreateDatabaseIfNotExists<SportsDataContext>()); // Use to keep data
+            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());  // Use to drop db
+            Database.SetInitializer<SportsDataContext>(new CreateDatabaseIfNotExists<SportsDataContext>()); // Use to keep data
             //Database.SetInitializer<SportsDataContext>(null); // Use for ProdConnection migrations
 
             Database.Initialize(false);
