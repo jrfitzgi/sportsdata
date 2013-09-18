@@ -61,10 +61,6 @@ namespace SportsData.Nhl
         [Display(Name = "Home: PIM")]
         public int HomePIM { get; set; }
 
-        [Required]
-        [Display(Name = "Attendance")]
-        public int Att { get; set; }
-
         /// <summary>
         /// Gets the NHL season in YYYN-YYYM format, where M = N+1. Eg. 2012-2013.
         /// </summary>

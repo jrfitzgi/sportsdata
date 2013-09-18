@@ -40,5 +40,8 @@ namespace SportsData
         [Display(Name = "Home Score")]
         public int HomeScore { get; set; }
 
+        [Required]
+        [Display(Name = "Attendance")]
+        public int Attendance { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace NhlStats.Areas.Attendance
+namespace SportsData.Areas.Attendance
 {
     public class AttendanceAreaRegistration : AreaRegistration
     {

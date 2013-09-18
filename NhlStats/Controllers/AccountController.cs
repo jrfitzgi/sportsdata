@@ -8,10 +8,10 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
-using NhlStats.Filters;
-using NhlStats.Models;
+using SportsData.Filters;
+using SportsData.Models;
 
-namespace NhlStats.Controllers
+namespace SportsData.Controllers
 {
     [Authorize]
     [InitializeSimpleMembership]

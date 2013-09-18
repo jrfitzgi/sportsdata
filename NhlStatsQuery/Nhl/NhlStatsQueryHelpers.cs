@@ -62,7 +62,7 @@ namespace SportsData.Nhl.Query
                 gameSummary.HomePPGF = ConvertStringToInt(tds[13].InnerText);
                 gameSummary.HomePPOpp = ConvertStringToInt(tds[14].InnerText);
                 gameSummary.HomePIM = ConvertStringToInt(tds[15].InnerText);
-                gameSummary.Att = ConvertStringToInt(tds[16].InnerText.Replace(",", String.Empty));
+                gameSummary.Attendance = ConvertStringToInt(tds[16].InnerText.Replace(",", String.Empty));
 
                 db.NhlGameSummaries.Add(gameSummary);
                 db.SaveChanges();
@@ -172,7 +172,7 @@ namespace SportsData.Nhl.Query
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();
-            cell.Controls.Add(new LiteralControl(gameSummary.Att.ToString()));
+            cell.Controls.Add(new LiteralControl(gameSummary.Attendance.ToString()));
             htmlRow.Cells.Add(cell);
 
             return htmlRow;

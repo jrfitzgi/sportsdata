@@ -63,11 +63,28 @@ namespace SportsData.Mlb
                 return this.City + " " + this.Name;
             }
         }
+
+        // The name used in the espn.com tables. We need this here as a lookup key.
+        public string EspnOpponentName { get; set; }
     }
 
     [Table("MlbGameSummary")]
     public class MlbGameSummary : GameSummary
     {
+        [Display(Name = "Season Type")]
+        public MlbSeasonType MlbSeasonType { get; set; }
+
+        [Display(Name = "Innings")]
+        public int Innings { get; set; }
+
+        [Display(Name = "Wins To Date")]
+        public int WinsToDate { get; set; }
+
+        [Display(Name = "Losses To Date")]
+        public int LossesToDate { get; set; }
+
+        [Display(Name = "Postponed")]
+        public bool Postponed { get; set; }
         [Display(Name = "W Pitcher")]
         public string WPitcher { get; set; }
 
@@ -76,10 +93,6 @@ namespace SportsData.Mlb
 
         [Display(Name = "Save Pitcher")]
         public string SavePitcher { get; set; }
-
-        [Required]
-        [Display(Name = "Innings")]
-        public int Innings { get; set; }
     }
 }
 

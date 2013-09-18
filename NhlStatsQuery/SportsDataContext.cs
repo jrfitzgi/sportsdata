@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 
 using SportsData.Nhl;
@@ -12,12 +13,12 @@ namespace SportsData
             : base("DefaultConnection")
             //: base("ProdConnection")
         {
-            //Database.SetInitializer<SportsDataContext>(new DropCreateDatabaseAlways<SportsDataContext>()); // Not really needed
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());  // Use to drop db
-            Database.SetInitializer<SportsDataContext>(new CreateDatabaseIfNotExists<SportsDataContext>()); // Use to keep data
+            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
+            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
+            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfModelChanges());
             //Database.SetInitializer<SportsDataContext>(null); // Use for ProdConnection migrations
 
-            Database.Initialize(false);
+            //Database.Initialize(false);
         }
 
         // Mlb
@@ -35,22 +36,22 @@ namespace SportsData
                 new MlbTeam { ShortNameId = MlbTeamShortName.ATL, City = "Atlanta", Name = "Braves" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.BAL, City = "Baltimore", Name = "Orioles" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.BOS, City = "Boston", Name = "Red Sox" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.CHC, City = "Chicago", Name = "Cubs" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.CHW, City = "Chicago", Name = "White Sox" },
+                new MlbTeam { ShortNameId = MlbTeamShortName.CHC, City = "Chicago", Name = "Cubs", EspnOpponentName = "Cubs" },
+                new MlbTeam { ShortNameId = MlbTeamShortName.CHW, City = "Chicago", Name = "White Sox", EspnOpponentName = "White Sox" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.CIN, City = "Cincinnati", Name = "Reds" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.CLE, City = "Cleveland", Name = "Indians" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.COL, City = "Colorado", Name = "Rockies" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.DET, City = "Detroit", Name = "Tigers" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.HOU, City = "Houston", Name = "Astros" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.KC, City = "Kansas City", Name = "Royals" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.LAA, City = "Los Angeles", Name = "Angels" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.LAD, City = "Los Angeles", Name = "Dodgers" },
+                new MlbTeam { ShortNameId = MlbTeamShortName.LAA, City = "Los Angeles", Name = "Angels", EspnOpponentName = "LA Angels" },
+                new MlbTeam { ShortNameId = MlbTeamShortName.LAD, City = "Los Angeles", Name = "Dodgers", EspnOpponentName = "LA Dodgers" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.MIA, City = "Miami", Name = "Marlins" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.MIL, City = "Milwaukee", Name = "Brewers" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.MIN, City = "Minnesota", Name = "Twins" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.NYM, City = "New York", Name = "Mets" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.NYY, City = "New York", Name = "Yankees" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.OAK, City = "Oakland", Name = "Athletics" },
+                new MlbTeam { ShortNameId = MlbTeamShortName.NYM, City = "New York", Name = "Mets", EspnOpponentName = "NY Mets" },
+                new MlbTeam { ShortNameId = MlbTeamShortName.NYY, City = "New York", Name = "Yankees", EspnOpponentName = "NY Yankees" },
+                new MlbTeam { ShortNameId = MlbTeamShortName.OAK, City = "Oakland", Name = "Athletics"},
                 new MlbTeam { ShortNameId = MlbTeamShortName.PHI, City = "Philadelphia", Name = "Phillies" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.PIT, City = "Pittsburgh", Name = "Pirates" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.SD, City = "San Diego", Name = "Padres" },
@@ -68,6 +69,11 @@ namespace SportsData
             foreach (MlbTeam mlbTeam in context.MlbTeams)
             {
                 mlbTeam.ShortName = mlbTeam.ShortNameId.ToString("g");
+            
+                if (String.IsNullOrWhiteSpace(mlbTeam.EspnOpponentName))
+                {
+                    mlbTeam.EspnOpponentName = mlbTeam.City;
+                }
             }
 
             context.SaveChanges();
@@ -76,6 +82,24 @@ namespace SportsData
     }
 
     public class SportsDataContextDropCreateDatabaseAlways : DropCreateDatabaseAlways<SportsDataContext>
+    {
+        protected override void Seed(SportsDataContext context)
+        {
+            SportsDataContext.Seed(context);
+            base.Seed(context);
+        }
+    }
+
+    public class SportsDataContextDropCreateDatabaseIfNotExists : CreateDatabaseIfNotExists<SportsDataContext>
+    {
+        protected override void Seed(SportsDataContext context)
+        {
+            SportsDataContext.Seed(context);
+            base.Seed(context);
+        }
+    }
+
+    public class SportsDataContextDropCreateDatabaseIfModelChanges : DropCreateDatabaseIfModelChanges<SportsDataContext>
     {
         protected override void Seed(SportsDataContext context)
         {

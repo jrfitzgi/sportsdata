@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,19 +14,76 @@ namespace SportsData.Mlb
     {
         private const string baseAddress = "http://espn.go.com/";
         private const string preSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/seasontype/1"; // team short name, year
-        private const string regSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/half/{2}"; // team short name, year, half (1 or 2)
+        private const string regSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/seasontype/2/half/{2}"; // team short name, year, half (1 or 2)
         private const string postSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/seasontype/3"; // team short name, year
 
-        public static List<MlbGameSummary> GetSeason(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
+        public static List<MlbGameSummary> GetSeason(MlbSeasonType mlbSeasonType, int seasonYear)
         {
-            return MlbAttendanceQuery.GetPage(mlbSeasonType, mlbTeam, seasonYear);
+            List<MlbGameSummary> results = new List<MlbGameSummary>();
+
+            foreach (MlbTeamShortName mlbTeam in Enum.GetValues(typeof(MlbTeamShortName)))
+            {
+                List<MlbGameSummary> teamResults = MlbAttendanceQuery.GetSeasonForTeam(mlbSeasonType, mlbTeam, seasonYear);
+                if (null != teamResults)
+                {
+                    results.AddRange(teamResults);
+                }
+            }
+
+            return results;
         }
 
-        private static List<MlbGameSummary> GetPage(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
+        public static List<MlbGameSummary> GetSeasonForTeam(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
+        {
+            string relativeUrl;
+            List<MlbGameSummary> results;
+
+            switch (mlbSeasonType)
+            {
+                case MlbSeasonType.Spring:
+                    relativeUrl = String.Format(MlbAttendanceQuery.preSeasonFormatString, mlbTeam.ToString(), seasonYear);
+                    results = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
+                    break;
+                case MlbSeasonType.Regular:
+
+                    // Collect first half of the season
+                    relativeUrl = String.Format(MlbAttendanceQuery.regSeasonFormatString, mlbTeam.ToString(), seasonYear, 1);
+                    List<MlbGameSummary> firstHalf = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
+
+                    // Collect second half of the season
+                    relativeUrl = String.Format(MlbAttendanceQuery.regSeasonFormatString, mlbTeam.ToString(), seasonYear, 2);
+                    List<MlbGameSummary> secondHalf = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
+
+                    // Merge them together
+                    results = new List<MlbGameSummary>();
+                    results.AddRange(firstHalf);
+                    results.AddRange(secondHalf);
+                    break;
+                case MlbSeasonType.PostSeason:
+                    relativeUrl = String.Format(MlbAttendanceQuery.postSeasonFormatString, mlbTeam.ToString(), seasonYear);
+                    results = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
+                    break;
+                default:
+                    throw new ArgumentException(String.Format("Unrecognized season type {0}", mlbSeasonType.ToString()));
+            }
+
+            // Add the season type and year to every item
+            if (null != results)
+            {
+                results.ForEach(x =>
+                    {
+                        x.MlbSeasonType = mlbSeasonType;
+                        x.Season = seasonYear;
+                    });
+            }
+
+            return results;
+        }
+
+        private static List<MlbGameSummary> GetPage(string relativeUrl, MlbTeamShortName mlbTeam, int seasonYear)
         {
             // Construct the url
-            string urlString = String.Format(preSeasonFormatString, mlbTeam.ToString(), seasonYear);
-            Uri url = new Uri(urlString, UriKind.Relative);
+            Uri url = new Uri(relativeUrl, UriKind.Relative);
 
             // Make an http request
             HttpClient httpClient = new HttpClient();
@@ -46,11 +105,25 @@ namespace SportsData.Mlb
 
         private static List<MlbGameSummary> ParseRows(HtmlNodeCollection rows, MlbTeamShortName mlbTeam, int seasonYear)
         {
+            // error checks
+            if (null == rows || rows.Count == 0)
+            {
+                return null;
+            }
+
+            HtmlNode firstRow = rows[0];
+            HtmlNode firstColumn = firstRow.SelectSingleNode(@".//td");
+            if (firstColumn.InnerText.IndexOf("no schedule", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            {
+                // There are no games in this page
+                return null;
+            }
+
             List<MlbGameSummary> games = new List<MlbGameSummary>();
             foreach (HtmlNode row in rows)
             {
                 HtmlNodeCollection columns = row.SelectNodes(@".//td");
-                MlbGameSummary game = MlbAttendanceQuery.ParseRow(columns, mlbTeam, seasonYear);
+                MlbGameSummary game = MlbAttendanceQuery.ParseRow(columns, mlbTeam, seasonYear, true);
                 if (null != game)
                 {
                     games.Add(game);
@@ -64,410 +137,173 @@ namespace SportsData.Mlb
         {
             MlbGameSummary game = new MlbGameSummary();
 
-            // Date
+            // Check if this is a home or away game and if we should proceed parsing
+            HtmlNode gameStatusNode = columns[1].SelectSingleNode(@".//li[@class='game-status']");
+            if (gameStatusNode.InnerText.Equals("@") && includeHomeGamesOnly)
+            {
+                // This is an away game and we don't want to include away games so return null
+                return null;
+            }
+
+            // Game Date
             HtmlNode dateNode = columns[0];
             DateTime date = Convert.ToDateTime(dateNode.InnerText + " " + seasonYear);
             game.Date = date;
 
             // Determine the Opponent
-            // Only include home games if specified
             HtmlNode opponentNode = columns[1];
-
             HtmlNode opponentTeamNode = opponentNode.SelectSingleNode(@".//li[@class='team-name']");
             string opponentTeamCity = opponentTeamNode.InnerText;
 
-            HtmlNode gameStatusNode = opponentNode.SelectSingleNode(@".//li[@class='game-status']");
-            if (gameStatusNode.InnerText.Equals("@") && includeHomeGamesOnly)
+            // Check if the game was postponed
+            if (columns[2].InnerText.Equals("postponed", StringComparison.InvariantCultureIgnoreCase))
             {
-                return null;
-            }
+                // The game was postponed. Figure out home/away teams and then return
+                game.Postponed = true;
 
-            // Determine home and away teams
-            if (gameStatusNode.InnerText.Equals("@"))
-            {
-                // away game
-                game.Home = MlbAttendanceQuery.LookupShortName(opponentTeamCity).ToString();
-                game.Visitor = mlbTeam.ToString();
+                if (gameStatusNode.InnerText.Equals("vs", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // home game for mlbTeam 
+                    game.Home = mlbTeam.ToString();
+                    string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
+                    game.Visitor = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
+                }
+                else if (gameStatusNode.InnerText.Equals("@", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // away game for mlbTeam
+                    string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
+                    game.Home = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
+                    game.Visitor = mlbTeam.ToString();
+                }
+
+                return game;
             }
             else
             {
-                // home game
-                game.Home = mlbTeam.ToString();
-                game.Visitor = MlbAttendanceQuery.LookupShortName(opponentTeamCity).ToString();
+                game.Postponed = false;
             }
 
+            // Game Result
+            HtmlNode gameResultNode = columns[2];
+            HtmlNode scoreNode = gameResultNode.SelectSingleNode(@".//li[contains(@class,'score')]");
+
+            // Check if there were extra innings
+            string score = scoreNode.InnerText;
+            string fToken = "f/"; // This string implies there were extra innings
+            int fIndex = score.IndexOf(fToken, StringComparison.InvariantCultureIgnoreCase);
+            if (fIndex >= 0)
+            {
+                game.Innings = Convert.ToInt32(score.Substring(fIndex + fToken.Length));
+                score = score.Substring(0, fIndex).Trim();
+            }
+            else
+            {
+                game.Innings = 9;
+            }
+
+            int winningScore = score.Split('-').Max(x => Convert.ToInt32(x));
+            int losingScore = score.Split('-').Min(x => Convert.ToInt32(x));
 
 
+            // Figure out if the home team won or lost
+            HtmlNode winLossNode = gameResultNode.SelectSingleNode(@".//li[contains(@class,'game-status')]");
+            int mlbTeamScore;
+            int opponentScore;
+            if (winLossNode.Attributes["class"].Value.IndexOf("win", StringComparison.InvariantCultureIgnoreCase) >= 0) // case-insensitive 'contains'
+            {
+                mlbTeamScore = winningScore;
+                opponentScore = losingScore;
+            }
+            else if (winLossNode.Attributes["class"].Value.IndexOf("loss", StringComparison.InvariantCultureIgnoreCase) >= 0) // case-insensitive 'contains'
+            {
+                mlbTeamScore = losingScore;
+                opponentScore = winningScore;
+            }
+            else if (winLossNode.Attributes["class"].Value.IndexOf("tie", StringComparison.InvariantCultureIgnoreCase) >= 0) // case-insensitive 'contains'
+            {
+                mlbTeamScore = winningScore;
+                opponentScore = winningScore;
+            }
+            else
+            {
+                throw new Exception("Could not determine win or loss");
+            }
+
+            // Get Win-Loss record for mlbTeam
+            HtmlNode winLossRecordNode = columns[3];
+            string[] winLossRecord = winLossRecordNode.InnerText.Split('-');
+            if (null != winLossRecord && winLossRecord.Length == 2)
+            {
+                game.WinsToDate = Convert.ToInt32(winLossRecord[0]);
+                game.LossesToDate = Convert.ToInt32(winLossRecord[1]);
+            }
+            else
+            {
+                // do not set any values since we couldn't parse out the win-loss record
+            }
+
+            // Get pitchers
+            HtmlNode winningPitcherNode = columns[4].SelectSingleNode(@".//a");
+            game.WPitcher = winningPitcherNode != null ? winningPitcherNode.InnerText : null;
+            HtmlNode losingPitcherNode = columns[5].SelectSingleNode(@".//a");
+            game.LPitcher = losingPitcherNode != null ? losingPitcherNode.InnerText : null;
+            HtmlNode savingPitcherNode = columns[6].SelectSingleNode(@".//a");
+            game.SavePitcher = savingPitcherNode != null ? savingPitcherNode.InnerText : null;
+
+            // Determine home and away teams and which was the winner or loser
+            // Note: gameStatusNode was initialized at the start of the method
+            if (gameStatusNode.InnerText.Equals("vs", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // home game for mlbTeam 
+
+                game.Home = mlbTeam.ToString();
+                game.HomeScore = mlbTeamScore;
+
+                string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
+                game.Visitor = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
+                game.VisitorScore = opponentScore;
+            }
+            else if (gameStatusNode.InnerText.Equals("@", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // away game for mlbTeam
+
+                string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
+                game.Home = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
+                game.HomeScore = opponentScore;
+
+                game.Visitor = mlbTeam.ToString();
+                game.VisitorScore = mlbTeamScore;
+            }
+
+            // Get Attendance Data
+            HtmlNode attendanceNode = columns[7];
+            int attendance = 0;
+            Int32.TryParse(attendanceNode.InnerText, NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out attendance);
+            game.Attendance = attendance;
 
             return game;
         }
 
-        private static MlbTeamShortName LookupShortName(string city)
+        private static string LookupShortName(string espnOpponentName)
         {
-            SportsDataContext db = new SportsDataContext();
-            MlbTeamShortName shortName = db.MlbTeams.Where(x => x.City.Equals(city, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault().ShortNameId;
-            return shortName;
+
+            MlbTeam mlbTeam = null;
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                mlbTeam = (from t in db.MlbTeams.ToList()   // We need to use ToList() so we don't get 'ObjectContext instance has been disposed' error.
+                           where t.EspnOpponentName.Equals(espnOpponentName, StringComparison.InvariantCulture)
+                           select t).FirstOrDefault();
+            }
+
+            if (null == mlbTeam)
+            {
+                return null;
+            }
+            else
+            {
+                return mlbTeam.ShortNameId.ToString();
+            }
         }
 
-        //protected static void SaveRowsToDb(HtmlNode node, int gameType)
-        //{
-        //    // Verify that the tables contain rows
-        //    if (null == node || null == node.SelectNodes("./tbody/tr"))
-        //    {
-        //        // This is unexpected
-        //        return;
-        //    }
-
-        //    foreach (HtmlNode row in node.SelectNodes("./tbody/tr"))
-        //    {
-        //        NhlStatsQuery.SaveRowToDb(row, gameType);
-        //    }
-        //}
-
-
-
-        ///// <summary>
-        ///// Parses the data out of an html tr row and saves it in NhlStatsContext db
-        ///// </summary>
-        //protected static void SaveRowToDb(HtmlNode tr, int gameType)
-        //{
-        //    HtmlNodeCollection tds = tr.SelectNodes("./td");
-
-        //    using (NhlAttendanceContext db = new NhlAttendanceContext())
-        //    {
-        //        NhlGameSummary gameSummary = new NhlGameSummary();
-        //        gameSummary.Date = Convert.ToDateTime(tds[0].InnerText.Replace("'", "/"));
-        //        gameSummary.Home = tds[3].InnerText;
-
-        //        var result = from g in db.GameSummaries
-        //                     where g.Date == gameSummary.Date && g.Home == gameSummary.Home
-        //                     select g;
-        //        if (result.Any())
-        //        {
-        //            // do not add the record if it already exists
-        //            return;
-        //        }
-
-        //        gameSummary.Season = NhlGameSummary.GetSeason(gameSummary.Date).Item2;
-        //        gameSummary.GameType = gameType;
-        //        gameSummary.Visitor = tds[1].InnerText;
-        //        gameSummary.VisitorScore = ConvertStringToInt(tds[2].InnerText);
-        //        gameSummary.HomeScore = ConvertStringToInt(tds[4].InnerText);
-        //        gameSummary.OS = tds[5].InnerText;
-        //        gameSummary.WGoalie = tds[6].InnerText;
-        //        gameSummary.WGoal = tds[7].InnerText;
-        //        gameSummary.VisitorShots = ConvertStringToInt(tds[8].InnerText);
-        //        gameSummary.VisitorPPGF = ConvertStringToInt(tds[9].InnerText);
-        //        gameSummary.VisitorPPOpp = ConvertStringToInt(tds[10].InnerText);
-        //        gameSummary.VisitorPIM = ConvertStringToInt(tds[11].InnerText);
-        //        gameSummary.HomeShots = ConvertStringToInt(tds[12].InnerText);
-        //        gameSummary.HomePPGF = ConvertStringToInt(tds[13].InnerText);
-        //        gameSummary.HomePPOpp = ConvertStringToInt(tds[14].InnerText);
-        //        gameSummary.HomePIM = ConvertStringToInt(tds[15].InnerText);
-        //        gameSummary.Att = ConvertStringToInt(tds[16].InnerText.Replace(",", String.Empty));
-
-        //        db.GameSummaries.Add(gameSummary);
-        //        db.SaveChanges();
-        //    }
-        //}
-
-        //private static int GetNumResultsInDb(int season, int gameType)
-        //{
-        //    NhlAttendanceContext db = new NhlAttendanceContext();
-
-        //    int intSeason = Convert.ToInt32(season);
-        //    var results = (from g in db.GameSummaries
-        //                   where g.Season == intSeason && g.GameType == gameType
-        //                   orderby g.Date descending
-        //                   select g);
-
-        //    return results.Count();
-        //}
-
-        //private static int ConvertStringToInt(string s)
-        //{
-        //    int result;
-        //    bool success = Int32.TryParse(s, out result);
-
-        //    if (!success)
-        //    {
-        //        return 0;
-        //    }
-        //    else
-        //    {
-        //        return result;
-        //    }
-        //}
-
-        //private static HtmlTableRow BuildRow(NhlGameSummary gameSummary)
-        //{
-        //    HtmlTableRow htmlRow = new HtmlTableRow();
-
-        //    HtmlTableCell cell;
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.Date.ToShortDateString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlGameSummary.GameTypes), gameSummary.GameType)));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.Visitor));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.VisitorScore.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.Home));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.HomeScore.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.OS));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.WGoalie));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.WGoal));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.VisitorShots.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.VisitorPPGF.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.VisitorPPOpp.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.VisitorPIM.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.HomeShots.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.HomePPGF.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.HomePPOpp.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.HomePIM.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl(gameSummary.Att.ToString()));
-        //    htmlRow.Cells.Add(cell);
-
-        //    return htmlRow;
-        //}
-
-        //private static HtmlTableRow BuildTitleRow(int season, int numResults)
-        //{
-        //    HtmlTableRow htmlRow = new HtmlTableRow();
-
-        //    HtmlTableCell cell;
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Season: <br>" + (season-1) + "-" + season));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Results: " + numResults));
-        //    htmlRow.Cells.Add(cell);
-
-        //    return htmlRow;
-        //}
-
-        //private static HtmlTableRow BuildHeaderRow(int season)
-        //{
-        //    HtmlTableRow htmlRow = new HtmlTableRow();
-
-        //    HtmlTableCell cell;
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Date"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Game Type"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Visitor"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Visitor Score"));
-        //    htmlRow.Cells.Add(cell);
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Home"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Home Score"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("OT/SO"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Winning Goalie"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Winning Goal"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Visitor Shots"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Visitor PPGF"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Visitor PPOpp"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Visitor PIM"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Home Shots"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Home PPGF"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Home PPOpp"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Home PIM"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    cell = new HtmlTableCell();
-        //    cell.Controls.Add(new LiteralControl("Attendance"));
-        //    htmlRow.Cells.Add(cell);
-
-        //    return htmlRow;
-        //}
-
-
-        //protected static int CountRows(HtmlNode table)
-        //{
-        //    // Verify that the tables contain rows
-        //    if (null == table.SelectNodes("./tbody/tr"))
-        //    {
-        //        // This is unexpected
-        //        return 0;
-        //    }
-
-        //    HtmlNodeCollection rows = table.SelectNodes("./tbody/tr");
-        //    return rows.Count;
-        //}
-
-        ///// <summary>
-        ///// Finds the stats table in the html document and returns it as an HTMLNode
-        ///// </summary>
-        ///// <param name="htmlString"></param>
-        ///// <returns></returns>
-        //protected static HtmlNode GetStatsTable(string htmlString)
-        //{
-        //    HtmlDocument htmlDocument = new HtmlAgilityPack.HtmlDocument();
-        //    htmlDocument.LoadHtml(htmlString);
-
-        //    foreach (HtmlNode table in htmlDocument.DocumentNode.SelectNodes("//table"))
-        //    {
-        //        HtmlAttribute classAttribute = table.Attributes["class"];
-        //        if (null != classAttribute && classAttribute.Value.Equals("data stats", StringComparison.CurrentCultureIgnoreCase))
-        //        {
-        //            return table;
-        //        }
-        //    }
-
-        //    return null;
-        //}
-
-        ///// <summary>
-        ///// Finds the number of pages in a stats table
-        ///// </summary>
-        ///// <param name="htmlString"></param>
-        ///// <returns></returns>
-        //protected static int GetNumPages(HtmlNode tableNode)
-        //{
-        //    string query = @"//div[@class = 'numRes']";
-        //    HtmlNode numResults = tableNode.SelectSingleNode(query);
-
-        //    if (null == numResults)
-        //    {
-        //        return 1;
-        //    }
-
-        //    string tempString = Regex.Match(numResults.InnerText, @"\d+ results").Value;
-        //    tempString = Regex.Match(tempString, @"\d+").Value;
-
-        //    var numPages = Math.Ceiling(Convert.ToDouble(tempString) / 30);// 30 results per page
-
-        //    return Convert.ToInt32(numPages);
-        //}
-
-        ///// <summary>
-        ///// Finds the number of expected results in a stats table
-        ///// </summary>
-        ///// <param name="htmlString"></param>
-        ///// <returns></returns>
-        //protected static int GetNumExpectedResults(HtmlNode tableNode)
-        //{
-        //    string query = @"//div[@class = 'numRes']";
-        //    HtmlNode numResults = tableNode.SelectSingleNode(query);
-
-        //    if (null == numResults)
-        //    {
-        //        return 0;
-        //    }
-        //    else
-        //    {
-
-        //        string tempString = Regex.Match(numResults.InnerText, @"\d+ results").Value;
-        //        tempString = Regex.Match(tempString, @"\d+").Value;
-        //        return Convert.ToInt32(tempString);
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Remove the footer from the stats table
-        ///// </summary>
-        ///// <param name="htmlString"></param>
-        ///// <returns></returns>
-        //protected static void RemoveFooter(HtmlNode tableNode)
-        //{
-        //    HtmlNode footNode = tableNode.SelectSingleNode(@"//tfoot");
-        //    tableNode.RemoveChild(footNode);
-        //}
     }
 }

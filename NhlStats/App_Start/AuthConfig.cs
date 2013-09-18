@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Web.WebPages.OAuth;
-using NhlStats.Models;
+using SportsData.Models;
 
-namespace NhlStats
+namespace SportsData
 {
     public static class AuthConfig
     {
