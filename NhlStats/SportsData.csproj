@@ -173,6 +173,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Attendance\AttendanceAreaRegistration.cs" />
+    <Compile Include="Areas\Attendance\Controllers\MlbController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Areas\Attendance\Controllers\NhlController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -243,9 +244,7 @@
     <Content Include="Global.asax" />
     <Content Include="Areas\Attendance\Views\Web.config" />
     <Content Include="Areas\Attendance\Views\_ViewStart.cshtml" />
-    <None Include="Properties\PublishProfiles\nhlstats - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\nhlstats - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\nhlstats - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\nhlstats - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -306,7 +305,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Attendance\Views\Nhl\Index.cshtml" />
-    <Content Include="Areas\Attendance\Views\Mlb\Mlb.cshtml" />
+    <Content Include="Areas\Attendance\Views\Mlb\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

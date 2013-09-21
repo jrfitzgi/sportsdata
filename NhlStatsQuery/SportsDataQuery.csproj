@@ -61,22 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameSummaryBase.cs" />
-    <Compile Include="Migrations\201309090233527_MlbAttendanceSchema.cs" />
-    <Compile Include="Migrations\201309090233527_MlbAttendanceSchema.Designer.cs">
-      <DependentUpon>201309090233527_MlbAttendanceSchema.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201309090716007_MlbTeamsUpdate.cs" />
-    <Compile Include="Migrations\201309090716007_MlbTeamsUpdate.Designer.cs">
-      <DependentUpon>201309090716007_MlbTeamsUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201309110516557_ModifyMlbModel.cs" />
-    <Compile Include="Migrations\201309110516557_ModifyMlbModel.Designer.cs">
-      <DependentUpon>201309110516557_ModifyMlbModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201309130101013_AddPostponedGames.cs" />
-    <Compile Include="Migrations\201309130101013_AddPostponedGames.Designer.cs">
-      <DependentUpon>201309130101013_AddPostponedGames.cs</DependentUpon>
-    </Compile>
     <Compile Include="Mlb\MlbAttendanceData.cs" />
     <Compile Include="Mlb\MlbModels.cs" />
     <Compile Include="SportsDataContext.cs" />
@@ -93,20 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201309090233527_MlbAttendanceSchema.resx">
-      <DependentUpon>201309090233527_MlbAttendanceSchema.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201309090716007_MlbTeamsUpdate.resx">
-      <DependentUpon>201309090716007_MlbTeamsUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201309110516557_ModifyMlbModel.resx">
-      <DependentUpon>201309110516557_ModifyMlbModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201309130101013_AddPostponedGames.resx">
-      <DependentUpon>201309130101013_AddPostponedGames.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />

@@ -150,6 +150,11 @@ namespace SportsData.Mlb
             DateTime date = Convert.ToDateTime(dateNode.InnerText + " " + seasonYear);
             game.Date = date;
 
+            if (date >= DateTime.Now.Date) // Don't retrieve games from today or future
+            {
+                return null;
+            }
+
             // Determine the Opponent
             HtmlNode opponentNode = columns[1];
             HtmlNode opponentTeamNode = opponentNode.SelectSingleNode(@".//li[@class='team-name']");

@@ -13,12 +13,6 @@ namespace SportsData
             : base("DefaultConnection")
             //: base("ProdConnection")
         {
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfModelChanges());
-            //Database.SetInitializer<SportsDataContext>(null); // Use for ProdConnection migrations
-
-            //Database.Initialize(false);
         }
 
         // Mlb

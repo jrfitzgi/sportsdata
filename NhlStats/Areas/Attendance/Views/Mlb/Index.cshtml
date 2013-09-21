@@ -1,0 +1,117 @@
+﻿@using SportsData.Mlb;
+
+@model List<MlbGameSummary>
+
+@{
+    ViewBag.Title = "Mlb Attendance";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+            </p>
+        </div>
+    </section>
+}
+
+<form id="SelectSeason" method="post" action="~/attendance/mlb">
+    @{
+        List<SelectListItem> seasonYears = new List<SelectListItem>()
+        {
+            new SelectListItem {Text = "2014", Value = "2014"},
+            new SelectListItem {Text = "2013", Value = "2013"},
+            new SelectListItem {Text = "2012", Value = "2012"},
+            new SelectListItem {Text = "2011", Value = "2011"},
+            new SelectListItem {Text = "2010", Value = "2010"},
+            new SelectListItem {Text = "2009", Value = "2009"},
+            new SelectListItem {Text = "2008", Value = "2008"},
+            new SelectListItem {Text = "2007", Value = "2007"},
+            new SelectListItem {Text = "2006", Value = "2006"},
+            new SelectListItem {Text = "2005", Value = "2005"},
+            new SelectListItem {Text = "2004", Value = "2004"},
+            new SelectListItem {Text = "2003", Value = "2013"},
+            new SelectListItem {Text = "2002", Value = "2002"},
+        };
+
+        SelectList selectList = new SelectList(seasonYears, "Value", "Text");
+        @Html.DropDownList("SeasonList", selectList);
+        
+    }
+
+    <input type="submit" name="ShowResults" value="Show Results" />
+
+    @{       
+        if (ViewBag.GetLatest == true)
+        {
+        <input type="submit" name="Update" value="Get Latest" />
+        }  
+    }
+
+</form>
+
+<br />
+
+<table>
+    <tr>
+        @if (ViewBag.SeasonYear >= 2002)
+        {
+            <th colspan="9">Mlb Attendance for @ViewBag.SeasonYear (@Model.Count results)</th>
+        }
+    </tr>
+    <tr>
+        <th>Season Type</th>
+        <th>Date</th>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Home Score</th>
+        <th>Away Score</th>
+        <th>Home Team Wins to Date</th>
+        <th>Home Team Losses to Date</th>
+        <th>Attendance</th>
+    </tr>
+
+    @if (Model.Count == 0)
+    {
+        <tr>
+            <td colspan="9">No results found</td>
+        </tr>
+    }
+
+    @foreach (MlbGameSummary game in Model)
+    {    
+        <tr>
+            <td>@game.MlbSeasonType.ToString()</td>
+            <td>@game.Date.ToShortDateString()</td>
+            <td>@game.Home</td>
+            <td>@game.Visitor</td>
+
+            @if (@game.Postponed == true)
+            {
+                <td colspan="6" style='background-color: lightgrey'>Postponed</td>
+            }
+            else
+            {
+                <td>@game.HomeScore</td>
+                <td>@game.VisitorScore</td>
+                <td>@game.WinsToDate</td>
+                <td>@game.LossesToDate</td>
+                
+                if (@game.Attendance <= 0) // highlight games without attendance numbers
+                {
+                <td style='background-color: red'>@game.Attendance</td>
+                }
+                else
+                {                   
+                <td>@game.Attendance</td>
+                }
+            }
+        </tr>
+    }
+
+</table>
+

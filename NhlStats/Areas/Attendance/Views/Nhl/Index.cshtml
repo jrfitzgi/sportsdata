@@ -17,7 +17,6 @@
 }
 
 <form id="SelectSeason" method="post" action="~/attendance/nhl">
-    @*<form id="SelectSeason" method="post">*@
     @{
         List<HockeySeason> seasons = new List<HockeySeason>();
         seasons.Add(new HockeySeason("2014", "2013-2014"));
@@ -43,7 +42,7 @@
         
     }
 
-    <input type="submit" name="ShowResults" value="Show Results">
+    <input type="submit" name="ShowResults" value="Show Results" />
     
     @{       
         if (ViewBag.GetLatest == true)
@@ -53,6 +52,8 @@
     }
 
 </form>
+
+<br />
 
 @Html.Raw(@ViewBag.Table)
 
