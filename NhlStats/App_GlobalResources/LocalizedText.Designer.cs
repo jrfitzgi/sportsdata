@@ -70,7 +70,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NHL Stats.
+        ///   Looks up a localized string similar to Game Stats.
         /// </summary>
         internal static string Title {
             get {

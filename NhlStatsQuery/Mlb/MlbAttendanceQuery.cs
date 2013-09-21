@@ -161,26 +161,11 @@ namespace SportsData.Mlb
             string opponentTeamCity = opponentTeamNode.InnerText;
 
             // Check if the game was postponed
-            if (columns[2].InnerText.Equals("postponed", StringComparison.InvariantCultureIgnoreCase))
+            if (columns[2].InnerText.Equals("postponed", StringComparison.InvariantCultureIgnoreCase) || columns[3].InnerText.Equals("delayed", StringComparison.InvariantCultureIgnoreCase))
             {
                 // The game was postponed. Figure out home/away teams and then return
                 game.Postponed = true;
-
-                if (gameStatusNode.InnerText.Equals("vs", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // home game for mlbTeam 
-                    game.Home = mlbTeam.ToString();
-                    string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
-                    game.Visitor = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
-                }
-                else if (gameStatusNode.InnerText.Equals("@", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // away game for mlbTeam
-                    string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
-                    game.Home = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
-                    game.Visitor = mlbTeam.ToString();
-                }
-
+                MlbAttendanceQuery.DetermineHomeAndAway(gameStatusNode, mlbTeam, opponentTeamCity, ref game);
                 return game;
             }
             else
@@ -191,6 +176,13 @@ namespace SportsData.Mlb
             // Game Result
             HtmlNode gameResultNode = columns[2];
             HtmlNode scoreNode = gameResultNode.SelectSingleNode(@".//li[contains(@class,'score')]");
+
+            // Check if the score can be parsed out and if not then return
+            if (null == scoreNode)
+            {
+                MlbAttendanceQuery.DetermineHomeAndAway(gameStatusNode, mlbTeam, opponentTeamCity, ref game);
+                return game;
+            }
 
             // Check if there were extra innings
             string score = scoreNode.InnerText;
@@ -206,9 +198,20 @@ namespace SportsData.Mlb
                 game.Innings = 9;
             }
 
-            int winningScore = score.Split('-').Max(x => Convert.ToInt32(x));
-            int losingScore = score.Split('-').Min(x => Convert.ToInt32(x));
-
+            int winningScore;
+            int losingScore;
+            try
+            {
+                winningScore = score.Split('-').Max(x => Convert.ToInt32(x));
+                losingScore = score.Split('-').Min(x => Convert.ToInt32(x));
+            }
+            catch (FormatException e)
+            {
+                winningScore = 0;
+                losingScore = 0;
+                MlbAttendanceQuery.DetermineHomeAndAway(gameStatusNode, mlbTeam, opponentTeamCity, ref game);
+                return game;
+            }
 
             // Figure out if the home team won or lost
             HtmlNode winLossNode = gameResultNode.SelectSingleNode(@".//li[contains(@class,'game-status')]");
@@ -287,6 +290,25 @@ namespace SportsData.Mlb
             game.Attendance = attendance;
 
             return game;
+        }
+
+        private static void DetermineHomeAndAway(HtmlNode gameStatusNode, MlbTeamShortName mlbTeam, string opponentTeamCity, ref MlbGameSummary game)
+        {
+            //Figure out home/away teams and then return
+            if (gameStatusNode.InnerText.Equals("vs", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // home game for mlbTeam 
+                game.Home = mlbTeam.ToString();
+                string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
+                game.Visitor = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
+            }
+            else if (gameStatusNode.InnerText.Equals("@", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // away game for mlbTeam
+                string shortName = MlbAttendanceQuery.LookupShortName(opponentTeamCity);
+                game.Home = String.IsNullOrWhiteSpace(shortName) ? opponentTeamCity : shortName;
+                game.Visitor = mlbTeam.ToString();
+            }
         }
 
         private static string LookupShortName(string espnOpponentName)

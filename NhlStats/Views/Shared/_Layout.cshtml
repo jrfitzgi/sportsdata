@@ -20,7 +20,7 @@
                     </section>*@
                     <nav>
                         <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li>@Html.ActionLink("Home", "Index", "Home", new {Area = ""}, new {})</li>
                             
                             <li>@Html.ActionLink("NHL Attendance", "Index", "Nhl", new { Area = "Attendance" }, new {})</li>
                             <li>@Html.ActionLink("MLB Attendance", "Index", "Mlb", new { Area = "Attendance" }, new {})</li>
