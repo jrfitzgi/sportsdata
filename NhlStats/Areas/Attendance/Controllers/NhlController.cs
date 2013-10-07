@@ -4,40 +4,47 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using SportsData.Nhl;
 using SportsData.Nhl.Query;
 
 namespace SportsData.Areas.Attendance.Controllers
 {
-    public class NhlController : Controller
+    public class NhlController : SportsDataController
     {
-        public ActionResult Index(bool update=false)
+        public ActionResult Index(int seasonYear = 0, bool update = false)
         {
-            if (update == true)
-            {
-                ViewBag.GetLatest = true;
-            }
+            ViewBag.GetLatest = update;
+            ViewBag.SeasonYear = seasonYear;
 
-            string season = (string)Request.Form["SeasonList"];
-            ViewBag.Season = season;
 
-            if (String.IsNullOrEmpty(season))
+            List<NhlGameSummary> games = new List<NhlGameSummary>();
+            if (seasonYear >= 1998) // check if it is a valid season and if so get the results
             {
-                ViewBag.Table = String.Empty;
-            }
-            else
-            {
-                bool performUpdate = false;
-
-                if (this.Request["Update"] == "Update")
+                using (SportsDataContext db = new SportsDataContext())
                 {
-                    performUpdate = true;
+                    IEnumerable<NhlGameSummary> results = from g in db.NhlGameSummaries
+                                                          where g.Season == seasonYear
+                                                          orderby g.Date
+                                                          select g;
+                    games = results.ToList();
                 }
-
-                ViewBag.Table = SportsData.Nhl.Query.NhlStatsQuery.GetStatsFromDb(season, performUpdate);
-                ViewBag.PerformUpdate = false;
             }
 
-            return View();
+            return Result(games);
+        }
+
+        [HttpPost]
+        public ActionResult Index()
+        {
+            string year = this.Request["SeasonList"];
+            bool performUpdate = (this.Request["Update"] == "Get Latest");
+
+            if (performUpdate)
+            {
+                NhlStatsQuery.GetAndStoreStats(year);
+            }
+
+            return RedirectToAction("Index", "Nhl", new { seasonYear = Convert.ToInt32(year), update = performUpdate });
         }
 
         public ActionResult Update()

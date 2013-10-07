@@ -20,6 +20,9 @@ namespace SportsData.Nhl
     [Table("NhlGameSummary")]
     public class NhlGameSummary : GameSummary
     {
+        [Display(Name = "Season Type")]
+        public NhlSeasonType NhlSeasonType { get; set; }
+
         [Display(Name = "O/S")]
         public string OS { get; set; }
 

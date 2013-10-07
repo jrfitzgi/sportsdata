@@ -24,12 +24,12 @@ namespace SportsData.Nhl.Query
         {
             int intSeason = Int32.Parse(season);
 
-            NhlStatsQuery.GetAndStoreStats(intSeason, 1);
-            NhlStatsQuery.GetAndStoreStats(intSeason, 2);
-            NhlStatsQuery.GetAndStoreStats(intSeason, 3);
+            NhlStatsQuery.GetAndStoreStats(intSeason, NhlSeasonType.PreSeason);
+            NhlStatsQuery.GetAndStoreStats(intSeason, NhlSeasonType.RegularSeason);
+            NhlStatsQuery.GetAndStoreStats(intSeason, NhlSeasonType.Playoff);
         }
 
-        protected static void GetAndStoreStats(int season, int gameType)
+        protected static void GetAndStoreStats(int season, NhlSeasonType gameType)
         {
             string queryUrl = "http://www.nhl.com/ice/gamestats.htm?fetchKey={0}{1}ALLSATALL&viewName=summary&sort=gameDate&pg={2}";
 

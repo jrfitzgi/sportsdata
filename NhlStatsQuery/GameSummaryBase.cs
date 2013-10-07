@@ -24,9 +24,6 @@ namespace SportsData
         public DateTime Date { get; set; }
 
         [Required]
-        public int GameType { get; set; }
-
-        [Required]
         public string Visitor { get; set; }
 
         [Required]

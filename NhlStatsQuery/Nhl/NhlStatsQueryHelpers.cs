@@ -27,7 +27,7 @@ namespace SportsData.Nhl.Query
         /// <summary>
         /// Parses the data out of an html tr row and saves it in NhlStatsContext db
         /// </summary>
-        protected static void SaveRowToDb(HtmlNode tr, int gameType)
+        protected static void SaveRowToDb(HtmlNode tr, NhlSeasonType gameType)
         {
             HtmlNodeCollection tds = tr.SelectNodes("./td");
 
@@ -47,7 +47,7 @@ namespace SportsData.Nhl.Query
                 }
 
                 gameSummary.Season = NhlGameSummary.GetSeason(gameSummary.Date).Item2;
-                gameSummary.GameType = gameType;
+                gameSummary.NhlSeasonType = gameType;
                 gameSummary.Visitor = tds[1].InnerText;
                 gameSummary.VisitorScore = ConvertStringToInt(tds[2].InnerText);
                 gameSummary.HomeScore = ConvertStringToInt(tds[4].InnerText);
@@ -69,13 +69,13 @@ namespace SportsData.Nhl.Query
             }
         }
 
-        private static int GetNumResultsInDb(int season, int gameType)
+        private static int GetNumResultsInDb(int season, NhlSeasonType gameType)
         {
             SportsDataContext db = new SportsDataContext();
 
             int intSeason = Convert.ToInt32(season);
             var results = (from g in db.NhlGameSummaries
-                           where g.Season == intSeason && g.GameType == gameType
+                           where g.Season == intSeason && g.NhlSeasonType == gameType
                            orderby g.Date descending
                            select g);
 
@@ -108,7 +108,7 @@ namespace SportsData.Nhl.Query
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();
-            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlSeasonType), gameSummary.GameType)));
+            cell.Controls.Add(new LiteralControl(Enum.GetName(typeof(NhlSeasonType), gameSummary.NhlSeasonType)));
             htmlRow.Cells.Add(cell);
 
             cell = new HtmlTableCell();
@@ -277,9 +277,9 @@ namespace SportsData.Nhl.Query
             return htmlRow;
         }
 
-        private static string GetPage(string queryFormatString, int season, int gameType, int pageNum)
+        private static string GetPage(string queryFormatString, int season, NhlSeasonType gameType, int pageNum)
         {
-            string uriString = String.Format(queryFormatString, season, gameType, pageNum);
+            string uriString = String.Format(queryFormatString, season, Convert.ToInt32(gameType), pageNum);
             Uri uri = new Uri(uriString);
 
             HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
@@ -295,7 +295,7 @@ namespace SportsData.Nhl.Query
             return responseString;
         }
 
-        protected static void SaveRowsToDb(HtmlNode node, int gameType)
+        protected static void SaveRowsToDb(HtmlNode node, NhlSeasonType gameType)
         {
             // Verify that the tables contain rows
             if (null == node || null == node.SelectNodes("./tbody/tr"))
