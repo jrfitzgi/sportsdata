@@ -1,0 +1,102 @@
+﻿@using SportsData.Twitter;
+
+@model List<TwitterAccountSnapshot>
+
+@{
+    ViewBag.Title = "Twitter Followers";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+            </p>
+        </div>
+    </section>
+}
+
+<form id="SelectSeason" method="post" action="~/social/twitter">
+
+    <input type="submit" name="ShowResults" value="Show Results" />
+
+    @{       
+        if (ViewBag.GetLatest == true)
+        {
+        <input type="submit" name="Update" value="Get Latest" />
+        }  
+    }
+
+</form>
+
+<br />
+
+<table>
+    @{ViewBag.NumberOfColumns = "6";}
+    <tr>
+        <th colspan="@ViewBag.NumberOfColumns">@ViewBag.Title (@Model.Count results)</th>
+    </tr>
+    <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Account</th>
+        <th>Tweets</th>
+        <th>Following</th>
+        <th>Followers</th>
+    </tr>
+
+    @if (Model.Count == 0)
+    {
+        <tr>
+            <td colspan="@ViewBag.NumberOfColumns">No results found</td>
+        </tr>
+    }
+
+    @foreach (TwitterAccountSnapshot snapshot in Model)
+    {    
+        <tr>
+            <td>@snapshot.DateOfSnapshot.ToShortDateString()</td>
+            <td>@snapshot.TwitterAccount.FriendlyName</td>
+            <td>@snapshot.TwitterAccountId</td>
+
+            @{
+                if (snapshot.Tweets <= 0) // highlight the cell
+                {
+                        <td style='background-color: red'>@snapshot.Tweets</td>
+                }
+                else
+                {                   
+                        <td>@snapshot.Tweets</td>
+                }
+            }
+
+            @{
+                if (snapshot.Following <= 0) // highlight the cell
+                {
+                        <td style='background-color: red'>@snapshot.Following</td>
+                }
+                else
+                {                   
+                        <td>@snapshot.Following</td>
+                }
+            }
+
+            @{
+                if (snapshot.Followers <= 0) // highlight the cell
+                {
+                        <td style='background-color: red'>@snapshot.Followers</td>
+                }
+                else
+                {                   
+                        <td>@snapshot.Followers</td>
+                }
+            }
+
+        </tr>
+    }
+
+</table>
+
