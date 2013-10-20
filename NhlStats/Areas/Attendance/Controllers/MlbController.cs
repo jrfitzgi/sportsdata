@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using SportsData;
 using SportsData.Mlb;
 
+using SportsData.Controllers;
+
 namespace SportsData.Areas.Attendance.Controllers
 {
     public class MlbController : SportsDataController

@@ -25,7 +25,7 @@ namespace SportsData.Areas.Social.Controllers
             using (SportsDataContext db = new SportsDataContext())
             {
                 TwitterAccountSnapshot latestSnapshot = (from d in db.TwitterSnapshots
-                                  orderby d.DateOfSnapshot
+                                  orderby d.DateOfSnapshot descending
                                   select d).FirstOrDefault();
 
                 if (null != latestSnapshot)
@@ -34,13 +34,14 @@ namespace SportsData.Areas.Social.Controllers
 
                     IEnumerable<TwitterAccountSnapshot> results = from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
                                                                   where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(latestDate)
+                                                                  && !s.TwitterAccountId.Equals("NhlToSeattle", StringComparison.InvariantCultureIgnoreCase)
+                                                                  && !s.TwitterAccountId.Equals("Nhl", StringComparison.InvariantCultureIgnoreCase)
                                                                   orderby s.TwitterAccount.FriendlyName
                                                                   select s;
 
                     latestSnapshots = results.ToList();
                 }
             }
-
 
             return Result(latestSnapshots);
         }

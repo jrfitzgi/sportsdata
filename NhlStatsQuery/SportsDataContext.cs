@@ -2,8 +2,9 @@
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 
-using SportsData.Nhl;
 using SportsData.Mlb;
+using SportsData.Nhl;
+using SportsData.Twitter;
 
 namespace SportsData
 {
@@ -22,8 +23,14 @@ namespace SportsData
         // Nhl
         public DbSet<NhlGameSummary> NhlGameSummaries { get; set; }
 
+        // Twitter
+        public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }
+        public DbSet<TwitterAccountSnapshot> TwitterSnapshots { get; set; }
+
         public static void Seed(SportsDataContext context)
         {
+            #region Mlb
+
             context.MlbTeams.AddOrUpdate(
                 t => t.ShortNameId,
                 new MlbTeam { ShortNameId = MlbTeamShortName.ARI, City = "Arizona", Name = "Diamondbacks" },
@@ -71,6 +78,53 @@ namespace SportsData
             }
 
             context.SaveChanges();
+
+            #endregion
+
+            #region Twitter
+
+            context.TwitterAccountsToFollow.AddOrUpdate(
+                t => t.Id,
+                new TwitterAccount { Id = "anaheimducks", FriendlyName = "Anaheim Ducks" },
+                new TwitterAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" },
+                new TwitterAccount { Id = "buffalosabres", FriendlyName = "Bufalo Sabres" },
+                new TwitterAccount { Id = "NHLFlames", FriendlyName = "Calgary Flames" },
+                new TwitterAccount { Id = "NHLCanes", FriendlyName = "Carolina Hurricanes" },
+                new TwitterAccount { Id = "NHLBlackhawks", FriendlyName = "Chicago Blackhawks" },
+                new TwitterAccount { Id = "Avalanche", FriendlyName = "Colorado Avalanche" },
+                new TwitterAccount { Id = "bluejacketsnhl", FriendlyName = "Columbus Blue Jackets" },
+                new TwitterAccount { Id = "DallasStars", FriendlyName = "Dallas Stars" },
+                new TwitterAccount { Id = "DetroitRedWings", FriendlyName = "Detroit Red Wings" },
+                new TwitterAccount { Id = "EdmontonOilers", FriendlyName = "Edmonton Oilers" },
+                new TwitterAccount { Id = "FlaPanthers", FriendlyName = "Florida Panthers" },
+                new TwitterAccount { Id = "LAKings", FriendlyName = "Los Angeles Kings" },
+                new TwitterAccount { Id = "mnwild", FriendlyName = "Minnesota Wild" },
+                new TwitterAccount { Id = "CanadiensMTL", FriendlyName = "Montreal Canadians" },
+                new TwitterAccount { Id = "PredsNHL", FriendlyName = "Nashville Predators" },
+                new TwitterAccount { Id = "NHLDevils", FriendlyName = "New Jersey Devils" },
+                new TwitterAccount { Id = "NYIslanders", FriendlyName = "New York Islanders" },
+                new TwitterAccount { Id = "NYRangers", FriendlyName = "New York Rangers" },
+                new TwitterAccount { Id = "Senators", FriendlyName = "Ottawa Senators" },
+                new TwitterAccount { Id = "NHLFlyers", FriendlyName = "Philadelphia Flyers" },
+                new TwitterAccount { Id = "phoenixcoyotes", FriendlyName = "Phoenix Coyotes" },
+                new TwitterAccount { Id = "penguins", FriendlyName = "Pittsburgh Penguins" },
+                new TwitterAccount { Id = "SanJoseSharks", FriendlyName = "San Jose Sharks" },
+                new TwitterAccount { Id = "StLouisBlues", FriendlyName = "St. Louis Blues" },
+                new TwitterAccount { Id = "TBLightning", FriendlyName = "Tampa Bay Lightning" },
+                new TwitterAccount { Id = "MapleLeafs", FriendlyName = "Toronto Maple Leafs" },
+                new TwitterAccount { Id = "VanCanucks", FriendlyName = "Vancouver Canucks" },
+                new TwitterAccount { Id = "washcaps", FriendlyName = "Washington Capitals" },
+                new TwitterAccount { Id = "NHLJets", FriendlyName = "Winnipeg Jets" },
+
+                new TwitterAccount { Id = "NHLtoSeattle", FriendlyName = "NHLtoSeattle" },
+                new TwitterAccount { Id = "NHL", FriendlyName = "NHL" }
+
+
+             );
+
+            context.SaveChanges();
+
+            #endregion
         }
 
     }

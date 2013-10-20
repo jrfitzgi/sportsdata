@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using SportsData.Nhl;
 using SportsData.Nhl.Query;
 
+using SportsData.Controllers;
+
 namespace SportsData.Areas.Attendance.Controllers
 {
     public class NhlController : SportsDataController

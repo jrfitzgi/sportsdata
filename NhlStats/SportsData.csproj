@@ -174,7 +174,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Attendance\AttendanceAreaRegistration.cs" />
     <Compile Include="Areas\Attendance\Controllers\MlbController.cs" />
-    <Compile Include="Areas\Attendance\SportsDataController.cs" />
+    <Compile Include="Areas\Social\Controllers\Twitter\TwitterController.cs" />
+    <Compile Include="Controllers\SportsDataController.cs" />
+    <Compile Include="Areas\Social\SocialAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Areas\Attendance\Controllers\NhlController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -246,7 +248,12 @@
     <Content Include="Global.asax" />
     <Content Include="Areas\Attendance\Views\Web.config" />
     <Content Include="Areas\Attendance\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Social\Views\Web.config" />
+    <Content Include="Areas\Social\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Social\Views\Twitter\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\nhlstats - FTP %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\nhlstats - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\nhlstats - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\nhlstats - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -313,6 +320,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Attendance\Models\" />
     <Folder Include="Areas\Attendance\Views\Shared\" />
+    <Folder Include="Areas\Social\Models\" />
+    <Folder Include="Areas\Social\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
