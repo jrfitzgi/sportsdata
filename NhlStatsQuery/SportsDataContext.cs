@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 using SportsData.Mlb;
 using SportsData.Nhl;
 using SportsData.Twitter;
+using SportsData.Facebook;
 
 namespace SportsData
 {
@@ -26,6 +27,10 @@ namespace SportsData
         // Twitter
         public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }
         public DbSet<TwitterAccountSnapshot> TwitterSnapshots { get; set; }
+
+        // Facebook
+        public DbSet<FacebookAccount> FacebookAccountsToFollow { get; set; }
+        public DbSet<FacebookAccountSnapshot> FacebookSnapshots { get; set; }
 
         public static void Seed(SportsDataContext context)
         {
@@ -118,13 +123,55 @@ namespace SportsData
 
                 new TwitterAccount { Id = "NHLtoSeattle", FriendlyName = "NHLtoSeattle" },
                 new TwitterAccount { Id = "NHL", FriendlyName = "NHL" }
-
-
              );
 
             context.SaveChanges();
 
             #endregion
+
+            #region Facebook
+
+            context.FacebookAccountsToFollow.AddOrUpdate(
+                account => account.Id,
+                new FacebookAccount { Id = "anaheimducks", FriendlyName = "Anaheim Ducks" },
+                new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" },
+                new FacebookAccount { Id = "BuffaloSabres", FriendlyName = "Bufalo Sabres" },
+                new FacebookAccount { Id = "NHLFlames", FriendlyName = "Calgary Flames" },
+                new FacebookAccount { Id = "Hurricanes", FriendlyName = "Carolina Hurricanes" },
+                //new FacebookAccount { Id = "NHLBlackhawks", FriendlyName = "Chicago Blackhawks" },
+                //new FacebookAccount { Id = "Avalanche", FriendlyName = "Colorado Avalanche" },
+                //new FacebookAccount { Id = "bluejacketsnhl", FriendlyName = "Columbus Blue Jackets" },
+                //new FacebookAccount { Id = "DallasStars", FriendlyName = "Dallas Stars" },
+                //new FacebookAccount { Id = "DetroitRedWings", FriendlyName = "Detroit Red Wings" },
+                //new FacebookAccount { Id = "EdmontonOilers", FriendlyName = "Edmonton Oilers" },
+                //new FacebookAccount { Id = "FlaPanthers", FriendlyName = "Florida Panthers" },
+                //new FacebookAccount { Id = "LAKings", FriendlyName = "Los Angeles Kings" },
+                //new FacebookAccount { Id = "mnwild", FriendlyName = "Minnesota Wild" },
+                //new FacebookAccount { Id = "CanadiensMTL", FriendlyName = "Montreal Canadians" },
+                //new FacebookAccount { Id = "PredsNHL", FriendlyName = "Nashville Predators" },
+                //new FacebookAccount { Id = "NHLDevils", FriendlyName = "New Jersey Devils" },
+                //new FacebookAccount { Id = "NYIslanders", FriendlyName = "New York Islanders" },
+                //new FacebookAccount { Id = "NYRangers", FriendlyName = "New York Rangers" },
+                //new FacebookAccount { Id = "Senators", FriendlyName = "Ottawa Senators" },
+                //new FacebookAccount { Id = "NHLFlyers", FriendlyName = "Philadelphia Flyers" },
+                //new FacebookAccount { Id = "phoenixcoyotes", FriendlyName = "Phoenix Coyotes" },
+                //new FacebookAccount { Id = "penguins", FriendlyName = "Pittsburgh Penguins" },
+                //new FacebookAccount { Id = "SanJoseSharks", FriendlyName = "San Jose Sharks" },
+                //new FacebookAccount { Id = "StLouisBlues", FriendlyName = "St. Louis Blues" },
+                //new FacebookAccount { Id = "TBLightning", FriendlyName = "Tampa Bay Lightning" },
+                //new FacebookAccount { Id = "MapleLeafs", FriendlyName = "Toronto Maple Leafs" },
+                //new FacebookAccount { Id = "VanCanucks", FriendlyName = "Vancouver Canucks" },
+                //new FacebookAccount { Id = "washcaps", FriendlyName = "Washington Capitals" },
+                //new FacebookAccount { Id = "NHLJets", FriendlyName = "Winnipeg Jets" },
+
+                //new FacebookAccount { Id = "NHLtoSeattle", FriendlyName = "NHLtoSeattle" },
+                new FacebookAccount { Id = "NHL", FriendlyName = "NHL" }
+             );
+
+            context.SaveChanges();
+
+            #endregion
+        
         }
 
     }

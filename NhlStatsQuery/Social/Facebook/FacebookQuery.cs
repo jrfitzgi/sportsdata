@@ -10,103 +10,81 @@ using HtmlAgilityPack;
 
 namespace SportsData.Facebook
 {
-    //public class FacebookQuery
-    //{
-    //    private const string baseAddress = "https://twitter.com/";
-    //    private const string twitterPageFormatString = "/{0}"; // baseAddress + formatString = https://twitter.com/MapleLeafs
+    public class FacebookQuery
+    {
+        private const string baseAddress = "http://www.facebook.com/";
+        private const string pageFormatString = "/{0}/likes";
 
-    //    public static List<TwitterAccountSnapshot> GetTwitterSnapshots(List<TwitterAccount> twitterAccounts)
-    //    {
-    //        List<TwitterAccountSnapshot> results = new List<TwitterAccountSnapshot>();
+        public static List<FacebookAccountSnapshot> GetSnapshots(List<FacebookAccount> accounts)
+        {
+            List<FacebookAccountSnapshot> results = new List<FacebookAccountSnapshot>();
 
-    //        // Store the date so all records are stamped with the same date
-    //        DateTime dateOfSnapshot = DateTime.UtcNow;
+            // Store the date so all records are stamped with the same date
+            DateTime dateOfSnapshot = DateTime.UtcNow;
 
-    //        foreach (TwitterAccount twitterAccount in twitterAccounts)
-    //        {
-    //            TwitterAccountSnapshot twitterAccountSnapshot = TwitterQuery.GetTwitterSnapshot(twitterAccount);
-    //            if (null != twitterAccountSnapshot)
-    //            {
-    //                twitterAccountSnapshot.DateOfSnapshot = dateOfSnapshot; // overwrite the date
-    //                results.Add(twitterAccountSnapshot);
-    //            }
-    //        }
+            foreach (FacebookAccount account in accounts)
+            {
+                FacebookAccountSnapshot accountSnapshot = FacebookQuery.GetSnapshot(account);
+                if (null != accountSnapshot)
+                {
+                    accountSnapshot.DateOfSnapshot = dateOfSnapshot; // overwrite the date
+                    results.Add(accountSnapshot);
+                }
+            }
 
-    //        return results;
-    //    }
+            return results;
+        }
 
-    //    public static TwitterAccountSnapshot GetTwitterSnapshot(TwitterAccount twitterAccount)
-    //    {
-    //        // Construct the url
-    //        string relativeUrl = String.Format(TwitterQuery.twitterPageFormatString, twitterAccount.Id); // Eg. /MapleLeafs
-    //        Uri url = new Uri(relativeUrl, UriKind.Relative);
+        public static FacebookAccountSnapshot GetSnapshot(FacebookAccount account)
+        {
+            // Construct the url
+            string relativeUrl = String.Format(FacebookQuery.pageFormatString, account.Id); // Eg. /torontomapleleafs/likes
+            Uri url = new Uri(relativeUrl, UriKind.Relative);
 
-    //        // Make an http request
-    //        HttpClient httpClient = new HttpClient();
-    //        httpClient.BaseAddress = new Uri(TwitterQuery.baseAddress);
+            // Make an http request
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
+            //IE is User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)
+            httpClient.BaseAddress = new Uri(FacebookQuery.baseAddress);
 
-    //        Task<string> httpResponseMessage = httpClient.GetStringAsync(url);
-    //        string responseString = httpResponseMessage.Result;
+            Task<string> httpResponseMessage = httpClient.GetStringAsync(url);
+            string responseString = httpResponseMessage.Result;
 
-    //        HtmlDocument document = new HtmlDocument();
-    //        document.LoadHtml(responseString);
+            HtmlDocument document = new HtmlDocument();
+            document.LoadHtml(responseString);
 
-    //        HtmlNode documentNode = document.DocumentNode;
+            HtmlNode documentNode = document.DocumentNode;
 
-    //        TwitterAccountSnapshot result = TwitterQuery.ParsePage(documentNode, twitterAccount);
+            FacebookAccountSnapshot result = FacebookQuery.ParsePage(documentNode, account);
 
-    //        result.DateOfSnapshot = DateTime.UtcNow;
-    //        return result;
-    //    }
+            result.DateOfSnapshot = DateTime.UtcNow;
+            return result;
+        }
 
-    //    private static TwitterAccountSnapshot ParsePage(HtmlNode documentNode, TwitterAccount twitterAccount)
-    //    {
-    //        TwitterAccountSnapshot twitterAccountSnapshot = new TwitterAccountSnapshot();
-    //        twitterAccountSnapshot.TwitterAccountId = twitterAccount.Id;
+        private static FacebookAccountSnapshot ParsePage(HtmlNode documentNode, FacebookAccount account)
+        {
+            FacebookAccountSnapshot accountSnapshot = new FacebookAccountSnapshot();
+            accountSnapshot.FacebookAccountId = account.Id;
 
-    //        if (null == documentNode)
-    //        {
-    //            return null;
-    //        }
+            if (null == documentNode)
+            {
+                return null;
+            }
 
-    //        string tweetCountXPath = @"//a[@data-element-term='tweet_stats']/strong";
-    //        HtmlNode tweetCount = documentNode.SelectSingleNode(tweetCountXPath);
-    //        if (null == tweetCount)
-    //        {
-    //            twitterAccountSnapshot.Tweets = -1;
-    //            twitterAccountSnapshot.Log += "Could not find tweetCount using " + tweetCountXPath + Environment.NewLine;
-    //        }
-    //        else
-    //        {
-    //            twitterAccountSnapshot.Tweets = int.Parse(tweetCount.InnerText, NumberStyles.AllowThousands);
-    //        }
-
-    //        string followingCountXPath = @"//a[@data-element-term='following_stats']/strong";
-    //        HtmlNode followingCount = documentNode.SelectSingleNode(followingCountXPath);
-    //        if (null == followingCount)
-    //        {
-    //            twitterAccountSnapshot.Following = -1;
-    //            twitterAccountSnapshot.Log += "Could not find followingCount using " + followingCountXPath + Environment.NewLine;
-    //        }
-    //        else
-    //        {
-    //            twitterAccountSnapshot.Following = int.Parse(followingCount.InnerText, NumberStyles.AllowThousands);
-    //        }
+            string totalLikesXPath = @"//span[@class='timelineLikesBigNumber fsm']";
+            HtmlNode totalLikes = documentNode.SelectSingleNode(totalLikesXPath);
+            if (null == totalLikes)
+            {
+                accountSnapshot.TotalLikes = -1;
+                accountSnapshot.Log += "Could not find totalLikes using " + totalLikesXPath + Environment.NewLine;
+            }
+            else
+            {
+                accountSnapshot.TotalLikes = int.Parse(totalLikes.InnerText, NumberStyles.AllowThousands);
+            }
 
 
-    //        string followerCountXPath = @"//a[@data-element-term='follower_stats']/strong";
-    //        HtmlNode followerCount = documentNode.SelectSingleNode(followerCountXPath);
-    //        if (null == followerCount)
-    //        {
-    //            twitterAccountSnapshot.Followers = -1;
-    //            twitterAccountSnapshot.Log += "Could not find followerCount using " + followerCountXPath + Environment.NewLine;
-    //        }
-    //        else
-    //        {
-    //            twitterAccountSnapshot.Followers = int.Parse(followerCount.InnerText, NumberStyles.AllowThousands);
-    //        }
-
-    //        return twitterAccountSnapshot;
-    //    }
-    //}
+            return accountSnapshot;
+        }
+    }
 }

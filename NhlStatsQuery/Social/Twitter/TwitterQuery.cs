@@ -13,7 +13,7 @@ namespace SportsData.Twitter
     public class TwitterQuery
     {
         private const string baseAddress = "https://twitter.com/";
-        private const string twitterPageFormatString = "/{0}"; // baseAddress + formatString = https://twitter.com/MapleLeafs
+        private const string pageFormatString = "/{0}"; // baseAddress + formatString = https://twitter.com/MapleLeafs
 
         public static List<TwitterAccountSnapshot> GetTwitterSnapshots(List<TwitterAccount> twitterAccounts)
         {
@@ -38,7 +38,7 @@ namespace SportsData.Twitter
         public static TwitterAccountSnapshot GetTwitterSnapshot(TwitterAccount twitterAccount)
         {
             // Construct the url
-            string relativeUrl = String.Format(TwitterQuery.twitterPageFormatString, twitterAccount.Id); // Eg. /MapleLeafs
+            string relativeUrl = String.Format(TwitterQuery.pageFormatString, twitterAccount.Id); // Eg. /MapleLeafs
             Uri url = new Uri(relativeUrl, UriKind.Relative);
 
             // Make an http request
