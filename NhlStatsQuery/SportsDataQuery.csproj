@@ -60,23 +60,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Social\Facebook\FacebookData.cs" />
+    <Compile Include="Social\Facebook\FacebookModel.cs" />
+    <Compile Include="Social\Facebook\FacebookQuery.cs" />
     <Compile Include="GameSummaryBase.cs" />
     <Compile Include="Migrations\201310200123597_twitteraccounts.cs" />
     <Compile Include="Migrations\201310200123597_twitteraccounts.Designer.cs">
       <DependentUpon>201310200123597_twitteraccounts.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mlb\MlbAttendanceData.cs" />
-    <Compile Include="Mlb\MlbModels.cs" />
+    <Compile Include="Attendance\Mlb\MlbAttendanceData.cs" />
+    <Compile Include="Attendance\Mlb\MlbModels.cs" />
     <Compile Include="SportsDataContext.cs" />
-    <Compile Include="Mlb\MlbAttendanceQuery.cs" />
-    <Compile Include="Nhl\NhlStatsQueryHelpers.cs" />
+    <Compile Include="Attendance\Mlb\MlbAttendanceQuery.cs" />
+    <Compile Include="Attendance\Nhl\NhlStatsQueryHelpers.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Nhl\NhlModels.cs" />
-    <Compile Include="Nhl\NhlStatsQuery.cs" />
+    <Compile Include="Attendance\Nhl\NhlModels.cs" />
+    <Compile Include="Attendance\Nhl\NhlStatsQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Twitter\TwitterData.cs" />
-    <Compile Include="Twitter\TwitterQuery.cs" />
-    <Compile Include="Twitter\TwitterModels.cs" />
+    <Compile Include="Social\Twitter\TwitterData.cs" />
+    <Compile Include="Social\Twitter\TwitterQuery.cs" />
+    <Compile Include="Social\Twitter\TwitterModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
