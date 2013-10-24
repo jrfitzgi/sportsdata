@@ -37,31 +37,31 @@ namespace FacebookTests
 
             Assert.AreEqual(DateTime.UtcNow.Date, accountSnapshot.DateOfSnapshot.Date, "The snapshot is from today");
             Assert.IsTrue(accountSnapshot.TotalLikes > 0, "There are more than 0 likes");
-            //Assert.IsTrue(accountSnapshot.PeopleTalkingAboutThis > 0, "There are more than 0 people talking about this");
-            //Assert.IsTrue(accountSnapshot.MostPopularWeek > DateTime.MinValue, "The most popular week is not the default DateTime.MinValue");
-            //Assert.AreNotEqual(String.Empty, accountSnapshot.MostPopularCity, "The most popular city is not empty");
-            //Assert.AreNotEqual(String.Empty, accountSnapshot.MostPopularAgeGroup, "The most popular age group is not empty");
+            Assert.IsTrue(accountSnapshot.PeopleTalkingAboutThis > 0, "There are more than 0 people talking about this");
+            Assert.IsTrue(accountSnapshot.MostPopularWeek > DateTime.MinValue, "The most popular week is not the default DateTime.MinValue");
+            Assert.AreNotEqual(String.Empty, accountSnapshot.MostPopularCity, "The most popular city is not empty");
+            Assert.AreNotEqual(String.Empty, accountSnapshot.MostPopularAgeGroup, "The most popular age group is not empty");
 
             Assert.AreEqual(account.Id, accountSnapshot.FacebookAccountId, "There account name is correct in the snapshot");
             Assert.AreEqual("NHLBruins", accountSnapshot.FacebookAccountId, "There account name is NHLBruins");
         }
 
-        //[TestMethod]
-        //public void TwitterGetSnapshots()
-        //{
-        //    List<TwitterAccount> twitterAccounts = new List<TwitterAccount>();
-        //    twitterAccounts.Add(new TwitterAccount { Id = "MapleLeafs", FriendlyName = "Toronto Maple Leafs" });
-        //    twitterAccounts.Add(new TwitterAccount { Id = "phoenixcoyotes", FriendlyName = "Phoenix Coyotes" });
+        [TestMethod]
+        public void FacebookGetSnapshots()
+        {
+            List<FacebookAccount> accounts = new List<FacebookAccount>();
+            accounts.Add(new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" });
+            accounts.Add(new FacebookAccount { Id = "torontomapleleafs", FriendlyName = "Toronto Maple Leafs" });
 
-        //    List<TwitterAccountSnapshot> twitterAccountSnapshots = TwitterQuery.GetTwitterSnapshots(twitterAccounts);
+            List<FacebookAccountSnapshot> snapshots = FacebookQuery.GetSnapshots(accounts);
 
-        //    Assert.AreEqual(2, twitterAccountSnapshots.Count, "There are 2 snapshots");
+            Assert.AreEqual(2, snapshots.Count, "There are 2 snapshots");
 
-        //    Assert.AreEqual(DateTime.UtcNow.Date, twitterAccountSnapshots[0].DateOfSnapshot.Date, "The snapshots are from today");
-        //    Assert.AreEqual(twitterAccountSnapshots[0].DateOfSnapshot.Date, twitterAccountSnapshots[1].DateOfSnapshot.Date, "The snapshots are equal");
-        //    Assert.AreEqual("MapleLeafs", twitterAccountSnapshots[0].TwitterAccountId, "The first snapshot is from MapleLeafs");
-        //    Assert.AreEqual("phoenixcoyotes", twitterAccountSnapshots[1].TwitterAccountId, "The first snapshot is from phoenixcoyotes");
-        //}
+            Assert.AreEqual(DateTime.UtcNow.Date, snapshots[0].DateOfSnapshot.Date, "The snapshots are from today");
+            Assert.AreEqual(snapshots[0].DateOfSnapshot.Date, snapshots[1].DateOfSnapshot.Date, "The snapshots are equal");
+            Assert.AreEqual("NHLBruins", snapshots[0].FacebookAccountId, "The first snapshot is from NHLBruins");
+            Assert.AreEqual("torontomapleleafs", snapshots[1].FacebookAccountId, "The first snapshot is from torontomapleleafs");
+        }
 
         //[TestMethod]
         //public void TwitterUpdateSnapshotsInDb()
