@@ -73,6 +73,7 @@ namespace SportsData.Facebook
 
             string totalLikesXPath = @"//span[@class='timelineLikesBigNumber fsm']";
             HtmlNode totalLikes = documentNode.SelectSingleNode(totalLikesXPath);
+            HtmlNodeCollection likes = documentNode.SelectNodes(totalLikesXPath);
             if (null == totalLikes)
             {
                 accountSnapshot.TotalLikes = -1;
@@ -83,6 +84,53 @@ namespace SportsData.Facebook
                 accountSnapshot.TotalLikes = int.Parse(totalLikes.InnerText, NumberStyles.AllowThousands);
             }
 
+            string peopleTalkingAboutThisXPath = @"//span[@class='***peopleTalkingAboutThisXPath']";
+            HtmlNode peopleTalkingAboutThis = documentNode.SelectSingleNode(peopleTalkingAboutThisXPath);
+            if (null == peopleTalkingAboutThis)
+            {
+                accountSnapshot.PeopleTalkingAboutThis = -1;
+                accountSnapshot.Log += "Could not find peopleTalkingAboutThis using " + peopleTalkingAboutThisXPath + Environment.NewLine;
+            }
+            else
+            {
+                accountSnapshot.PeopleTalkingAboutThis = int.Parse(peopleTalkingAboutThis.InnerText, NumberStyles.AllowThousands);
+            }
+
+            string mostPopularWeekXPath = @"//span[@class='***mostPopularWeekXPath']";
+            HtmlNode mostPopularWeek = documentNode.SelectSingleNode(mostPopularWeekXPath);
+            if (null == mostPopularWeek)
+            {
+                accountSnapshot.MostPopularWeek = new DateTime(1900, 1, 1);
+                accountSnapshot.Log += "Could not find mostPopularWeek using " + mostPopularWeekXPath + Environment.NewLine;
+            }
+            else
+            {
+                accountSnapshot.MostPopularWeek = DateTime.Parse(mostPopularWeek.InnerText);
+            }
+
+            string mostPopularCityXPath = @"//span[@class='***mostPopularCity']";
+            HtmlNode mostPopularCity = documentNode.SelectSingleNode(mostPopularCityXPath);
+            if (null == mostPopularCity)
+            {
+                accountSnapshot.MostPopularCity = String.Empty;
+                accountSnapshot.Log += "Could not find mostPopularCity using " + mostPopularCityXPath + Environment.NewLine;
+            }
+            else
+            {
+                accountSnapshot.MostPopularCity = mostPopularCity.InnerText;
+            }
+
+            string mostPopularAgeGroupXPath = @"//span[@class='***mostPopularAgeGroup']";
+            HtmlNode mostPopularAgeGroup = documentNode.SelectSingleNode(mostPopularAgeGroupXPath);
+            if (null == mostPopularAgeGroup)
+            {
+                accountSnapshot.MostPopularAgeGroup = String.Empty;
+                accountSnapshot.Log += "Could not find mostPopularAgeGroup using " + mostPopularAgeGroupXPath + Environment.NewLine;
+            }
+            else
+            {
+                accountSnapshot.MostPopularAgeGroup = mostPopularAgeGroup.InnerText;
+            }
 
             return accountSnapshot;
         }

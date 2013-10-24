@@ -33,7 +33,7 @@ namespace SportsData.Facebook
 
         public string MostPopularCity { get; set; }
 
-        public int MostPopularAgeGroup { get; set; }
+        public string MostPopularAgeGroup { get; set; }
 
         public string Log { get; set; }
     }

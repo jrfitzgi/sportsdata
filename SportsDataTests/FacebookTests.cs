@@ -36,7 +36,7 @@ namespace FacebookTests
             FacebookAccountSnapshot accountSnapshot = FacebookQuery.GetSnapshot(account);
 
             Assert.AreEqual(DateTime.UtcNow.Date, accountSnapshot.DateOfSnapshot.Date, "The snapshot is from today");
-            Assert.IsTrue(accountSnapshot.TotalLikes > 0, "There are more than 0 tweets");
+            Assert.IsTrue(accountSnapshot.TotalLikes > 0, "There are more than 0 likes");
             //Assert.IsTrue(accountSnapshot.PeopleTalkingAboutThis > 0, "There are more than 0 people talking about this");
             //Assert.IsTrue(accountSnapshot.MostPopularWeek > DateTime.MinValue, "The most popular week is not the default DateTime.MinValue");
             //Assert.AreNotEqual(String.Empty, accountSnapshot.MostPopularCity, "The most popular city is not empty");
