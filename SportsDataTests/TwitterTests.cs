@@ -6,7 +6,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SportsData;
-using SportsData.Twitter;
+using SportsData.Social;
 
 namespace TwitterTests
 {
@@ -21,11 +21,11 @@ namespace TwitterTests
         }
 
         [TestMethod]
-        public void TwitterAccountsToFollowTest()
+        public void TwitterAccountsSeededTest()
         {
             using (SportsDataContext db = new SportsDataContext())
             {
-                Assert.AreEqual(3, db.TwitterAccountsToFollow.Count(), "There are 3 twitter accounts seeded");
+                Assert.IsTrue(db.TwitterAccountsToFollow.Count() > 0, "There more than 0 twitter accounts seeded");
             }
         }
 
@@ -33,7 +33,7 @@ namespace TwitterTests
         public void TwitterGetSnapshot()
         {
             TwitterAccount twitterAccount = new TwitterAccount { Id = "sanjosesharks", FriendlyName = "San Jose Sharks" };
-            TwitterAccountSnapshot twitterAccountSnapshot = TwitterQuery.GetTwitterSnapshot(twitterAccount);
+            TwitterSnapshot twitterAccountSnapshot = TwitterQuery.GetTwitterSnapshot(twitterAccount);
 
             Assert.AreEqual(DateTime.UtcNow.Date, twitterAccountSnapshot.DateOfSnapshot.Date, "The snapshot is from today");
             Assert.IsTrue(twitterAccountSnapshot.Tweets > 0, "There are more than 0 tweets");
@@ -51,7 +51,7 @@ namespace TwitterTests
             twitterAccounts.Add(new TwitterAccount { Id = "MapleLeafs", FriendlyName = "Toronto Maple Leafs" });
             twitterAccounts.Add(new TwitterAccount { Id = "phoenixcoyotes", FriendlyName = "Phoenix Coyotes" });
 
-            List<TwitterAccountSnapshot> twitterAccountSnapshots = TwitterQuery.GetTwitterSnapshots(twitterAccounts);
+            List<TwitterSnapshot> twitterAccountSnapshots = TwitterQuery.GetTwitterSnapshots(twitterAccounts);
 
             Assert.AreEqual(2, twitterAccountSnapshots.Count, "There are 2 snapshots");
 
@@ -68,7 +68,7 @@ namespace TwitterTests
             twitterAccounts.Add(new TwitterAccount { Id = "MapleLeafs", FriendlyName = "Toronto Maple Leafs" });
             twitterAccounts.Add(new TwitterAccount { Id = "phoenixcoyotes", FriendlyName = "Phoenix Coyotes" });
 
-            List<TwitterAccountSnapshot> twitterAccountSnapshots = TwitterData.UpdateSnapshotsInDb(twitterAccounts);
+            List<TwitterSnapshot> twitterAccountSnapshots = TwitterData.UpdateSnapshotsInDb(twitterAccounts);
             Assert.AreEqual(2, twitterAccountSnapshots.Count, "There are 2 snapshots");
 
             // Call Update again to make sure dupes are added
@@ -77,7 +77,7 @@ namespace TwitterTests
             // Make sure we have the right items in the db
             using (SportsDataContext db = new SportsDataContext())
             {
-                List<TwitterAccountSnapshot> snapshotsFromToday = (from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
+                List<TwitterSnapshot> snapshotsFromToday = (from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
                                                                   where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
                                                                   orderby s.TwitterAccount.Id
                                                                   select s).ToList();

@@ -2,36 +2,25 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SportsData.Twitter
+namespace SportsData.Social
 {
     [Table("TwitterAccountsToFollow")]
-    public class TwitterAccount
+    public class TwitterAccount : SocialBaseAccount
     {
-        [Key]
-        public string Id { get; set; }
-
-        public string FriendlyName { get; set; }
     }
 
     [Table("TwitterAccountSnapshots")]
-    public class TwitterAccountSnapshot
+    public class TwitterSnapshot : SocialBaseSnapshot
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
         public string TwitterAccountId { get; set; }
         [ForeignKey("TwitterAccountId")]
         public TwitterAccount TwitterAccount { get; set; }
-
-        public DateTime DateOfSnapshot { get; set; }
 
         public int Followers { get; set; }
 
         public int Following { get; set; }
 
         public int Tweets { get; set; }
-
-        public string Log { get; set; }
     }
 }
 

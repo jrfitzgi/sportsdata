@@ -9,39 +9,39 @@ using System.Threading.Tasks;
 
 using HtmlAgilityPack;
 
-namespace SportsData.Facebook
+namespace SportsData.Social
 {
     public class FacebookData
     {
-    //    public static List<TwitterAccountSnapshot> UpdateSnapshotsInDb(List<TwitterAccount> twitterAccountSnapshots)
-    //    {
-    //        // Get latest results
-    //        List<TwitterAccountSnapshot> snapshotsToAdd = TwitterQuery.GetTwitterSnapshots(twitterAccountSnapshots);
+        public static List<FacebookSnapshot> UpdateSnapshotsInDb(List<FacebookAccount> accountsToQuery)
+        {
+            // Get latest results
+            List<FacebookSnapshot> snapshotsToAdd = (new FacebookQuery()).GetSnapshots<FacebookSnapshot,FacebookAccount>(accountsToQuery) ;
 
-    //        // Remove existing results from DB from today and save new ones
-    //        using (SportsDataContext db = new SportsDataContext())
-    //        {
-    //            IEnumerable<TwitterAccountSnapshot> snapshotsToRemove = from s in db.TwitterSnapshots
-    //                                                        where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
-    //                                                        select s;
+            // Remove existing results from DB from today and save new ones
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                IEnumerable<FacebookSnapshot> snapshotsToRemove = from s in db.FacebookSnapshots
+                                                                        where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
+                                                                        select s;
 
-    //            foreach (TwitterAccountSnapshot snapshotToRemove in snapshotsToRemove)
-    //            {
-    //                db.TwitterSnapshots.Remove(snapshotToRemove);
-    //            }
+                foreach (FacebookSnapshot snapshotToRemove in snapshotsToRemove)
+                {
+                    db.FacebookSnapshots.Remove(snapshotToRemove);
+                }
 
-    //            db.SaveChanges();
+                //db.SaveChanges();
 
-    //            foreach (TwitterAccountSnapshot snapshotToAdd in snapshotsToAdd)
-    //            {
-    //                db.TwitterSnapshots.Add(snapshotToAdd);
-    //            }
+                foreach (FacebookSnapshot snapshotToAdd in snapshotsToAdd)
+                {
+                    db.FacebookSnapshots.Add(snapshotToAdd);
+                }
 
-    //            db.SaveChanges();
-    //        }
+                db.SaveChanges();
+            }
 
-    //        return snapshotsToAdd;
-    //    }
+            return snapshotsToAdd;
+        }
 
     }
 }

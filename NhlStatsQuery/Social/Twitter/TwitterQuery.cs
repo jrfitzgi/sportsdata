@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 
 using HtmlAgilityPack;
 
-namespace SportsData.Twitter
+namespace SportsData.Social
 {
     public class TwitterQuery
     {
         private const string baseAddress = "https://twitter.com/";
         private const string pageFormatString = "/{0}"; // baseAddress + formatString = https://twitter.com/MapleLeafs
 
-        public static List<TwitterAccountSnapshot> GetTwitterSnapshots(List<TwitterAccount> twitterAccounts)
+        public static List<TwitterSnapshot> GetTwitterSnapshots(List<TwitterAccount> twitterAccounts)
         {
-            List<TwitterAccountSnapshot> results = new List<TwitterAccountSnapshot>();
+            List<TwitterSnapshot> results = new List<TwitterSnapshot>();
 
             // Store the date so all records are stamped with the same date
             DateTime dateOfSnapshot = DateTime.UtcNow;
 
             foreach (TwitterAccount twitterAccount in twitterAccounts)
             {
-                TwitterAccountSnapshot twitterAccountSnapshot = TwitterQuery.GetTwitterSnapshot(twitterAccount);
+                TwitterSnapshot twitterAccountSnapshot = TwitterQuery.GetTwitterSnapshot(twitterAccount);
                 if (null != twitterAccountSnapshot)
                 {
                     twitterAccountSnapshot.DateOfSnapshot = dateOfSnapshot; // overwrite the date
@@ -35,7 +35,7 @@ namespace SportsData.Twitter
             return results;
         }
 
-        public static TwitterAccountSnapshot GetTwitterSnapshot(TwitterAccount twitterAccount)
+        public static TwitterSnapshot GetTwitterSnapshot(TwitterAccount twitterAccount)
         {
             // Construct the url
             string relativeUrl = String.Format(TwitterQuery.pageFormatString, twitterAccount.Id); // Eg. /MapleLeafs
@@ -53,15 +53,15 @@ namespace SportsData.Twitter
 
             HtmlNode documentNode = document.DocumentNode;
 
-            TwitterAccountSnapshot result = TwitterQuery.ParsePage(documentNode, twitterAccount);
+            TwitterSnapshot result = TwitterQuery.ParsePage(documentNode, twitterAccount);
 
             result.DateOfSnapshot = DateTime.UtcNow;
             return result;
         }
 
-        private static TwitterAccountSnapshot ParsePage(HtmlNode documentNode, TwitterAccount twitterAccount)
+        private static TwitterSnapshot ParsePage(HtmlNode documentNode, TwitterAccount twitterAccount)
         {
-            TwitterAccountSnapshot twitterAccountSnapshot = new TwitterAccountSnapshot();
+            TwitterSnapshot twitterAccountSnapshot = new TwitterSnapshot();
             twitterAccountSnapshot.TwitterAccountId = twitterAccount.Id;
 
             if (null == documentNode)

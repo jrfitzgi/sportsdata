@@ -60,6 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />
+    <Compile Include="Social\SocialBaseClasses\SocialBaseModel.cs" />
     <Compile Include="Social\Facebook\FacebookData.cs" />
     <Compile Include="Social\Facebook\FacebookModel.cs" />
     <Compile Include="Social\Facebook\FacebookQuery.cs" />

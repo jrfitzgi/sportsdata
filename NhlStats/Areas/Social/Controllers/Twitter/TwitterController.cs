@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 
 using SportsData;
-using SportsData.Twitter;
+using SportsData.Social;
 
 using SportsData.Controllers;
 
@@ -20,11 +20,11 @@ namespace SportsData.Areas.Social.Controllers
         {
             ViewBag.GetLatest = update; // specifies if we should show the update button
 
-            List<TwitterAccountSnapshot> latestSnapshots = new List<TwitterAccountSnapshot>();
+            List<TwitterSnapshot> latestSnapshots = new List<TwitterSnapshot>();
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                TwitterAccountSnapshot latestSnapshot = (from d in db.TwitterSnapshots
+                TwitterSnapshot latestSnapshot = (from d in db.TwitterSnapshots
                                   orderby d.DateOfSnapshot descending
                                   select d).FirstOrDefault();
 
@@ -32,7 +32,7 @@ namespace SportsData.Areas.Social.Controllers
                 {
                     DateTime latestDate = latestSnapshot.DateOfSnapshot;
 
-                    IEnumerable<TwitterAccountSnapshot> results = from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
+                    IEnumerable<TwitterSnapshot> results = from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
                                                                   where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(latestDate)
                                                                   && !s.TwitterAccountId.Equals("NhlToSeattle", StringComparison.InvariantCultureIgnoreCase)
                                                                   && !s.TwitterAccountId.Equals("Nhl", StringComparison.InvariantCultureIgnoreCase)

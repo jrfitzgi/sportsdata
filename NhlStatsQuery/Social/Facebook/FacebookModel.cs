@@ -2,28 +2,19 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SportsData.Facebook
+namespace SportsData.Social
 {
     [Table("FacebookAccountsToFollow")]
-    public class FacebookAccount
+    public class FacebookAccount : SocialBaseAccount
     {
-        [Key]
-        public string Id { get; set; }
-
-        public string FriendlyName { get; set; }
     }
 
     [Table("FacebookAccountSnapshots")]
-    public class FacebookAccountSnapshot
+    public class FacebookSnapshot : SocialBaseSnapshot
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
         public string FacebookAccountId { get; set; }
         [ForeignKey("FacebookAccountId")]
         public FacebookAccount FacebookAccount { get; set; }
-
-        public DateTime DateOfSnapshot { get; set; }
 
         public int TotalLikes { get; set; }
 
@@ -34,8 +25,6 @@ namespace SportsData.Facebook
         public string MostPopularCity { get; set; }
 
         public string MostPopularAgeGroup { get; set; }
-
-        public string Log { get; set; }
     }
 }
 

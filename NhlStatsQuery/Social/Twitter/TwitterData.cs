@@ -9,30 +9,30 @@ using System.Threading.Tasks;
 
 using HtmlAgilityPack;
 
-namespace SportsData.Twitter
+namespace SportsData.Social
 {
     public class TwitterData
     {
-        public static List<TwitterAccountSnapshot> UpdateSnapshotsInDb(List<TwitterAccount> twitterAccountSnapshots)
+        public static List<TwitterSnapshot> UpdateSnapshotsInDb(List<TwitterAccount> twitterAccountSnapshots)
         {
             // Get latest results
-            List<TwitterAccountSnapshot> snapshotsToAdd = TwitterQuery.GetTwitterSnapshots(twitterAccountSnapshots);
+            List<TwitterSnapshot> snapshotsToAdd = TwitterQuery.GetTwitterSnapshots(twitterAccountSnapshots);
 
             // Remove existing results from DB from today and save new ones
             using (SportsDataContext db = new SportsDataContext())
             {
-                IEnumerable<TwitterAccountSnapshot> snapshotsToRemove = from s in db.TwitterSnapshots
+                IEnumerable<TwitterSnapshot> snapshotsToRemove = from s in db.TwitterSnapshots
                                                             where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
                                                             select s;
 
-                foreach (TwitterAccountSnapshot snapshotToRemove in snapshotsToRemove)
+                foreach (TwitterSnapshot snapshotToRemove in snapshotsToRemove)
                 {
                     db.TwitterSnapshots.Remove(snapshotToRemove);
                 }
 
-                db.SaveChanges();
+                //db.SaveChanges();
 
-                foreach (TwitterAccountSnapshot snapshotToAdd in snapshotsToAdd)
+                foreach (TwitterSnapshot snapshotToAdd in snapshotsToAdd)
                 {
                     db.TwitterSnapshots.Add(snapshotToAdd);
                 }

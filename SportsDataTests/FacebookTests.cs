@@ -6,7 +6,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SportsData;
-using SportsData.Facebook;
+using SportsData.Social;
 
 namespace FacebookTests
 {
@@ -21,7 +21,7 @@ namespace FacebookTests
         }
 
         [TestMethod]
-        public void FacebookAccountsToFollowTest()
+        public void FacebookAccountsSeededTest()
         {
             using (SportsDataContext db = new SportsDataContext())
             {
@@ -33,7 +33,8 @@ namespace FacebookTests
         public void FacebookGetSnapshot()
         {
             FacebookAccount account = new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" };
-            FacebookAccountSnapshot accountSnapshot = FacebookQuery.GetSnapshot(account);
+           
+            FacebookSnapshot accountSnapshot = (new FacebookQuery()).GetSnapshot<FacebookSnapshot>(account);
 
             Assert.AreEqual(DateTime.UtcNow.Date, accountSnapshot.DateOfSnapshot.Date, "The snapshot is from today");
             Assert.IsTrue(accountSnapshot.TotalLikes > 0, "There are more than 0 likes");
@@ -53,7 +54,7 @@ namespace FacebookTests
             accounts.Add(new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" });
             accounts.Add(new FacebookAccount { Id = "torontomapleleafs", FriendlyName = "Toronto Maple Leafs" });
 
-            List<FacebookAccountSnapshot> snapshots = FacebookQuery.GetSnapshots(accounts);
+            List<FacebookSnapshot> snapshots = (new FacebookQuery()).GetSnapshots<FacebookSnapshot,FacebookAccount>(accounts);
 
             Assert.AreEqual(2, snapshots.Count, "There are 2 snapshots");
 
@@ -63,34 +64,34 @@ namespace FacebookTests
             Assert.AreEqual("torontomapleleafs", snapshots[1].FacebookAccountId, "The first snapshot is from torontomapleleafs");
         }
 
-        //[TestMethod]
-        //public void TwitterUpdateSnapshotsInDb()
-        //{
-        //    List<TwitterAccount> twitterAccounts = new List<TwitterAccount>();
-        //    twitterAccounts.Add(new TwitterAccount { Id = "MapleLeafs", FriendlyName = "Toronto Maple Leafs" });
-        //    twitterAccounts.Add(new TwitterAccount { Id = "phoenixcoyotes", FriendlyName = "Phoenix Coyotes" });
+        [TestMethod]
+        public void FacebookUpdateSnapshotsInDb()
+        {
+            List<FacebookAccount> accounts = new List<FacebookAccount>();
+            accounts.Add(new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" });
+            accounts.Add(new FacebookAccount { Id = "torontomapleleafs", FriendlyName = "Toronto Maple Leafs" });
 
-        //    List<TwitterAccountSnapshot> twitterAccountSnapshots = TwitterData.UpdateSnapshotsInDb(twitterAccounts);
-        //    Assert.AreEqual(2, twitterAccountSnapshots.Count, "There are 2 snapshots");
+            List<FacebookSnapshot> snapshots = FacebookData.UpdateSnapshotsInDb(accounts);
+            Assert.AreEqual(2, snapshots.Count, "There are 2 snapshots");
 
-        //    // Call Update again to make sure dupes are added
-        //    twitterAccountSnapshots = TwitterData.UpdateSnapshotsInDb(twitterAccounts);
+            // Call Update again to make sure dupes are added
+            snapshots = FacebookData.UpdateSnapshotsInDb(accounts);
 
-        //    // Make sure we have the right items in the db
-        //    using (SportsDataContext db = new SportsDataContext())
-        //    {
-        //        List<TwitterAccountSnapshot> snapshotsFromToday = (from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
-        //                                                          where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
-        //                                                          orderby s.TwitterAccount.Id
-        //                                                          select s).ToList();
+            // Make sure we have the right items in the db
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                List<FacebookSnapshot> snapshotsFromToday = (from s in db.FacebookSnapshots.Include(x => x.FacebookAccount)
+                                                                   where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
+                                                                   orderby s.FacebookAccount.Id
+                                                                   select s).ToList();
 
 
-        //        Assert.AreEqual(2, snapshotsFromToday.Count, "There are 2 snapshots, not 4");
-        //        Assert.AreEqual(DateTime.UtcNow.Date, snapshotsFromToday[0].DateOfSnapshot.Date, "The snapshots are from today");
-        //        Assert.AreEqual(snapshotsFromToday[0].DateOfSnapshot.Date, snapshotsFromToday[1].DateOfSnapshot.Date, "The snapshots are equal");
-        //        Assert.AreEqual("MapleLeafs", snapshotsFromToday[0].TwitterAccount.Id, "The first snapshot is from MapleLeafs");
-        //        Assert.AreEqual("phoenixcoyotes", snapshotsFromToday[1].TwitterAccount.Id, "The first snapshot is from phoenixcoyotes");
-        //    }
-        //}
+                Assert.AreEqual(2, snapshotsFromToday.Count, "There are 2 snapshots, not 4");
+                Assert.AreEqual(DateTime.UtcNow.Date, snapshotsFromToday[0].DateOfSnapshot.Date, "The snapshots are from today");
+                Assert.AreEqual(snapshotsFromToday[0].DateOfSnapshot.Date, snapshotsFromToday[1].DateOfSnapshot.Date, "The snapshots are equal");
+                Assert.AreEqual("NHLBruins", snapshotsFromToday[0].FacebookAccount.Id, "The first snapshot is from NHLBruins");
+                Assert.AreEqual("torontomapleleafs", snapshotsFromToday[1].FacebookAccount.Id, "The first snapshot is from torontomapleleafs");
+            }
+        }
     }
 }

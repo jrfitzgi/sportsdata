@@ -4,8 +4,8 @@ using System.Data.Entity.Migrations;
 
 using SportsData.Mlb;
 using SportsData.Nhl;
-using SportsData.Twitter;
-using SportsData.Facebook;
+using SportsData.Social;
+using SportsData.Social;
 
 namespace SportsData
 {
@@ -26,11 +26,11 @@ namespace SportsData
 
         // Twitter
         public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }
-        public DbSet<TwitterAccountSnapshot> TwitterSnapshots { get; set; }
+        public DbSet<TwitterSnapshot> TwitterSnapshots { get; set; }
 
         // Facebook
         public DbSet<FacebookAccount> FacebookAccountsToFollow { get; set; }
-        public DbSet<FacebookAccountSnapshot> FacebookSnapshots { get; set; }
+        public DbSet<FacebookSnapshot> FacebookSnapshots { get; set; }
 
         public static void Seed(SportsDataContext context)
         {
@@ -159,7 +159,7 @@ namespace SportsData
                 //new FacebookAccount { Id = "SanJoseSharks", FriendlyName = "San Jose Sharks" },
                 //new FacebookAccount { Id = "StLouisBlues", FriendlyName = "St. Louis Blues" },
                 //new FacebookAccount { Id = "TBLightning", FriendlyName = "Tampa Bay Lightning" },
-                //new FacebookAccount { Id = "MapleLeafs", FriendlyName = "Toronto Maple Leafs" },
+                new FacebookAccount { Id = "torontomapleleafs", FriendlyName = "Toronto Maple Leafs" },
                 //new FacebookAccount { Id = "VanCanucks", FriendlyName = "Vancouver Canucks" },
                 //new FacebookAccount { Id = "washcaps", FriendlyName = "Washington Capitals" },
                 //new FacebookAccount { Id = "NHLJets", FriendlyName = "Winnipeg Jets" },
