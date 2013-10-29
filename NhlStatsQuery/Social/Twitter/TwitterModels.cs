@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Social
 {
-    [Table("TwitterAccountsToFollow")]
+    [Table("TwitterAccounts")]
     public class TwitterAccount : SocialBaseAccount
     {
     }
 
-    [Table("TwitterAccountSnapshots")]
+    [Table("TwitterSnapshots")]
     public class TwitterSnapshot : SocialBaseSnapshot
     {
         public string TwitterAccountId { get; set; }

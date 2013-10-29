@@ -14,17 +14,17 @@ using SportsData.Controllers;
 
 namespace SportsData.Areas.Social.Controllers
 {
-    public class TwitterController : SocialBaseController
+    public class FacebookController : SocialBaseController
     {
         public ActionResult Index(bool update = false)
         {
             ViewBag.GetLatest = update; // specifies if we should show the update button
 
-            List<TwitterSnapshot> latestSnapshots = new List<TwitterSnapshot>();
+            List<FacebookSnapshot> latestSnapshots = new List<FacebookSnapshot>();
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                TwitterSnapshot latestSnapshot = (from d in db.TwitterSnapshots
+                FacebookSnapshot latestSnapshot = (from d in db.FacebookSnapshots
                                   orderby d.DateOfSnapshot descending
                                   select d).FirstOrDefault();
 
@@ -32,11 +32,11 @@ namespace SportsData.Areas.Social.Controllers
                 {
                     DateTime latestDate = latestSnapshot.DateOfSnapshot;
 
-                    IEnumerable<TwitterSnapshot> results = from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
+                    IEnumerable<FacebookSnapshot> results = from s in db.FacebookSnapshots.Include(x => x.FacebookAccount)
                                                                   where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(latestDate)
-                                                                  //&& !s.TwitterAccountId.Equals("NhlToSeattle", StringComparison.InvariantCultureIgnoreCase)
-                                                                  //&& !s.TwitterAccountId.Equals("Nhl", StringComparison.InvariantCultureIgnoreCase)
-                                                                  orderby s.TwitterAccount.FriendlyName
+                                                                  //&& !s.FacebookAccountId.Equals("NhlToSeattle", StringComparison.InvariantCultureIgnoreCase)
+                                                                  //&& !s.FacebookAccountId.Equals("Nhl", StringComparison.InvariantCultureIgnoreCase)
+                                                                  orderby s.FacebookAccount.FriendlyName
                                                                   select s;
 
                     latestSnapshots = results.ToList();
@@ -49,12 +49,12 @@ namespace SportsData.Areas.Social.Controllers
         [HttpPost]
         public ActionResult Index()
         {
-            return this.IndexPost<TwitterData>("Twitter");
+            return this.IndexPost<FacebookData>("Facebook");
         }
 
         public ActionResult Update()
         {
-            return this.UpdateGet("Twitter");
+            return this.UpdateGet("Facebook");
         }
 
     }

@@ -60,16 +60,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201310290649044_nhlseattlenameupdate.cs" />
+    <Compile Include="Migrations\201310290649044_nhlseattlenameupdate.Designer.cs">
+      <DependentUpon>201310290649044_nhlseattlenameupdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseModel.cs" />
     <Compile Include="Social\Facebook\FacebookData.cs" />
     <Compile Include="Social\Facebook\FacebookModel.cs" />
     <Compile Include="Social\Facebook\FacebookQuery.cs" />
     <Compile Include="GameSummaryBase.cs" />
-    <Compile Include="Migrations\201310200123597_twitteraccounts.cs" />
-    <Compile Include="Migrations\201310200123597_twitteraccounts.Designer.cs">
-      <DependentUpon>201310200123597_twitteraccounts.cs</DependentUpon>
-    </Compile>
     <Compile Include="Attendance\Mlb\MlbAttendanceData.cs" />
     <Compile Include="Attendance\Mlb\MlbModels.cs" />
     <Compile Include="SportsDataContext.cs" />
@@ -94,8 +94,8 @@
     <Folder Include="SqlQueries\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201310200123597_twitteraccounts.resx">
-      <DependentUpon>201310200123597_twitteraccounts.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201310290649044_nhlseattlenameupdate.resx">
+      <DependentUpon>201310290649044_nhlseattlenameupdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,7 +13,7 @@ namespace SportsData
     {
         public SportsDataContext()
             : base("DefaultConnection")
-            //: base("ProdConnection")
+        //: base("ProdConnection")
         {
         }
 
@@ -57,7 +57,7 @@ namespace SportsData
                 new MlbTeam { ShortNameId = MlbTeamShortName.MIN, City = "Minnesota", Name = "Twins" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.NYM, City = "New York", Name = "Mets", EspnOpponentName = "NY Mets" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.NYY, City = "New York", Name = "Yankees", EspnOpponentName = "NY Yankees" },
-                new MlbTeam { ShortNameId = MlbTeamShortName.OAK, City = "Oakland", Name = "Athletics"},
+                new MlbTeam { ShortNameId = MlbTeamShortName.OAK, City = "Oakland", Name = "Athletics" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.PHI, City = "Philadelphia", Name = "Phillies" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.PIT, City = "Pittsburgh", Name = "Pirates" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.SD, City = "San Diego", Name = "Padres" },
@@ -75,7 +75,7 @@ namespace SportsData
             foreach (MlbTeam mlbTeam in context.MlbTeams)
             {
                 mlbTeam.ShortName = mlbTeam.ShortNameId.ToString("g");
-            
+
                 if (String.IsNullOrWhiteSpace(mlbTeam.EspnOpponentName))
                 {
                     mlbTeam.EspnOpponentName = mlbTeam.City;
@@ -121,8 +121,9 @@ namespace SportsData
                 new TwitterAccount { Id = "washcaps", FriendlyName = "Washington Capitals" },
                 new TwitterAccount { Id = "NHLJets", FriendlyName = "Winnipeg Jets" },
 
-                new TwitterAccount { Id = "NHLtoSeattle", FriendlyName = "NHLtoSeattle" },
-                new TwitterAccount { Id = "NHL", FriendlyName = "NHL" }
+                new TwitterAccount { Id = "nhlnw", FriendlyName = "*NHL Northwest" },
+                new TwitterAccount { Id = "NHLtoSeattle", FriendlyName = "*NHL to Seattle" },
+                new TwitterAccount { Id = "NHL", FriendlyName = "*NHL" }
              );
 
             context.SaveChanges();
@@ -138,40 +139,42 @@ namespace SportsData
                 new FacebookAccount { Id = "BuffaloSabres", FriendlyName = "Bufalo Sabres" },
                 new FacebookAccount { Id = "NHLFlames", FriendlyName = "Calgary Flames" },
                 new FacebookAccount { Id = "Hurricanes", FriendlyName = "Carolina Hurricanes" },
-                //new FacebookAccount { Id = "NHLBlackhawks", FriendlyName = "Chicago Blackhawks" },
-                //new FacebookAccount { Id = "Avalanche", FriendlyName = "Colorado Avalanche" },
-                //new FacebookAccount { Id = "bluejacketsnhl", FriendlyName = "Columbus Blue Jackets" },
-                //new FacebookAccount { Id = "DallasStars", FriendlyName = "Dallas Stars" },
-                //new FacebookAccount { Id = "DetroitRedWings", FriendlyName = "Detroit Red Wings" },
-                //new FacebookAccount { Id = "EdmontonOilers", FriendlyName = "Edmonton Oilers" },
-                //new FacebookAccount { Id = "FlaPanthers", FriendlyName = "Florida Panthers" },
-                //new FacebookAccount { Id = "LAKings", FriendlyName = "Los Angeles Kings" },
-                //new FacebookAccount { Id = "mnwild", FriendlyName = "Minnesota Wild" },
-                //new FacebookAccount { Id = "CanadiensMTL", FriendlyName = "Montreal Canadians" },
-                //new FacebookAccount { Id = "PredsNHL", FriendlyName = "Nashville Predators" },
-                //new FacebookAccount { Id = "NHLDevils", FriendlyName = "New Jersey Devils" },
-                //new FacebookAccount { Id = "NYIslanders", FriendlyName = "New York Islanders" },
-                //new FacebookAccount { Id = "NYRangers", FriendlyName = "New York Rangers" },
-                //new FacebookAccount { Id = "Senators", FriendlyName = "Ottawa Senators" },
-                //new FacebookAccount { Id = "NHLFlyers", FriendlyName = "Philadelphia Flyers" },
-                //new FacebookAccount { Id = "phoenixcoyotes", FriendlyName = "Phoenix Coyotes" },
-                //new FacebookAccount { Id = "penguins", FriendlyName = "Pittsburgh Penguins" },
-                //new FacebookAccount { Id = "SanJoseSharks", FriendlyName = "San Jose Sharks" },
-                //new FacebookAccount { Id = "StLouisBlues", FriendlyName = "St. Louis Blues" },
-                //new FacebookAccount { Id = "TBLightning", FriendlyName = "Tampa Bay Lightning" },
+                new FacebookAccount { Id = "nhlblackhawks", FriendlyName = "Chicago Blackhawks" },
+                new FacebookAccount { Id = "coloradoavalanche", FriendlyName = "Colorado Avalanche" },
+                new FacebookAccount { Id = "columbusbluejackets", FriendlyName = "Columbus Blue Jackets" },
+                new FacebookAccount { Id = "DallasStars", FriendlyName = "Dallas Stars" },
+                new FacebookAccount { Id = "DETROITREDWINGS", FriendlyName = "Detroit Red Wings" },
+                new FacebookAccount { Id = "Oilers.NHL", FriendlyName = "Edmonton Oilers" },
+                new FacebookAccount { Id = "FloridaPanthers", FriendlyName = "Florida Panthers" },
+                new FacebookAccount { Id = "LAKings", FriendlyName = "Los Angeles Kings" },
+                new FacebookAccount { Id = "minnesotawild", FriendlyName = "Minnesota Wild" },
+                new FacebookAccount { Id = "canadiensmtl", FriendlyName = "Montreal Canadians" },
+                new FacebookAccount { Id = "nashvillepredators", FriendlyName = "Nashville Predators" },
+                new FacebookAccount { Id = "NewJerseyDevils", FriendlyName = "New Jersey Devils" },
+                new FacebookAccount { Id = "NEWYORKISLANDERS", FriendlyName = "New York Islanders" },
+                new FacebookAccount { Id = "nyrangers", FriendlyName = "New York Rangers" },
+                new FacebookAccount { Id = "ottawasenators", FriendlyName = "Ottawa Senators" },
+                new FacebookAccount { Id = "philadelphiaflyers", FriendlyName = "Philadelphia Flyers" },
+                new FacebookAccount { Id = "thephoenixcoyotes", FriendlyName = "Phoenix Coyotes" },
+                new FacebookAccount { Id = "penguins", FriendlyName = "Pittsburgh Penguins" },
+                new FacebookAccount { Id = "SanJoseSharks", FriendlyName = "San Jose Sharks" },
+                new FacebookAccount { Id = "St.LouisBlues", FriendlyName = "St. Louis Blues" },
+                new FacebookAccount { Id = "Lightning.NHL", FriendlyName = "Tampa Bay Lightning" },
                 new FacebookAccount { Id = "torontomapleleafs", FriendlyName = "Toronto Maple Leafs" },
-                //new FacebookAccount { Id = "VanCanucks", FriendlyName = "Vancouver Canucks" },
-                //new FacebookAccount { Id = "washcaps", FriendlyName = "Washington Capitals" },
-                //new FacebookAccount { Id = "NHLJets", FriendlyName = "Winnipeg Jets" },
+                new FacebookAccount { Id = "Canucks", FriendlyName = "Vancouver Canucks" },
+                new FacebookAccount { Id = "WashingtonCapitals", FriendlyName = "Washington Capitals" },
+                new FacebookAccount { Id = "nhljets", FriendlyName = "Winnipeg Jets" },
 
-                //new FacebookAccount { Id = "NHLtoSeattle", FriendlyName = "NHLtoSeattle" },
-                new FacebookAccount { Id = "NHL", FriendlyName = "NHL" }
+                new FacebookAccount { Id = "NHLNW", FriendlyName = "*NHL Northwest" },
+                new FacebookAccount { Id = "NHLSeattle", FriendlyName = "*NHL Seattle" },
+                new FacebookAccount { Id = "NHLtoSeattle", FriendlyName = "*NHLtoSeattle" },
+                new FacebookAccount { Id = "NHL", FriendlyName = "*NHL" }
              );
 
             context.SaveChanges();
 
             #endregion
-        
+
         }
 
     }

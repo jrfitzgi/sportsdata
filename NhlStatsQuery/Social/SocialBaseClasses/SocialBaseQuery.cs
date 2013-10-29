@@ -15,7 +15,7 @@ namespace SportsData.Social
         protected string BaseAddress = null;
         protected string PageFormatString = null;
 
-        public List<Snapshot> GetSnapshots<Snapshot,Account>(List<Account> accounts)
+        protected List<Snapshot> GetSnapshots<Snapshot,Account>(List<Account> accounts)
             where Snapshot:SocialBaseSnapshot
             where Account:SocialBaseAccount
         {
@@ -26,7 +26,7 @@ namespace SportsData.Social
 
             foreach (Account account in accounts)
             {
-                Snapshot accountSnapshot = this.GetSnapshot<Snapshot>(account);
+                Snapshot accountSnapshot = this.GetSnapshot(account) as Snapshot;
                 if (null != accountSnapshot)
                 {
                     accountSnapshot.DateOfSnapshot = dateOfSnapshot; // overwrite the date
@@ -37,8 +37,8 @@ namespace SportsData.Social
             return results;
         }
 
-        public virtual Snapshot GetSnapshot<Snapshot>(SocialBaseAccount account)
-            where Snapshot : SocialBaseSnapshot
+        protected virtual SocialBaseSnapshot GetSnapshot(SocialBaseAccount account)
+            //where Snapshot : SocialBaseSnapshot
         {
             // Construct the url
             string relativeUrl = String.Format(PageFormatString, account.Id); // Eg. /torontomapleleafs/likes
@@ -60,7 +60,7 @@ namespace SportsData.Social
             SocialBaseSnapshot result = this.ParsePage(documentNode, account);
 
             result.DateOfSnapshot = DateTime.UtcNow;
-            return result as Snapshot;
+            return result;
         }
 
         protected abstract SocialBaseSnapshot ParsePage(HtmlNode documentNode, SocialBaseAccount account);

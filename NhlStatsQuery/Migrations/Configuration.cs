@@ -11,10 +11,10 @@ namespace SportsData.Nhl.Query.Migrations
 
         protected override void Seed(SportsDataContext context)
         {
-            if (System.Diagnostics.Debugger.IsAttached == false)
-            {
-                System.Diagnostics.Debugger.Launch();
-            }
+            //if (System.Diagnostics.Debugger.IsAttached == false)
+            //{
+            //    System.Diagnostics.Debugger.Launch();
+            //}
 
             SportsDataContext.Seed(context);
         }

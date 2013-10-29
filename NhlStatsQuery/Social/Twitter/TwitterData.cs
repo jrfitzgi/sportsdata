@@ -13,10 +13,21 @@ namespace SportsData.Social
 {
     public class TwitterData
     {
-        public static List<TwitterSnapshot> UpdateSnapshotsInDb(List<TwitterAccount> twitterAccountSnapshots)
+        public static List<TwitterSnapshot> UpdateAllSnapshotsInDb()
+        {
+            List<TwitterAccount> accounts = new List<TwitterAccount>();
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                accounts = db.TwitterAccountsToFollow.ToList();
+            }
+
+            return TwitterData.UpdateSnapshotsInDb(accounts);
+        }
+        
+        public static List<TwitterSnapshot> UpdateSnapshotsInDb(List<TwitterAccount> accounts)
         {
             // Get latest results
-            List<TwitterSnapshot> snapshotsToAdd = TwitterQuery.GetTwitterSnapshots(twitterAccountSnapshots);
+            List<TwitterSnapshot> snapshots = TwitterQuery.GetTwitterSnapshots(accounts);
 
             // Remove existing results from DB from today and save new ones
             using (SportsDataContext db = new SportsDataContext())
@@ -32,7 +43,7 @@ namespace SportsData.Social
 
                 //db.SaveChanges();
 
-                foreach (TwitterSnapshot snapshotToAdd in snapshotsToAdd)
+                foreach (TwitterSnapshot snapshotToAdd in snapshots)
                 {
                     db.TwitterSnapshots.Add(snapshotToAdd);
                 }
@@ -40,7 +51,7 @@ namespace SportsData.Social
                 db.SaveChanges();
             }
 
-            return snapshotsToAdd;
+            return snapshots;
         }
 
     }

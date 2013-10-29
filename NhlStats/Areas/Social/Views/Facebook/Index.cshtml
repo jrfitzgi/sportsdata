@@ -1,9 +1,9 @@
 ﻿@using SportsData.Social;
 
-@model List<TwitterSnapshot>
+@model List<FacebookSnapshot>
 
 @{
-    ViewBag.Title = "Twitter Followers";
+    ViewBag.Title = "Facebook Likes";
 }
 
 @section featured {
@@ -19,14 +19,14 @@
     </section>
 }
 
-<form id="SelectSeason" method="post" action="~/social/twitter">
+<form id="SelectSeason" method="post" action="~/social/facebook">
 
     <input type="submit" name="ShowResults" value="Show Results" />
 
     @{       
         if (ViewBag.GetLatest == true)
         {
-        <input type="submit" name="Update" value="Get Latest" />
+            <input type="submit" name="Update" value="Get Latest" />
         }  
     }
 
@@ -35,7 +35,7 @@
 <br />
 
 <table>
-    @{ViewBag.NumberOfColumns = "6";}
+    @{ViewBag.NumberOfColumns = "8";}
     <tr>
         <th colspan="@ViewBag.NumberOfColumns">@ViewBag.Title (@Model.Count results)</th>
     </tr>
@@ -43,9 +43,11 @@
         <th>Date</th>
         <th>Name</th>
         <th>Account</th>
-        <th>Tweets</th>
-        <th>Following</th>
-        <th>Followers</th>
+        <th>Total Likes</th>
+        <th>People Talking About This</th>
+        <th>Most Popular Week</th>
+        <th>Most Popular City</th>
+        <th>Most Popular Age Group</th>
     </tr>
 
     @if (Model.Count == 0)
@@ -55,46 +57,38 @@
         </tr>
     }
 
-    @foreach (TwitterSnapshot snapshot in Model)
+    @foreach (FacebookSnapshot snapshot in Model)
     {    
         <tr>
             <td>@snapshot.DateOfSnapshot.ToShortDateString()</td>
-            <td>@snapshot.TwitterAccount.FriendlyName</td>
-            <td>@snapshot.TwitterAccountId</td>
+            <td>@snapshot.FacebookAccount.FriendlyName</td>
+            <td>@snapshot.FacebookAccountId</td>
 
             @{
-                if (snapshot.Tweets <= 0) // highlight the cell
+                if (snapshot.TotalLikes <= 0) // highlight the cell
                 {
-                        <td style='background-color: red'>@snapshot.Tweets</td>
+                        <td style='background-color: red'>@snapshot.TotalLikes</td>
                 }
                 else
                 {                   
-                        <td>@snapshot.Tweets</td>
+                        <td>@snapshot.TotalLikes</td>
                 }
             }
 
             @{
-                if (snapshot.Following <= 0) // highlight the cell
+                if (snapshot.PeopleTalkingAboutThis <= 0) // highlight the cell
                 {
-                        <td style='background-color: red'>@snapshot.Following</td>
+                        <td style='background-color: red'>@snapshot.PeopleTalkingAboutThis</td>
                 }
                 else
                 {                   
-                        <td>@snapshot.Following</td>
+                        <td>@snapshot.PeopleTalkingAboutThis</td>
                 }
             }
 
-            @{
-                if (snapshot.Followers <= 0) // highlight the cell
-                {
-                        <td style='background-color: red'>@snapshot.Followers</td>
-                }
-                else
-                {                   
-                        <td>@snapshot.Followers</td>
-                }
-            }
-
+           <td>@snapshot.MostPopularWeek.ToShortDateString()</td>
+           <td>@snapshot.MostPopularCity</td>
+           <td>@snapshot.MostPopularAgeGroup</td>
         </tr>
     }
 

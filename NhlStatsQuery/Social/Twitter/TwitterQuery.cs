@@ -10,59 +10,28 @@ using HtmlAgilityPack;
 
 namespace SportsData.Social
 {
-    public class TwitterQuery
+    public class TwitterQuery : SocialBaseQuery
     {
-        private const string baseAddress = "https://twitter.com/";
-        private const string pageFormatString = "/{0}"; // baseAddress + formatString = https://twitter.com/MapleLeafs
+        public TwitterQuery()
+        {
+            this.BaseAddress = "https://twitter.com/";
+            this.PageFormatString = "/{0}"; // baseAddress + formatString = https://twitter.com/MapleLeafs
+        }
 
         public static List<TwitterSnapshot> GetTwitterSnapshots(List<TwitterAccount> twitterAccounts)
         {
-            List<TwitterSnapshot> results = new List<TwitterSnapshot>();
-
-            // Store the date so all records are stamped with the same date
-            DateTime dateOfSnapshot = DateTime.UtcNow;
-
-            foreach (TwitterAccount twitterAccount in twitterAccounts)
-            {
-                TwitterSnapshot twitterAccountSnapshot = TwitterQuery.GetTwitterSnapshot(twitterAccount);
-                if (null != twitterAccountSnapshot)
-                {
-                    twitterAccountSnapshot.DateOfSnapshot = dateOfSnapshot; // overwrite the date
-                    results.Add(twitterAccountSnapshot);
-                }
-            }
-
-            return results;
+            return (new TwitterQuery()).GetSnapshots<TwitterSnapshot,TwitterAccount>(twitterAccounts);
         }
 
         public static TwitterSnapshot GetTwitterSnapshot(TwitterAccount twitterAccount)
         {
-            // Construct the url
-            string relativeUrl = String.Format(TwitterQuery.pageFormatString, twitterAccount.Id); // Eg. /MapleLeafs
-            Uri url = new Uri(relativeUrl, UriKind.Relative);
-
-            // Make an http request
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(TwitterQuery.baseAddress);
-
-            Task<string> httpResponseMessage = httpClient.GetStringAsync(url);
-            string responseString = httpResponseMessage.Result;
-
-            HtmlDocument document = new HtmlDocument();
-            document.LoadHtml(responseString);
-
-            HtmlNode documentNode = document.DocumentNode;
-
-            TwitterSnapshot result = TwitterQuery.ParsePage(documentNode, twitterAccount);
-
-            result.DateOfSnapshot = DateTime.UtcNow;
-            return result;
+            return (new TwitterQuery()).GetSnapshot(twitterAccount) as TwitterSnapshot;
         }
 
-        private static TwitterSnapshot ParsePage(HtmlNode documentNode, TwitterAccount twitterAccount)
+        protected override SocialBaseSnapshot ParsePage(HtmlNode documentNode, SocialBaseAccount account)
         {
             TwitterSnapshot twitterAccountSnapshot = new TwitterSnapshot();
-            twitterAccountSnapshot.TwitterAccountId = twitterAccount.Id;
+            twitterAccountSnapshot.TwitterAccountId = account.Id;
 
             if (null == documentNode)
             {

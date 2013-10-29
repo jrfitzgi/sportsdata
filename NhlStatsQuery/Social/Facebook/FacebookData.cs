@@ -13,10 +13,21 @@ namespace SportsData.Social
 {
     public class FacebookData
     {
-        public static List<FacebookSnapshot> UpdateSnapshotsInDb(List<FacebookAccount> accountsToQuery)
+        public static List<FacebookSnapshot> UpdateAllSnapshotsInDb()
+        {
+            List<FacebookAccount> accounts = new List<FacebookAccount>();
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                accounts = db.FacebookAccountsToFollow.ToList();
+            }
+
+            return FacebookData.UpdateSnapshotsInDb(accounts);
+        }
+
+        public static List<FacebookSnapshot> UpdateSnapshotsInDb(List<FacebookAccount> accounts)
         {
             // Get latest results
-            List<FacebookSnapshot> snapshotsToAdd = (new FacebookQuery()).GetSnapshots<FacebookSnapshot,FacebookAccount>(accountsToQuery) ;
+            List<FacebookSnapshot> snapshots = FacebookQuery.GetFacebookSnapshots(accounts) ;
 
             // Remove existing results from DB from today and save new ones
             using (SportsDataContext db = new SportsDataContext())
@@ -32,7 +43,7 @@ namespace SportsData.Social
 
                 //db.SaveChanges();
 
-                foreach (FacebookSnapshot snapshotToAdd in snapshotsToAdd)
+                foreach (FacebookSnapshot snapshotToAdd in snapshots)
                 {
                     db.FacebookSnapshots.Add(snapshotToAdd);
                 }
@@ -40,7 +51,7 @@ namespace SportsData.Social
                 db.SaveChanges();
             }
 
-            return snapshotsToAdd;
+            return snapshots;
         }
 
     }

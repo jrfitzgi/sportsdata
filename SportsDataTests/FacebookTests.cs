@@ -34,7 +34,7 @@ namespace FacebookTests
         {
             FacebookAccount account = new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" };
            
-            FacebookSnapshot accountSnapshot = (new FacebookQuery()).GetSnapshot<FacebookSnapshot>(account);
+            FacebookSnapshot accountSnapshot = FacebookQuery.GetFacebookSnapshot(account);
 
             Assert.AreEqual(DateTime.UtcNow.Date, accountSnapshot.DateOfSnapshot.Date, "The snapshot is from today");
             Assert.IsTrue(accountSnapshot.TotalLikes > 0, "There are more than 0 likes");
@@ -54,7 +54,7 @@ namespace FacebookTests
             accounts.Add(new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" });
             accounts.Add(new FacebookAccount { Id = "torontomapleleafs", FriendlyName = "Toronto Maple Leafs" });
 
-            List<FacebookSnapshot> snapshots = (new FacebookQuery()).GetSnapshots<FacebookSnapshot,FacebookAccount>(accounts);
+            List<FacebookSnapshot> snapshots = FacebookQuery.GetFacebookSnapshots(accounts);
 
             Assert.AreEqual(2, snapshots.Count, "There are 2 snapshots");
 
