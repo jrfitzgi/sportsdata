@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Objects;
+//using System.Data.Objects;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
 using SportsData;
+using SportsData.Models;
 using SportsData.Social;
 
 using SportsData.Controllers;
@@ -33,7 +34,7 @@ namespace SportsData.Areas.Social.Controllers
                     DateTime latestDate = latestSnapshot.DateOfSnapshot;
 
                     IEnumerable<TwitterSnapshot> results = from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
-                                                                  where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(latestDate)
+                                                           where DbFunctions.TruncateTime(s.DateOfSnapshot) == DbFunctions.TruncateTime(latestDate)
                                                                   //&& !s.TwitterAccountId.Equals("NhlToSeattle", StringComparison.InvariantCultureIgnoreCase)
                                                                   //&& !s.TwitterAccountId.Equals("Nhl", StringComparison.InvariantCultureIgnoreCase)
                                                                   orderby s.TwitterAccount.FriendlyName

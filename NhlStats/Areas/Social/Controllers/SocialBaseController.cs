@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Objects;
+//using System.Data.Objects;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 
 using SportsData;
+using SportsData.Models;
 using SportsData.Social;
 
 using SportsData.Controllers;

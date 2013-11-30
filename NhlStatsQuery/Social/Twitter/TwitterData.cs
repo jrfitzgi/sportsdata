@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Objects;
+//using System.Data.Objects;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 using HtmlAgilityPack;
+using SportsData.Models;
 
 namespace SportsData.Social
 {
@@ -33,7 +34,7 @@ namespace SportsData.Social
             using (SportsDataContext db = new SportsDataContext())
             {
                 IEnumerable<TwitterSnapshot> snapshotsToRemove = from s in db.TwitterSnapshots
-                                                            where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
+                                                                 where DbFunctions.TruncateTime(s.DateOfSnapshot) == DbFunctions.TruncateTime(DateTime.UtcNow)
                                                             select s;
 
                 foreach (TwitterSnapshot snapshotToRemove in snapshotsToRemove)

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Objects;
+//using System.Data.Objects;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SportsData;
+using SportsData.Models;
 using SportsData.Social;
 
 namespace TwitterTests
@@ -78,7 +79,7 @@ namespace TwitterTests
             using (SportsDataContext db = new SportsDataContext())
             {
                 List<TwitterSnapshot> snapshotsFromToday = (from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
-                                                                  where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
+                                                            where DbFunctions.TruncateTime(s.DateOfSnapshot) == DbFunctions.TruncateTime(DateTime.UtcNow)
                                                                   orderby s.TwitterAccount.Id
                                                                   select s).ToList();
 

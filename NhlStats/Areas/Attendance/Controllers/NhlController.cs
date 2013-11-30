@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using SportsData.Models;
 using SportsData.Nhl;
 using SportsData.Nhl.Query;
 

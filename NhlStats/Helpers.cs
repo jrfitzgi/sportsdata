@@ -10,17 +10,5 @@ namespace SportsData
 {
     public class Helpers
     {
-        //public static bool IsRequestForJson(HttpContext httpContext)
-        //{
-        //    string acceptHeader = httpContext.Request.Headers["Accept"];
-        //    if (acceptHeader.IndexOf("application/json", StringComparison.InvariantCultureIgnoreCase) >= 0)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
     }
 }

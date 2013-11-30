@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SportsData;
 using SportsData.Mlb;
+using SportsData.Models;
 
 namespace SportsDataTests
 {

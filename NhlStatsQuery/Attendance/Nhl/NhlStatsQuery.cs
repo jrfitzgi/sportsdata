@@ -9,6 +9,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 
 using HtmlAgilityPack;
+using SportsData.Models;
 
 namespace SportsData.Nhl.Query
 {

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Objects;
+//using System.Data.Objects;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SportsData;
+using SportsData.Models;
 using SportsData.Social;
 
 namespace FacebookTests
@@ -81,7 +82,7 @@ namespace FacebookTests
             using (SportsDataContext db = new SportsDataContext())
             {
                 List<FacebookSnapshot> snapshotsFromToday = (from s in db.FacebookSnapshots.Include(x => x.FacebookAccount)
-                                                                   where EntityFunctions.TruncateTime(s.DateOfSnapshot) == EntityFunctions.TruncateTime(DateTime.UtcNow)
+                                                             where DbFunctions.TruncateTime(s.DateOfSnapshot) == DbFunctions.TruncateTime(DateTime.UtcNow)
                                                                    orderby s.FacebookAccount.Id
                                                                    select s).ToList();
 

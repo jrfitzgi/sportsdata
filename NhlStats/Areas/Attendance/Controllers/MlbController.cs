@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 using SportsData;
 using SportsData.Mlb;
+using SportsData.Models;
 
 using SportsData.Controllers;
 

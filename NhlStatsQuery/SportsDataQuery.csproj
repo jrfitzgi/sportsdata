@@ -34,7 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net40\HtmlAgilityPack.dll</HintPath>
@@ -42,7 +45,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Extensions">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.13\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -60,10 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201310290649044_nhlseattlenameupdate.cs" />
-    <Compile Include="Migrations\201310290649044_nhlseattlenameupdate.Designer.cs">
-      <DependentUpon>201310290649044_nhlseattlenameupdate.cs</DependentUpon>
-    </Compile>
+    <Compile Include="RawDataTables.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseModel.cs" />
     <Compile Include="Social\Facebook\FacebookData.cs" />
@@ -94,9 +93,10 @@
     <Folder Include="SqlQueries\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201310290649044_nhlseattlenameupdate.resx">
-      <DependentUpon>201310290649044_nhlseattlenameupdate.cs</DependentUpon>
-    </EmbeddedResource>
+    <ProjectReference Include="..\SportsDataModels\SportsDataModels.csproj">
+      <Project>{20b982a7-6b2f-40f3-8b98-6c4c887860f1}</Project>
+      <Name>SportsDataModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using HtmlAgilityPack;
+using SportsData.Models;
 
 namespace SportsData.Social
 {
