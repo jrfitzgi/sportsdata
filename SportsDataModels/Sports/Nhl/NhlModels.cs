@@ -6,6 +6,7 @@ namespace SportsData.Models
 {
     public enum NhlSeasonType
     {
+        None = 0,
         PreSeason = 1,
         RegularSeason = 2,
         Playoff = 3

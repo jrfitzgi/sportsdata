@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201311302316390_SportsDataModels.cs" />
+    <Compile Include="Migrations\201311302316390_SportsDataModels.Designer.cs">
+      <DependentUpon>201311302316390_SportsDataModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
     <Compile Include="Sports\Nhl\NhlModels.cs" />
@@ -60,6 +64,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201311302316390_SportsDataModels.resx">
+      <DependentUpon>201311302316390_SportsDataModels.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -41,8 +41,13 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -57,9 +62,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="FacebookTests.cs" />
-    <Compile Include="TwitterTests.cs" />
-    <Compile Include="MlbTests.cs" />
+    <Compile Include="Social\FacebookTests.cs" />
+    <Compile Include="Social\TwitterTests.cs" />
+    <Compile Include="Sports\NhlTests.cs" />
+    <Compile Include="Sports\MlbTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

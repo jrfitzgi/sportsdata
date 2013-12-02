@@ -15,13 +15,13 @@ namespace SportsData.Models
     {
         [Key]
         [Required]
+        public string SourceUrl { get; set; }
+        
+        [Required]
         public int RawDataType { get; set; }
 
         [Required]
         public DateTime LastUpdated { get; set; }
-
-        [Required]
-        public string SourceUrl { get; set; }
 
         [MaxLength]
         public string RawData { get; set; }

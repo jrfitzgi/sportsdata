@@ -44,7 +44,7 @@ namespace SportsData.Areas.Attendance.Controllers
 
             if (performUpdate)
             {
-                NhlStatsQuery.GetAndStoreStats(year);
+                NhlSummaryQuery.GetAndStoreStats(year);
             }
 
             return RedirectToAction("Index", "Nhl", new { seasonYear = Convert.ToInt32(year), update = performUpdate });

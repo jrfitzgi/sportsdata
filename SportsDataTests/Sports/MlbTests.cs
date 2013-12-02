@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using SportsData;
 using SportsData.Mlb;
 using SportsData.Models;
 

@@ -60,13 +60,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="RawDataTables\RawDataData.cs" />
+    <Compile Include="Sports\Nhl\NhlBaseClass.cs" />
+    <Compile Include="Sports\Nhl\NhlRtssReports.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />
     <Compile Include="Social\Facebook\FacebookData.cs" />
     <Compile Include="Social\Facebook\FacebookQuery.cs" />
-    <Compile Include="Attendance\Mlb\MlbAttendanceData.cs" />
-    <Compile Include="Attendance\Mlb\MlbAttendanceQuery.cs" />
-    <Compile Include="Attendance\Nhl\NhlStatsQueryHelpers.cs" />
-    <Compile Include="Attendance\Nhl\NhlStatsQuery.cs" />
+    <Compile Include="Sports\Mlb\MlbAttendanceData.cs" />
+    <Compile Include="Sports\Mlb\MlbAttendanceQuery.cs" />
+    <Compile Include="Sports\Nhl\NhlSummaryQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Social\Twitter\TwitterData.cs" />
     <Compile Include="Social\Twitter\TwitterQuery.cs" />
