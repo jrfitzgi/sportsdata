@@ -39,10 +39,13 @@ namespace SportsDataTests
             int year = 2011;
 
             NhlRtssReport nhlRtssReport = new NhlRtssReport();
-            HtmlNode page = nhlRtssReport.GetHtmlTableNode(year, nhlSeasonType, 1);
-            List<string> headers = NhlRtssReport.GetHeaderNames(page);
+            HtmlNode tableNode = nhlRtssReport.GetHtmlTableNode(year, nhlSeasonType, 1);
 
+            List<string> headers = NhlRtssReport.GetHeaderNames(tableNode);
             Assert.AreEqual(13, headers.Count);
+
+            List<HtmlNode> rowNodes = NhlRtssReport.GetRowsFromTable(tableNode);
+
         }
 
     }

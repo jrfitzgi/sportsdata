@@ -96,14 +96,21 @@ namespace SportsData.Nhl
         /// <summary>
         /// Given a <![CDATA[<table>]]> element, pull out the header names from the <![CDATA[<th>]]>
         /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
         /// TODO: make this protected when done testing
         public static List<string> GetHeaderNames(HtmlNode table)
         {
             HtmlNodeCollection headerColumnNodes = table.SelectNodes(@"//thead/tr/th");
-
             return headerColumnNodes.Select(n => n.InnerText.RemoveSpecialWhitespaceCharacters()).ToList();
+        }
+
+        /// <summary>
+        /// Given a <![CDATA[<table>]]> element, pull out the <![CDATA[<tr>]]> rows
+        /// </summary>
+        /// TODO: make this protected when done testing
+        public static List<HtmlNode> GetRowsFromTable(HtmlNode table)
+        {
+            HtmlNodeCollection rowNodes = table.SelectNodes(@"//tbody/tr");
+            return rowNodes.ToList();
         }
 
         /// <summary>
