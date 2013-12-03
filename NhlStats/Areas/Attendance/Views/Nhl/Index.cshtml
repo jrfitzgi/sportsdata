@@ -2,7 +2,7 @@
 @using SportsData.Nhl;
 @using SportsData.Models;
 
-@model List<NhlGameSummary>
+@model List<NhlGameSummaryModel>
 
 @{
     ViewBag.Title = "Nhl Attendance";
@@ -89,7 +89,7 @@
         </tr>
     }
 
-    @foreach (NhlGameSummary game in Model)
+    @foreach (NhlGameSummaryModel game in Model)
     {    
         <tr>
             <td>@game.NhlSeasonType.ToString()</td>

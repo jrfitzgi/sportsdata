@@ -20,13 +20,13 @@ namespace SportsData.Areas.Attendance.Controllers
             ViewBag.SeasonYear = seasonYear;
             ViewBag.GetLatest = update; // specifies if we should show the update button
 
-            List<MlbGameSummary> games = new List<MlbGameSummary>();
+            List<MlbGameSummaryModel> games = new List<MlbGameSummaryModel>();
             if (seasonYear >= 2002) // check if it is a valid season and if so get the results
             {
                 using (SportsDataContext db = new SportsDataContext())
                 {
-                    IEnumerable<MlbGameSummary> results = from g in db.MlbGameSummaries
-                                                          where g.Season == seasonYear
+                    IEnumerable<MlbGameSummaryModel> results = from g in db.MlbGameSummaries
+                                                          where g.Year == seasonYear
                                                           orderby g.Date
                                                           select g;
                     games = results.ToList();

@@ -45,6 +45,7 @@ namespace SportsDataTests
             Assert.AreEqual(13, headers.Count);
 
             List<HtmlNode> rowNodes = NhlRtssReport.GetRowsFromTable(tableNode);
+            Assert.AreEqual(30, rowNodes.Count);
 
         }
 

@@ -20,13 +20,13 @@ namespace SportsData.Areas.Attendance.Controllers
             ViewBag.SeasonYear = seasonYear;
 
 
-            List<NhlGameSummary> games = new List<NhlGameSummary>();
+            List<NhlGameSummaryModel> games = new List<NhlGameSummaryModel>();
             if (seasonYear >= 1998) // check if it is a valid season and if so get the results
             {
                 using (SportsDataContext db = new SportsDataContext())
                 {
-                    IEnumerable<NhlGameSummary> results = from g in db.NhlGameSummaries
-                                                          where g.Season == seasonYear
+                    IEnumerable<NhlGameSummaryModel> results = from g in db.NhlGameSummaries
+                                                          where g.Year == seasonYear
                                                           orderby g.Date
                                                           select g;
                     games = results.ToList();

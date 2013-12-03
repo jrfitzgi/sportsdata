@@ -17,10 +17,10 @@ namespace SportsData.Models
 
         // Mlb
         public DbSet<MlbTeam> MlbTeams { get; set; }
-        public DbSet<MlbGameSummary> MlbGameSummaries { get; set; }
+        public DbSet<MlbGameSummaryModel> MlbGameSummaries { get; set; }
 
         // Nhl
-        public DbSet<NhlGameSummary> NhlGameSummaries { get; set; }
+        public DbSet<NhlGameSummaryModel> NhlGameSummaries { get; set; }
 
         // Twitter
         public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }

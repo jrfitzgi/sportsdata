@@ -18,13 +18,13 @@ namespace SportsData.Mlb
         private const string regSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/seasontype/2/half/{2}"; // team short name, year, half (1 or 2)
         private const string postSeasonFormatString = "/mlb/team/schedule/_/name/{0}/year/{1}/seasontype/3"; // team short name, year
 
-        public static List<MlbGameSummary> GetSeason(MlbSeasonType mlbSeasonType, int seasonYear)
+        public static List<MlbGameSummaryModel> GetSeason(MlbSeasonType mlbSeasonType, int seasonYear)
         {
-            List<MlbGameSummary> results = new List<MlbGameSummary>();
+            List<MlbGameSummaryModel> results = new List<MlbGameSummaryModel>();
 
             foreach (MlbTeamShortName mlbTeam in Enum.GetValues(typeof(MlbTeamShortName)))
             {
-                List<MlbGameSummary> teamResults = MlbAttendanceQuery.GetSeasonForTeam(mlbSeasonType, mlbTeam, seasonYear);
+                List<MlbGameSummaryModel> teamResults = MlbAttendanceQuery.GetSeasonForTeam(mlbSeasonType, mlbTeam, seasonYear);
                 if (null != teamResults)
                 {
                     results.AddRange(teamResults);
@@ -34,10 +34,10 @@ namespace SportsData.Mlb
             return results;
         }
 
-        public static List<MlbGameSummary> GetSeasonForTeam(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
+        public static List<MlbGameSummaryModel> GetSeasonForTeam(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
         {
             string relativeUrl;
-            List<MlbGameSummary> results;
+            List<MlbGameSummaryModel> results;
 
             switch (mlbSeasonType)
             {
@@ -49,14 +49,14 @@ namespace SportsData.Mlb
 
                     // Collect first half of the season
                     relativeUrl = String.Format(MlbAttendanceQuery.regSeasonFormatString, mlbTeam.ToString(), seasonYear, 1);
-                    List<MlbGameSummary> firstHalf = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
+                    List<MlbGameSummaryModel> firstHalf = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
 
                     // Collect second half of the season
                     relativeUrl = String.Format(MlbAttendanceQuery.regSeasonFormatString, mlbTeam.ToString(), seasonYear, 2);
-                    List<MlbGameSummary> secondHalf = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
+                    List<MlbGameSummaryModel> secondHalf = MlbAttendanceQuery.GetPage(relativeUrl, mlbTeam, seasonYear);
 
                     // Merge them together
-                    results = new List<MlbGameSummary>();
+                    results = new List<MlbGameSummaryModel>();
                     results.AddRange(firstHalf);
                     results.AddRange(secondHalf);
                     break;
@@ -74,14 +74,14 @@ namespace SportsData.Mlb
                 results.ForEach(x =>
                     {
                         x.MlbSeasonType = mlbSeasonType;
-                        x.Season = seasonYear;
+                        x.Year = seasonYear;
                     });
             }
 
             return results;
         }
 
-        private static List<MlbGameSummary> GetPage(string relativeUrl, MlbTeamShortName mlbTeam, int seasonYear)
+        private static List<MlbGameSummaryModel> GetPage(string relativeUrl, MlbTeamShortName mlbTeam, int seasonYear)
         {
             // Construct the url
             Uri url = new Uri(relativeUrl, UriKind.Relative);
@@ -99,12 +99,12 @@ namespace SportsData.Mlb
             HtmlNode tableNode = document.DocumentNode.SelectSingleNode(@"//table[@class='tablehead']");
             HtmlNodeCollection rows = tableNode.SelectNodes(@".//tr[contains(@class,'evenrow') or contains(@class,'oddrow')]");
 
-            List<MlbGameSummary> games = MlbAttendanceQuery.ParseRows(rows, mlbTeam, seasonYear);
+            List<MlbGameSummaryModel> games = MlbAttendanceQuery.ParseRows(rows, mlbTeam, seasonYear);
 
             return games;
         }
 
-        private static List<MlbGameSummary> ParseRows(HtmlNodeCollection rows, MlbTeamShortName mlbTeam, int seasonYear)
+        private static List<MlbGameSummaryModel> ParseRows(HtmlNodeCollection rows, MlbTeamShortName mlbTeam, int seasonYear)
         {
             // error checks
             if (null == rows || rows.Count == 0)
@@ -120,11 +120,11 @@ namespace SportsData.Mlb
                 return null;
             }
 
-            List<MlbGameSummary> games = new List<MlbGameSummary>();
+            List<MlbGameSummaryModel> games = new List<MlbGameSummaryModel>();
             foreach (HtmlNode row in rows)
             {
                 HtmlNodeCollection columns = row.SelectNodes(@".//td");
-                MlbGameSummary game = MlbAttendanceQuery.ParseRow(columns, mlbTeam, seasonYear, true);
+                MlbGameSummaryModel game = MlbAttendanceQuery.ParseRow(columns, mlbTeam, seasonYear, true);
                 if (null != game)
                 {
                     games.Add(game);
@@ -134,9 +134,9 @@ namespace SportsData.Mlb
             return games;
         }
 
-        private static MlbGameSummary ParseRow(HtmlNodeCollection columns, MlbTeamShortName mlbTeam, int seasonYear, bool includeHomeGamesOnly = true)
+        private static MlbGameSummaryModel ParseRow(HtmlNodeCollection columns, MlbTeamShortName mlbTeam, int seasonYear, bool includeHomeGamesOnly = true)
         {
-            MlbGameSummary game = new MlbGameSummary();
+            MlbGameSummaryModel game = new MlbGameSummaryModel();
 
             // Check if this is a home or away game and if we should proceed parsing
             HtmlNode gameStatusNode = columns[1].SelectSingleNode(@".//li[@class='game-status']");
@@ -293,7 +293,7 @@ namespace SportsData.Mlb
             return game;
         }
 
-        private static void DetermineHomeAndAway(HtmlNode gameStatusNode, MlbTeamShortName mlbTeam, string opponentTeamCity, ref MlbGameSummary game)
+        private static void DetermineHomeAndAway(HtmlNode gameStatusNode, MlbTeamShortName mlbTeam, string opponentTeamCity, ref MlbGameSummaryModel game)
         {
             //Figure out home/away teams and then return
             if (gameStatusNode.InnerText.Equals("vs", StringComparison.InvariantCultureIgnoreCase))

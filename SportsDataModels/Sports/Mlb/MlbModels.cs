@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
@@ -68,11 +69,39 @@ namespace SportsData.Models
         public string EspnOpponentName { get; set; }
     }
 
-    [Table("MlbGameSummary")]
-    public class MlbGameSummary : GameSummary
+    [Table("MlbGameSummary2")]
+    public class MlbGameSummaryModel
     {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
+        public int Year { get; set; }
+
         [Display(Name = "Season Type")]
         public MlbSeasonType MlbSeasonType { get; set; }
+
+        [Required]
+        public string Visitor { get; set; }
+
+        [Required]
+        [Display(Name = "Visitor Score")]
+        public int VisitorScore { get; set; }
+
+        [Required]
+        public string Home { get; set; }
+
+        [Required]
+        [Display(Name = "Home Score")]
+        public int HomeScore { get; set; }
+
+        [Required]
+        [Display(Name = "Attendance")]
+        public int Attendance { get; set; }
 
         [Display(Name = "Innings")]
         public int Innings { get; set; }
@@ -85,6 +114,7 @@ namespace SportsData.Models
 
         [Display(Name = "Postponed")]
         public bool Postponed { get; set; }
+
         [Display(Name = "W Pitcher")]
         public string WPitcher { get; set; }
 

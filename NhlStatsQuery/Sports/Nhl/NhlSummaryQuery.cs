@@ -97,7 +97,7 @@ namespace SportsData.Nhl.Query
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                NhlGameSummary gameSummary = new NhlGameSummary();
+                NhlGameSummaryModel gameSummary = new NhlGameSummaryModel();
                 gameSummary.Date = Convert.ToDateTime(tds[0].InnerText.Replace("'", "/"));
                 gameSummary.Home = tds[3].InnerText;
 
@@ -110,7 +110,7 @@ namespace SportsData.Nhl.Query
                     return;
                 }
 
-                gameSummary.Season = NhlGameSummary.GetSeason(gameSummary.Date).Item2;
+                gameSummary.Year = NhlGameSummaryModel.GetSeason(gameSummary.Date).Item2;
                 gameSummary.NhlSeasonType = gameType;
                 gameSummary.Visitor = tds[1].InnerText;
                 gameSummary.VisitorScore = ConvertStringToInt(tds[2].InnerText);
@@ -139,7 +139,7 @@ namespace SportsData.Nhl.Query
 
             int intSeason = Convert.ToInt32(season);
             var results = (from g in db.NhlGameSummaries
-                           where g.Season == intSeason && g.NhlSeasonType == gameType
+                           where g.Year == intSeason && g.NhlSeasonType == gameType
                            orderby g.Date descending
                            select g);
 

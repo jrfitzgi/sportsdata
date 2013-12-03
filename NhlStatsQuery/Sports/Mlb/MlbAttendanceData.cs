@@ -13,24 +13,24 @@ namespace SportsData.Mlb
 {
     public class MlbAttendanceData
     {
-        public static List<MlbGameSummary> UpdateSeason(MlbSeasonType mlbSeasonType, int seasonYear)
+        public static List<MlbGameSummaryModel> UpdateSeason(MlbSeasonType mlbSeasonType, int seasonYear)
         {
             // Get latest results
-            List<MlbGameSummary> gamesToAdd = MlbAttendanceQuery.GetSeason(mlbSeasonType, seasonYear);
+            List<MlbGameSummaryModel> gamesToAdd = MlbAttendanceQuery.GetSeason(mlbSeasonType, seasonYear);
 
             // Remove existing results from DB and save new ones
             using (SportsDataContext db = new SportsDataContext())
             {
-                IEnumerable<MlbGameSummary> gamesToRemove = from g in db.MlbGameSummaries
-                                                            where g.MlbSeasonType == mlbSeasonType && g.Season == seasonYear
+                IEnumerable<MlbGameSummaryModel> gamesToRemove = from g in db.MlbGameSummaries
+                                                            where g.MlbSeasonType == mlbSeasonType && g.Year == seasonYear
                                                             select g;
 
-                foreach (MlbGameSummary gameToRemove in gamesToRemove)
+                foreach (MlbGameSummaryModel gameToRemove in gamesToRemove)
                 {
                     db.MlbGameSummaries.Remove(gameToRemove);
                 }
 
-                foreach (MlbGameSummary gameToAdd in gamesToAdd)
+                foreach (MlbGameSummaryModel gameToAdd in gamesToAdd)
                 {
                     db.MlbGameSummaries.Add(gameToAdd);
                 }
@@ -41,10 +41,10 @@ namespace SportsData.Mlb
             return gamesToAdd;
         }
 
-        public static List<MlbGameSummary> UpdateSeasonForTeam(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
+        public static List<MlbGameSummaryModel> UpdateSeasonForTeam(MlbSeasonType mlbSeasonType, MlbTeamShortName mlbTeam, int seasonYear)
         {
             // Get latest results
-            List<MlbGameSummary> gamesToAdd = MlbAttendanceQuery.GetSeasonForTeam(mlbSeasonType, mlbTeam, seasonYear);
+            List<MlbGameSummaryModel> gamesToAdd = MlbAttendanceQuery.GetSeasonForTeam(mlbSeasonType, mlbTeam, seasonYear);
 
             // Remove existing results from DB and save new ones
             using (SportsDataContext db = new SportsDataContext())
@@ -52,18 +52,18 @@ namespace SportsData.Mlb
                 string mlbTeamString = mlbTeam.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
                 var gamesToRemove = from g in db.MlbGameSummaries
                                     where g.MlbSeasonType == mlbSeasonType &&
-                                          g.Season == seasonYear &&
+                                          g.Year == seasonYear &&
                                           g.Home.Equals(mlbTeamString, StringComparison.InvariantCultureIgnoreCase)
                                     select g;
 
-                foreach (MlbGameSummary gameToRemove in gamesToRemove)
+                foreach (MlbGameSummaryModel gameToRemove in gamesToRemove)
                 {
                     db.MlbGameSummaries.Remove(gameToRemove);
                 }
 
                 if (null != gamesToAdd)
                 {
-                    foreach (MlbGameSummary gameToAdd in gamesToAdd)
+                    foreach (MlbGameSummaryModel gameToAdd in gamesToAdd)
                     {
                         db.MlbGameSummaries.Add(gameToAdd);
                     }

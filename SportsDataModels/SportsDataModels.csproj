@@ -50,10 +50,18 @@
     <Compile Include="Migrations\201311302316390_SportsDataModels.Designer.cs">
       <DependentUpon>201311302316390_SportsDataModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312030727577_SplitMlbNhlModels.cs" />
+    <Compile Include="Migrations\201312030727577_SplitMlbNhlModels.Designer.cs">
+      <DependentUpon>201312030727577_SplitMlbNhlModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201312030744023_SplitMlbNhlModels2.cs" />
+    <Compile Include="Migrations\201312030744023_SplitMlbNhlModels2.Designer.cs">
+      <DependentUpon>201312030744023_SplitMlbNhlModels2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Sports\Nhl\NhlGameStatsBaseModel.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
-    <Compile Include="Sports\Nhl\NhlModels.cs" />
-    <Compile Include="Sports\GameSummaryBase.cs" />
+    <Compile Include="Sports\Nhl\NhlGameSummaryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawDataTables.cs" />
     <Compile Include="Social\FacebookModel.cs" />
@@ -68,6 +76,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201311302316390_SportsDataModels.resx">
       <DependentUpon>201311302316390_SportsDataModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312030727577_SplitMlbNhlModels.resx">
+      <DependentUpon>201312030727577_SplitMlbNhlModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312030744023_SplitMlbNhlModels2.resx">
+      <DependentUpon>201312030744023_SplitMlbNhlModels2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

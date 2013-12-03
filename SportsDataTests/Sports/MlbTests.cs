@@ -27,12 +27,12 @@ namespace SportsDataTests
             MlbTeamShortName teamName = MlbTeamShortName.NYY;
             int seasonYear = 2012;
 
-            List<MlbGameSummary> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
 
             Assert.AreEqual(12, result.Count, "Verify that there are 12 home games returned");
             Assert.AreEqual(MlbSeasonType.Spring, result[0].MlbSeasonType, "Verify that the game is a Spring season game");
             Assert.AreEqual(new DateTime(2012, 3, 2), result[0].Date, "Verify that the date of the first game is 3/2/2012");
-            Assert.AreEqual(2012, result[0].Season, "Verify that the Season is 2012");
+            Assert.AreEqual(2012, result[0].Year, "Verify that the Season is 2012");
             Assert.AreEqual(MlbTeamShortName.NYY.ToString(), result[1].Home, "Verify that the home team is NYY");
             Assert.AreEqual(MlbTeamShortName.TB.ToString(), result[2].Visitor, "Verify that the away team is TB");
         }
@@ -44,7 +44,7 @@ namespace SportsDataTests
             MlbTeamShortName teamName = MlbTeamShortName.TOR;
             int seasonYear = 2006;
 
-            List<MlbGameSummary> result = MlbAttendanceData.UpdateSeasonForTeam(seasonType, teamName, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceData.UpdateSeasonForTeam(seasonType, teamName, seasonYear);
 
             Assert.AreEqual(15, result.Count, "Verify that there are 15 home games returned");
 
@@ -53,7 +53,7 @@ namespace SportsDataTests
                 string teamNameString = teamName.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
                 Assert.AreEqual(15, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
                                                                    g.Home.Equals(teamNameString, StringComparison.InvariantCultureIgnoreCase) &&
-                                                                   g.Season == seasonYear).Count(),
+                                                                   g.Year == seasonYear).Count(),
                                 "Verify that there are 15 games in the db");
             }
         }
@@ -64,7 +64,7 @@ namespace SportsDataTests
             MlbSeasonType seasonType = MlbSeasonType.Spring;
             int seasonYear = 2011;
 
-            List<MlbGameSummary> result = MlbAttendanceQuery.GetSeason(seasonType, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceQuery.GetSeason(seasonType, seasonYear);
 
             Assert.AreEqual(MlbSeasonType.Spring, result[0].MlbSeasonType, "Verify that the game is a Spring season game");
             Assert.AreEqual(491, result.Count, "Verify that there are 491 home games returned");
@@ -77,7 +77,7 @@ namespace SportsDataTests
             MlbTeamShortName teamName = MlbTeamShortName.SEA;
             int seasonYear = 2010;
 
-            List<MlbGameSummary> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
             Assert.AreEqual(81, result.Count, "Verify that there are 81 home games returned");
 
             Assert.AreEqual(MlbSeasonType.Regular, result[0].MlbSeasonType, "Verify that the game is a Regular season game");
@@ -101,7 +101,7 @@ namespace SportsDataTests
             MlbTeamShortName teamName = MlbTeamShortName.SD;
             int seasonYear = 2005;
 
-            List<MlbGameSummary> result = MlbAttendanceData.UpdateSeasonForTeam(seasonType, teamName, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceData.UpdateSeasonForTeam(seasonType, teamName, seasonYear);
 
             Assert.AreEqual(81, result.Count, "Verify that there are 81 home games returned");
 
@@ -110,7 +110,7 @@ namespace SportsDataTests
                 string teamNameString = teamName.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
                 Assert.AreEqual(81, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
                                                                    g.Home.Equals(teamNameString, StringComparison.InvariantCultureIgnoreCase) &&
-                                                                   g.Season == seasonYear).Count(),
+                                                                   g.Year == seasonYear).Count(),
                                 "Verify that there are 81 games in the db");
             }
         }
@@ -121,7 +121,7 @@ namespace SportsDataTests
             MlbSeasonType seasonType = MlbSeasonType.Regular;
             int seasonYear = 2010;
 
-            List<MlbGameSummary> result = MlbAttendanceQuery.GetSeason(seasonType, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceQuery.GetSeason(seasonType, seasonYear);
 
             Assert.AreEqual(MlbSeasonType.Regular, result[0].MlbSeasonType, "Verify that the game is a Regular season game");
             Assert.AreEqual(2460, result.Where(x => x.Postponed == false).Count(), "Verify that there are 2460 home games returned");
@@ -134,10 +134,10 @@ namespace SportsDataTests
             MlbTeamShortName teamName = MlbTeamShortName.BOS;
             int seasonYear = 2008;
 
-            List<MlbGameSummary> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
 
             Assert.AreEqual(5, result.Count, "Verify that there are 5 home games returned");
-            Assert.AreEqual(2008, result[0].Season, "Verify that the Season is 2008");
+            Assert.AreEqual(2008, result[0].Year, "Verify that the Season is 2008");
             Assert.AreEqual(MlbSeasonType.PostSeason, result[0].MlbSeasonType, "Verify that the game is a Postseason game");
             Assert.AreEqual(new DateTime(2008, 10, 6), result[1].Date, "Verify that the date of the last game is 10/6/2008");
             Assert.AreEqual(MlbTeamShortName.BOS.ToString(), result[1].Home, "Verify that the home team is BOS");
@@ -159,7 +159,7 @@ namespace SportsDataTests
             MlbTeamShortName teamName = MlbTeamShortName.MIA;
             int seasonYear = 2007;
 
-            List<MlbGameSummary> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceQuery.GetSeasonForTeam(seasonType, teamName, seasonYear);
 
             Assert.AreEqual(MlbSeasonType.PostSeason, result[0].MlbSeasonType, "Verify that the game is a Postseason game");
             Assert.AreEqual(null, result, "Verify that there are 0 games returned");
@@ -172,7 +172,7 @@ namespace SportsDataTests
             MlbTeamShortName teamName = MlbTeamShortName.MIA;
             int seasonYear = 2004;
 
-            List<MlbGameSummary> result = MlbAttendanceData.UpdateSeasonForTeam(seasonType, teamName, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceData.UpdateSeasonForTeam(seasonType, teamName, seasonYear);
 
             Assert.AreEqual(null, result, "Verify that there are null home games returned");
 
@@ -181,7 +181,7 @@ namespace SportsDataTests
                 string teamNameString = teamName.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
                 Assert.AreEqual(0, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
                                                                    g.Home.Equals(teamNameString, StringComparison.InvariantCultureIgnoreCase) &&
-                                                                   g.Season == seasonYear).Count(),
+                                                                   g.Year == seasonYear).Count(),
                                 "Verify that there are 0 games in the db");
             }
         }
@@ -192,7 +192,7 @@ namespace SportsDataTests
             MlbSeasonType seasonType = MlbSeasonType.PostSeason;
             int seasonYear = 2007;
 
-            List<MlbGameSummary> result = MlbAttendanceQuery.GetSeason(seasonType, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceQuery.GetSeason(seasonType, seasonYear);
 
             Assert.AreEqual(MlbSeasonType.PostSeason, result[0].MlbSeasonType, "Verify that the game is a Postseason game");
             Assert.AreEqual(28, result.Count, "Verify that there are 28 games returned");
@@ -204,7 +204,7 @@ namespace SportsDataTests
             MlbSeasonType seasonType = MlbSeasonType.PostSeason;
             int seasonYear = 2002;
 
-            List<MlbGameSummary> result = MlbAttendanceData.UpdateSeason(seasonType, seasonYear);
+            List<MlbGameSummaryModel> result = MlbAttendanceData.UpdateSeason(seasonType, seasonYear);
 
             // For some reason, the final game of the world series is not included
             Assert.AreEqual(33, result.Count, "Verify that there were 33 games");
@@ -212,7 +212,7 @@ namespace SportsDataTests
             using (SportsDataContext db = new SportsDataContext())
             {
                 Assert.AreEqual(33, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
-                                                                   g.Season == seasonYear).Count(),
+                                                                   g.Year == seasonYear).Count(),
                                 "Verify that there are 33 games in the db");
             }
         }
