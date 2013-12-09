@@ -58,7 +58,20 @@
     <Compile Include="Migrations\201312030744023_SplitMlbNhlModels2.Designer.cs">
       <DependentUpon>201312030744023_SplitMlbNhlModels2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312082345504_SplitMlbNhlModels3.cs" />
+    <Compile Include="Migrations\201312082345504_SplitMlbNhlModels3.Designer.cs">
+      <DependentUpon>201312082345504_SplitMlbNhlModels3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201312082348210_SplitMlbNhlModels4.cs" />
+    <Compile Include="Migrations\201312082348210_SplitMlbNhlModels4.Designer.cs">
+      <DependentUpon>201312082348210_SplitMlbNhlModels4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201312090713156_makedateakeyfornhl.cs" />
+    <Compile Include="Migrations\201312090713156_makedateakeyfornhl.Designer.cs">
+      <DependentUpon>201312090713156_makedateakeyfornhl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Sports\Nhl\NhlRtssReportModel.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModel.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
     <Compile Include="Sports\Nhl\NhlGameSummaryModel.cs" />
@@ -82,6 +95,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312030744023_SplitMlbNhlModels2.resx">
       <DependentUpon>201312030744023_SplitMlbNhlModels2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312082345504_SplitMlbNhlModels3.resx">
+      <DependentUpon>201312082345504_SplitMlbNhlModels3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312082348210_SplitMlbNhlModels4.resx">
+      <DependentUpon>201312082348210_SplitMlbNhlModels4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312090713156_makedateakeyfornhl.resx">
+      <DependentUpon>201312090713156_makedateakeyfornhl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

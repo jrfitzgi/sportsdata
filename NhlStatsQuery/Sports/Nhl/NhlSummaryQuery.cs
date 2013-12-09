@@ -38,6 +38,24 @@ namespace SportsData.Nhl.Query
             get { return "/ice/gamestats.htm?fetchKey={0}{1}ALLSATALL&viewName=summary&sort=gameDate&pg={2}"; }
         }
 
+        protected override Type ModelType
+        {
+            get
+            {
+                return typeof(NhlGameSummaryModel);
+            }
+        }
+
+        public override T MapHtmlRowToModel<T>(HtmlNode row, NhlSeasonType nhlSeasonType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override NhlGameStatsBaseModel MapHtmlRowToModel2(HtmlNode row, NhlSeasonType nhlSeasonType)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets stats for pre-season, regular season and playoffs from a season and stores them in the db
         /// </summary>

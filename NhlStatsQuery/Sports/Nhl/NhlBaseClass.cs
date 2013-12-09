@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -39,6 +41,64 @@ namespace SportsData.Nhl
             get;
         }
 
+        protected abstract Type ModelType
+        {
+            get;
+        }
+
+        public abstract T MapHtmlRowToModel<T>(HtmlNode row, NhlSeasonType nhlSeasonType) where T : NhlGameStatsBaseModel;
+        public abstract NhlGameStatsBaseModel MapHtmlRowToModel2(HtmlNode row, NhlSeasonType nhlSeasonType);
+
+        public List<T> GetSeason<T>(int year) where T:NhlGameStatsBaseModel
+        {
+            List<HtmlNode> rows = new List<HtmlNode>();
+            rows.AddRange(this.GetStatPages(year, NhlSeasonType.PreSeason));
+            rows.AddRange(this.GetStatPages(year, NhlSeasonType.RegularSeason));
+            rows.AddRange(this.GetStatPages(year, NhlSeasonType.Playoff));
+
+            List<T> results = new List<T>();
+            foreach (HtmlNode row in rows)
+            {
+                 results.Add(this.MapHtmlRowToModel<T>(row, NhlSeasonType.None));
+            }
+
+            return results;
+        }
+
+        public List<NhlGameStatsBaseModel> GetSeason2(int year)
+        {
+            List<HtmlNode> rows = new List<HtmlNode>();
+            rows.AddRange(this.GetStatPages(year, NhlSeasonType.PreSeason));
+            rows.AddRange(this.GetStatPages(year, NhlSeasonType.RegularSeason));
+            rows.AddRange(this.GetStatPages(year, NhlSeasonType.Playoff));
+
+            List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
+            foreach (HtmlNode row in rows)
+            {
+                results.Add(this.MapHtmlRowToModel2(row, NhlSeasonType.None));
+            }
+
+            return results;
+        }
+
+        public void AddOrUpdate(List<NhlGameStatsBaseModel> models, IDbSet<NhlGameStatsBaseModel> dbSet)
+        {
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                dbSet.AddOrUpdate<NhlGameStatsBaseModel>(r => new { r.Date }, models.ToArray());
+                db.SaveChanges();
+            }
+        }
+
+        protected virtual void CheckType<T>()
+        {
+            // Check that T is of the right type
+            if (typeof(T) != this.ModelType)
+            {
+                throw new ArgumentException("T must be of type " + this.ModelType.ToString());
+            }
+        }
+
         /// <summary>
         /// Gets a list of all the html tables in a stat category
         /// </summary>
@@ -51,7 +111,7 @@ namespace SportsData.Nhl
 
             List<HtmlNode> pages = new List<HtmlNode>();
             pages.Add(firstPage);
-            for (int i = 2; i < numberOfPages+1; i++)
+            for (int i = 2; i < numberOfPages + 1; i++)
             {
                 pages.Add(this.GetHtmlTableNode(year, nhlSeasonType, i));
             }
@@ -109,7 +169,7 @@ namespace SportsData.Nhl
         /// TODO: make this protected when done testing
         public static List<HtmlNode> GetRowsFromTable(HtmlNode table)
         {
-            HtmlNodeCollection rowNodes = table.SelectNodes(@"//tbody/tr");
+            HtmlNodeCollection rowNodes = table.SelectNodes(@"./tbody/tr");
             return rowNodes.ToList();
         }
 

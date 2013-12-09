@@ -45,22 +45,6 @@ namespace SportsDataTests
             Assert.AreEqual(13, headers.Count);
 
             List<HtmlNode> rowNodes = NhlRtssReport.GetRowsFromTable(tableNode);
-            Assert.AreEqual(30, rowNodes.Count);
-        }
-
-        [TestMethod]
-        public void NhlParseRtssReportRow()
-        {
-            NhlSeasonType nhlSeasonType = NhlSeasonType.RegularSeason;
-            int year = 2014;
-
-            NhlRtssReport nhlRtssReport = new NhlRtssReport();
-            HtmlNode tableNode = nhlRtssReport.GetHtmlTableNode(year, nhlSeasonType, 1);
-
-            List<HtmlNode> rowNodes = NhlRtssReport.GetRowsFromTable(tableNode);
-            Assert.AreEqual(30, rowNodes.Count);
-
-            NhlRtssReportModel model = nhlRtssReport.MapHtmlRowToModel<NhlRtssReportModel>(rowNodes[0], nhlSeasonType);
 
         }
 

@@ -69,7 +69,7 @@ namespace SportsData.Models
         public string EspnOpponentName { get; set; }
     }
 
-    [Table("MlbGameSummary2")]
+    [Table("MlbGameSummary")]
     public class MlbGameSummaryModel
     {
         [Key]
