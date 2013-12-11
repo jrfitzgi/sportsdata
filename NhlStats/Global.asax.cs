@@ -27,7 +27,10 @@ namespace SportsData
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 
-            Database.SetInitializer<SportsDataContext>(new CreateDatabaseIfNotExists<SportsDataContext>());
+            Database.SetInitializer<SportsDataContext>(new SportsDataContextMigrateDatabaseToLatestVersion());
+            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
+            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
+
         }
     }
 }

@@ -1,6 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Net;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
 
 using HtmlAgilityPack;
 using SportsData.Models;
@@ -67,11 +74,15 @@ namespace SportsData.Nhl
 
         protected override void AddOrUpdateDb(List<NhlGameStatsBaseModel> models)
         {
-            List<NhlRtssReportModel> rtssModels = models.ConvertAll<NhlRtssReportModel>(m => (NhlRtssReportModel)m);
+            // Special case the FLA/NSH double header on 9/16/2013
+            IEnumerable<NhlGameStatsBaseModel> specialCaseModels = this.GetSpecialCaseModels(models);
+            IEnumerable<NhlRtssReportModel> downcastSpecialCaseModels = specialCaseModels.ToList().ConvertAll<NhlRtssReportModel>(m => (NhlRtssReportModel)m);
+            IEnumerable<NhlRtssReportModel> downcastModels = models.Except(specialCaseModels, new NhlGameStatsBaseModelComparer()).ToList().ConvertAll<NhlRtssReportModel>(m => (NhlRtssReportModel)m);
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlRtssReports.AddOrUpdate<NhlRtssReportModel>(r => new { r.Date, r.Visitor, r.Home }, rtssModels.ToArray());
+                db.NhlRtssReports.AddOrUpdate<NhlRtssReportModel>(g => new { g.Date, g.Visitor, g.Home, g.GameNumber}, downcastSpecialCaseModels.ToArray());
+                db.NhlRtssReports.AddOrUpdate<NhlRtssReportModel>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
                 db.SaveChanges();
             }
         }

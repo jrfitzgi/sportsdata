@@ -10,14 +10,6 @@ namespace SportsData.Models
         [Required]
         public int GameNumber { get; set; }
 
-        [Key, Column(Order = 1)]
-        [Required]
-        public string Visitor { get; set; }
-
-        [Key, Column(Order = 2)]
-        [Required]
-        public string Home { get; set; }
-
         public string RosterLink { get; set; }
 
         public string GameLink { get; set; }

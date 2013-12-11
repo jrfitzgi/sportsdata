@@ -46,35 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201311302316390_SportsDataModels.cs" />
-    <Compile Include="Migrations\201311302316390_SportsDataModels.Designer.cs">
-      <DependentUpon>201311302316390_SportsDataModels.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312030727577_SplitMlbNhlModels.cs" />
-    <Compile Include="Migrations\201312030727577_SplitMlbNhlModels.Designer.cs">
-      <DependentUpon>201312030727577_SplitMlbNhlModels.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312030744023_SplitMlbNhlModels2.cs" />
-    <Compile Include="Migrations\201312030744023_SplitMlbNhlModels2.Designer.cs">
-      <DependentUpon>201312030744023_SplitMlbNhlModels2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312082345504_SplitMlbNhlModels3.cs" />
-    <Compile Include="Migrations\201312082345504_SplitMlbNhlModels3.Designer.cs">
-      <DependentUpon>201312082345504_SplitMlbNhlModels3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312082348210_SplitMlbNhlModels4.cs" />
-    <Compile Include="Migrations\201312082348210_SplitMlbNhlModels4.Designer.cs">
-      <DependentUpon>201312082348210_SplitMlbNhlModels4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312090713156_makedateakeyfornhl.cs" />
-    <Compile Include="Migrations\201312090713156_makedateakeyfornhl.Designer.cs">
-      <DependentUpon>201312090713156_makedateakeyfornhl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312110225139_12.10.2013_1.cs" />
-    <Compile Include="Migrations\201312110225139_12.10.2013_1.Designer.cs">
-      <DependentUpon>201312110225139_12.10.2013_1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Sports\Nhl\NhlGameStatsBaseModelComparer.cs" />
     <Compile Include="Sports\Nhl\NhlRtssReportModel.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModel.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
@@ -89,29 +62,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201311302316390_SportsDataModels.resx">
-      <DependentUpon>201311302316390_SportsDataModels.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312030727577_SplitMlbNhlModels.resx">
-      <DependentUpon>201312030727577_SplitMlbNhlModels.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312030744023_SplitMlbNhlModels2.resx">
-      <DependentUpon>201312030744023_SplitMlbNhlModels2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312082345504_SplitMlbNhlModels3.resx">
-      <DependentUpon>201312082345504_SplitMlbNhlModels3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312082348210_SplitMlbNhlModels4.resx">
-      <DependentUpon>201312082348210_SplitMlbNhlModels4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312090713156_makedateakeyfornhl.resx">
-      <DependentUpon>201312090713156_makedateakeyfornhl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312110225139_12.10.2013_1.resx">
-      <DependentUpon>201312110225139_12.10.2013_1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

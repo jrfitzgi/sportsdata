@@ -16,8 +16,8 @@ namespace SportsDataTests
         [TestInitialize]
         public void TestInitialize()
         {
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
-            Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
+            Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
+            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
         }
 
         [TestMethod]

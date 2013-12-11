@@ -76,11 +76,15 @@ namespace SportsData.Nhl
 
         protected override void AddOrUpdateDb(List<NhlGameStatsBaseModel> models)
         {
-            List<NhlGameSummaryModel> gameSummaryModels = models.ConvertAll<NhlGameSummaryModel>(m => (NhlGameSummaryModel)m);
+            // Special case the FLA/NSH double header on 9/16/2013
+            IEnumerable<NhlGameStatsBaseModel> specialCaseModels = this.GetSpecialCaseModels(models);
+            IEnumerable<NhlGameSummaryModel> downcastSpecialCaseModels = specialCaseModels.ToList().ConvertAll<NhlGameSummaryModel>(m => (NhlGameSummaryModel)m);
+            IEnumerable<NhlGameSummaryModel> downcastModels = models.Except(specialCaseModels, new NhlGameStatsBaseModelComparer()).ToList().ConvertAll<NhlGameSummaryModel>(m => (NhlGameSummaryModel)m);
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlGameSummaries.AddOrUpdate<NhlGameSummaryModel>(r => new { r.Date, r.Visitor, r.Home }, gameSummaryModels.ToArray());
+                db.NhlGameSummaries.AddOrUpdate<NhlGameSummaryModel>(g => new { g.Date, g.Visitor, g.Home, g.VisitorScore, g.HomeScore }, downcastSpecialCaseModels.ToArray());
+                db.NhlGameSummaries.AddOrUpdate<NhlGameSummaryModel>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
                 db.SaveChanges();
             }
         }

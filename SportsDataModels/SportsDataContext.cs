@@ -178,6 +178,10 @@ namespace SportsData.Models
 
     }
 
+    public class SportsDataContextMigrateDatabaseToLatestVersion : MigrateDatabaseToLatestVersion<SportsDataContext, SportsData.Nhl.Query.Migrations.Configuration>
+    {
+    }
+
     public class SportsDataContextDropCreateDatabaseAlways : DropCreateDatabaseAlways<SportsDataContext>
     {
         protected override void Seed(SportsDataContext context)
