@@ -206,7 +206,7 @@ namespace SportsData.Mlb
                 winningScore = score.Split('-').Max(x => Convert.ToInt32(x));
                 losingScore = score.Split('-').Min(x => Convert.ToInt32(x));
             }
-            catch (FormatException e)
+            catch (FormatException)
             {
                 winningScore = 0;
                 losingScore = 0;

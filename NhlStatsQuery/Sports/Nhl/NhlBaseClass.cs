@@ -24,6 +24,8 @@ namespace SportsData.Nhl
     {
         public const string BaseAddress = "http://www.nhl.com";
 
+        #region Abstract Methods
+
         /// <summary>
         /// Implement this property in subclasses
         /// </summary>
@@ -46,65 +48,59 @@ namespace SportsData.Nhl
             get;
         }
 
-        public abstract T MapHtmlRowToModel<T>(HtmlNode row, NhlSeasonType nhlSeasonType) where T : NhlGameStatsBaseModel;
-        public abstract NhlGameStatsBaseModel MapHtmlRowToModel2(HtmlNode row, NhlSeasonType nhlSeasonType);
+        protected abstract NhlGameStatsBaseModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType);
 
-        public List<T> GetSeason<T>(int year) where T:NhlGameStatsBaseModel
+        /// <summary>
+        /// Update the db with the results in the list.
+        /// </summary>
+        /// <remarks>
+        /// When this is overridden, the List<NhlGameStatsBaseModel> must be converted to List<T> where T is the model type that the subclass uses.
+        /// </remarks>
+        protected abstract void AddOrUpdateDb(List<NhlGameStatsBaseModel> models);
+
+        protected abstract void UpdateSeason_protected(int year);
+
+        #endregion
+
+        #region Public Methods
+
+        public List<NhlGameStatsBaseModel> GetSeason(int year)
         {
-            List<HtmlNode> rows = new List<HtmlNode>();
-            rows.AddRange(this.GetStatPages(year, NhlSeasonType.PreSeason));
-            rows.AddRange(this.GetStatPages(year, NhlSeasonType.RegularSeason));
-            rows.AddRange(this.GetStatPages(year, NhlSeasonType.Playoff));
-
-            List<T> results = new List<T>();
-            foreach (HtmlNode row in rows)
-            {
-                 results.Add(this.MapHtmlRowToModel<T>(row, NhlSeasonType.None));
-            }
-
-            return results;
-        }
-
-        public List<NhlGameStatsBaseModel> GetSeason2(int year)
-        {
-            List<HtmlNode> rows = new List<HtmlNode>();
-            rows.AddRange(this.GetStatPages(year, NhlSeasonType.PreSeason));
-            rows.AddRange(this.GetStatPages(year, NhlSeasonType.RegularSeason));
-            rows.AddRange(this.GetStatPages(year, NhlSeasonType.Playoff));
-
             List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
-            foreach (HtmlNode row in rows)
+
+            List<NhlSeasonType> nhlSeasonTypes = new List<NhlSeasonType> { NhlSeasonType.PreSeason, NhlSeasonType.RegularSeason, NhlSeasonType.Playoff };
+            foreach (NhlSeasonType nhlSeasonType in nhlSeasonTypes)
             {
-                results.Add(this.MapHtmlRowToModel2(row, NhlSeasonType.None));
+                List<HtmlNode> htmlTables = this.GetAllPagesForSeasonType(year, nhlSeasonType);
+
+                List<HtmlNode> rows = new List<HtmlNode>();
+                htmlTables.ForEach(t => rows.AddRange(NhlBaseClass.ParseRowsFromTable(t)));
+
+                foreach (HtmlNode row in rows)
+                {
+                    results.Add(this.MapHtmlRowToModel(row, nhlSeasonType));
+                }
             }
 
             return results;
         }
 
-        public void AddOrUpdate(List<NhlGameStatsBaseModel> models, IDbSet<NhlGameStatsBaseModel> dbSet)
-        {
-            using (SportsDataContext db = new SportsDataContext())
-            {
-                dbSet.AddOrUpdate<NhlGameStatsBaseModel>(r => new { r.Date }, models.ToArray());
-                db.SaveChanges();
-            }
-        }
+        #endregion
 
-        protected virtual void CheckType<T>()
-        {
-            // Check that T is of the right type
-            if (typeof(T) != this.ModelType)
-            {
-                throw new ArgumentException("T must be of type " + this.ModelType.ToString());
-            }
-        }
+        #region Protected Methods
 
         /// <summary>
         /// Gets a list of all the html tables in a stat category
         /// </summary>
-        public virtual List<HtmlNode> GetStatPages(int year, NhlSeasonType nhlSeasonType)
+        protected virtual List<HtmlNode> GetAllPagesForSeasonType(int year, NhlSeasonType nhlSeasonType)
         {
-            HtmlNode firstPage = this.GetHtmlTableNode(year, nhlSeasonType, 1);
+            HtmlNode firstPage = this.ParseHtmlTableFromPage(year, nhlSeasonType, 1);
+
+            int numberOfResults = NhlBaseClass.GetResultsCount(firstPage);
+            if (numberOfResults <= 0)
+            {
+                return new List<HtmlNode>();
+            }
 
             // Get number of pages
             int numberOfPages = NhlBaseClass.GetPageCount(firstPage);
@@ -113,7 +109,7 @@ namespace SportsData.Nhl
             pages.Add(firstPage);
             for (int i = 2; i < numberOfPages + 1; i++)
             {
-                pages.Add(this.GetHtmlTableNode(year, nhlSeasonType, i));
+                pages.Add(this.ParseHtmlTableFromPage(year, nhlSeasonType, i));
             }
 
             return pages;
@@ -122,10 +118,9 @@ namespace SportsData.Nhl
         /// <summary>
         /// Gets the html table of a page specified by the xpath query
         /// </summary>
-        /// TODO: make this protected when done testing
-        public virtual HtmlNode GetHtmlTableNode(int year, NhlSeasonType nhlSeasonType, int page)
+        protected virtual HtmlNode ParseHtmlTableFromPage(int year, NhlSeasonType nhlSeasonType, int page)
         {
-            string pageHtml = this.GetPage(year, nhlSeasonType, page);
+            string pageHtml = this.GetFullHtmlPage(year, nhlSeasonType, page);
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(pageHtml);
 
@@ -137,7 +132,7 @@ namespace SportsData.Nhl
         /// <summary>
         /// Gets a page and returns the full html
         /// </summary>
-        protected virtual string GetPage(int year, NhlSeasonType nhlSeasonType, int page)
+        protected virtual string GetFullHtmlPage(int year, NhlSeasonType nhlSeasonType, int page)
         {
             HttpClient httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(NhlBaseClass.BaseAddress);
@@ -151,23 +146,23 @@ namespace SportsData.Nhl
             return responseString;
         }
 
-        #region Static Methods
-
-        /// <summary>
-        /// Given a <![CDATA[<table>]]> element, pull out the header names from the <![CDATA[<th>]]>
-        /// </summary>
-        /// TODO: make this protected when done testing
-        public static List<string> GetHeaderNames(HtmlNode table)
+        protected virtual void CheckType<T>()
         {
-            HtmlNodeCollection headerColumnNodes = table.SelectNodes(@"//thead/tr/th");
-            return headerColumnNodes.Select(n => n.InnerText.RemoveSpecialWhitespaceCharacters()).ToList();
+            // Check that T is of the right type
+            if (typeof(T) != this.ModelType)
+            {
+                throw new ArgumentException("T must be of type " + this.ModelType.ToString());
+            }
         }
+
+        #endregion
+
+        #region Static Methods
 
         /// <summary>
         /// Given a <![CDATA[<table>]]> element, pull out the <![CDATA[<tr>]]> rows
         /// </summary>
-        /// TODO: make this protected when done testing
-        public static List<HtmlNode> GetRowsFromTable(HtmlNode table)
+        protected static List<HtmlNode> ParseRowsFromTable(HtmlNode table)
         {
             HtmlNodeCollection rowNodes = table.SelectNodes(@"./tbody/tr");
             return rowNodes.ToList();
@@ -227,6 +222,16 @@ namespace SportsData.Nhl
         }
 
         /// <summary>
+        /// Given a <![CDATA[<table>]]> element, pull out the header names from the <![CDATA[<th>]]>
+        /// </summary>
+        /// TODO: make this protected when done testing
+        protected static List<string> GetHeaderNames(HtmlNode table)
+        {
+            HtmlNodeCollection headerColumnNodes = table.SelectNodes(@"//thead/tr/th");
+            return headerColumnNodes.Select(n => n.InnerText.RemoveSpecialWhitespaceCharacters()).ToList();
+        }
+
+        /// <summary>
         /// Remove the footer from the stats table
         /// </summary>
         protected static void RemoveFooter(HtmlNode tableNode)
@@ -234,6 +239,28 @@ namespace SportsData.Nhl
             HtmlNode footerNode = tableNode.SelectSingleNode(@"//tfoot");
             tableNode.RemoveChild(footerNode);
         }
+
+        #endregion
+
+        #region Unused Code
+
+        //public abstract T MapHtmlRowToModel<T>(HtmlNode row, NhlSeasonType nhlSeasonType) where T : NhlGameStatsBaseModel;
+
+        //public List<T> GetSeason<T>(int year) where T:NhlGameStatsBaseModel
+        //{
+        //    List<HtmlNode> rows = new List<HtmlNode>();
+        //    rows.AddRange(this.GetAllPagesForSeasonType(year, NhlSeasonType.PreSeason));
+        //    rows.AddRange(this.GetAllPagesForSeasonType(year, NhlSeasonType.RegularSeason));
+        //    rows.AddRange(this.GetAllPagesForSeasonType(year, NhlSeasonType.Playoff));
+
+        //    List<T> results = new List<T>();
+        //    foreach (HtmlNode row in rows)
+        //    {
+        //         results.Add(this.MapHtmlRowToModel<T>(row, NhlSeasonType.None));
+        //    }
+
+        //    return results;
+        //}
 
         #endregion
 

@@ -62,6 +62,8 @@
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="RawDataTables\RawDataData.cs" />
+    <Compile Include="Sports\Nhl\Copy of NhlSummaryQuery.cs" />
+    <Compile Include="Sports\Nhl\HockeySeason.cs" />
     <Compile Include="Sports\Nhl\NhlBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlRtssReports.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />

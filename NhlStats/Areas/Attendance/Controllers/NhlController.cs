@@ -19,7 +19,6 @@ namespace SportsData.Areas.Attendance.Controllers
             ViewBag.GetLatest = update;
             ViewBag.SeasonYear = seasonYear;
 
-
             List<NhlGameSummaryModel> games = new List<NhlGameSummaryModel>();
             if (seasonYear >= 1998) // check if it is a valid season and if so get the results
             {
@@ -44,7 +43,7 @@ namespace SportsData.Areas.Attendance.Controllers
 
             if (performUpdate)
             {
-                NhlSummaryQuery.GetAndStoreStats(year);
+                NhlSummaryQuery.UpdateSeason(Convert.ToInt32(year));
             }
 
             return RedirectToAction("Index", "Nhl", new { seasonYear = Convert.ToInt32(year), update = performUpdate });

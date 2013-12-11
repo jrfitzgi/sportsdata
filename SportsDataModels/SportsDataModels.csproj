@@ -70,6 +70,10 @@
     <Compile Include="Migrations\201312090713156_makedateakeyfornhl.Designer.cs">
       <DependentUpon>201312090713156_makedateakeyfornhl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312110225139_12.10.2013_1.cs" />
+    <Compile Include="Migrations\201312110225139_12.10.2013_1.Designer.cs">
+      <DependentUpon>201312110225139_12.10.2013_1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sports\Nhl\NhlRtssReportModel.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModel.cs" />
@@ -104,6 +108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312090713156_makedateakeyfornhl.resx">
       <DependentUpon>201312090713156_makedateakeyfornhl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312110225139_12.10.2013_1.resx">
+      <DependentUpon>201312110225139_12.10.2013_1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -21,20 +21,25 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void NhlGetRtssReport()
+        public void Script_NhlGetRtssReport()
         {
-            NhlSeasonType nhlSeasonType = NhlSeasonType.RegularSeason;
-            int year = 2011;
-
-            NhlRtssReport nhlRtssReport = new NhlRtssReport();
-            List<HtmlNode> pages = nhlRtssReport.GetStatPages(year, nhlSeasonType);
-            Assert.AreEqual(41, pages.Count);
-
-            //List<HtmlNode> rowNodes = NhlRtssReport.GetRowsFromTable(tableNode);
-            //NhlRtssReportModel model = nhlRtssReport.MapHtmlRowToModel(rowNodes[0], nhlSeasonType);
-
+            NhlRtssReport.UpdateSeason(2014);
         }
 
+        [TestMethod]
+        public void Script_NhlGetAllRtssReport()
+        {
+            // Create a list of years to collect data for
+            List<int> years = new List<int>();
+            for (int i = 2014; i >= 1998; i--)
+            {
+                years.Add(i);
+            }
 
+            foreach (int year in years)
+            {
+                NhlRtssReport.UpdateSeason(year);
+            }
+        }
     }
 }

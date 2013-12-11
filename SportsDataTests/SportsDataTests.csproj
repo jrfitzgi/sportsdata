@@ -65,7 +65,7 @@
     <Compile Include="Scripts\NhlScripts.cs" />
     <Compile Include="Social\FacebookTests.cs" />
     <Compile Include="Social\TwitterTests.cs" />
-    <Compile Include="Sports\NhlTests.cs" />
+    <Compile Include="Sports\NhlRtssReportTests.cs" />
     <Compile Include="Sports\MlbTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
