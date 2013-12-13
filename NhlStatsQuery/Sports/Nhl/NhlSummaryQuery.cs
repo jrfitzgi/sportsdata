@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 
@@ -21,10 +22,23 @@ namespace SportsData.Nhl
     {
         #region Public Methods
 
-        public static void UpdateSeason(int year)
+        public static void UpdateSeasonWithLatestOnly(int year)
         {
-            NhlSummaryQuery instance = new NhlSummaryQuery();
-            instance.UpdateSeason_protected(year);
+            DateTime latestResultDate;
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                latestResultDate = (from m in db.NhlGameSummaries
+                                    orderby m.Date descending
+                                    select m.Date).FirstOrDefault();
+
+            }
+
+            NhlSummaryQuery.UpdateSeason(year, latestResultDate.AddDays(-1));
+        }
+        
+        public static void UpdateSeason(int year, [Optional] DateTime fromDate)
+        {
+            NhlBaseClass.UpdateSeason<NhlSummaryQuery>(year, fromDate);
         }
 
         #endregion
@@ -87,12 +101,6 @@ namespace SportsData.Nhl
                 db.NhlGameSummaries.AddOrUpdate<NhlGameSummaryModel>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
                 db.SaveChanges();
             }
-        }
-
-        protected override void UpdateSeason_protected(int year)
-        {
-            List<NhlGameStatsBaseModel> results = this.GetSeason(year);
-            this.AddOrUpdateDb(results);
         }
 
         #endregion

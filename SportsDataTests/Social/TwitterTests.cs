@@ -9,18 +9,11 @@ using SportsData;
 using SportsData.Models;
 using SportsData.Social;
 
-namespace TwitterTests
+namespace SportsDataTests
 {
     [TestClass]
-    public class TwitterTests
+    public class TwitterTests : SportsDataTestsBaseClass
     {
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
-        }
-
         [TestMethod]
         public void TwitterAccountsSeededTest()
         {

@@ -10,16 +10,8 @@ using SportsData.Models;
 namespace SportsDataTests
 {
     [TestClass]
-    public class MlbTests
+    public class MlbTests : SportsDataTestsBaseClass
     {
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
-
-        }
-
         [TestMethod]
         public void GetSpringSeasonForTeamTest()
         {

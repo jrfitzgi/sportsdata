@@ -58,28 +58,20 @@ namespace SportsData.Nhl
         /// </remarks>
         protected abstract void AddOrUpdateDb(List<NhlGameStatsBaseModel> models);
 
-        protected abstract void UpdateSeason_protected(int year);
-
         #endregion
 
         #region Public Methods
 
-        public List<NhlGameStatsBaseModel> GetSeason(int year)
+        public List<NhlGameStatsBaseModel> GetSeason(int year, [Optional] DateTime fromDate)
         {
             List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
 
+            // The season types to collect results for
             List<NhlSeasonType> nhlSeasonTypes = new List<NhlSeasonType> { NhlSeasonType.PreSeason, NhlSeasonType.RegularSeason, NhlSeasonType.Playoff };
+
             foreach (NhlSeasonType nhlSeasonType in nhlSeasonTypes)
             {
-                List<HtmlNode> htmlTables = this.GetAllPagesForSeasonType(year, nhlSeasonType);
-
-                List<HtmlNode> rows = new List<HtmlNode>();
-                htmlTables.ForEach(t => rows.AddRange(NhlBaseClass.ParseRowsFromTable(t)));
-
-                foreach (HtmlNode row in rows)
-                {
-                    results.Add(this.MapHtmlRowToModel(row, nhlSeasonType));
-                }
+                results.AddRange(this.GetAllResultsForSeasonType(year, nhlSeasonType, fromDate));
             }
 
             return results;
@@ -101,8 +93,58 @@ namespace SportsData.Nhl
         }
 
         /// <summary>
+        /// Gets a list of all the results in a stat category on fromDate and later
+        /// </summary>
+        /// <remarks>
+        /// This method assumes that rows are sorted in descending order by date (newest to oldest).
+        ///
+        /// fromDate defaults to DateTime.MinValue
+        /// </remarks>
+        protected virtual List<NhlGameStatsBaseModel> GetAllResultsForSeasonType(int year, NhlSeasonType nhlSeasonType, [Optional] DateTime fromDate)
+        {
+            List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
+
+            HtmlNode firstPageTableNode = this.ParseHtmlTableFromPage(year, nhlSeasonType, 1);
+
+            int numberOfResults = NhlBaseClass.GetResultsCount(firstPageTableNode);
+            if (numberOfResults <= 0)
+            {
+                return results;
+            }
+
+            int numberOfPages = NhlBaseClass.GetPageCount(firstPageTableNode);
+
+            // Handle the first page. Go through each row and add it to the list of results. When we encounter a result with a date earlier than fromDate then we stop.
+            List<HtmlNode> firstPageRows = NhlBaseClass.ParseRowsFromTable(firstPageTableNode);
+            foreach (HtmlNode row in firstPageRows)
+            {
+                NhlGameStatsBaseModel model = this.MapHtmlRowToModel(row, nhlSeasonType);
+                if (model.Date < fromDate) { return results; }
+                else { results.Add(model); }
+            }
+
+            // Now similar code to handle the rest of the pages. Go through each row, add it to the list, stop when we hit a date prior to fromDate.
+            for (int i = 2; i < numberOfPages + 1; i++)
+            {
+                HtmlNode tableNode = this.ParseHtmlTableFromPage(year, nhlSeasonType, i);
+
+                List<HtmlNode> rows = NhlBaseClass.ParseRowsFromTable(tableNode);
+                foreach (HtmlNode row in rows)
+                {
+                    NhlGameStatsBaseModel model = this.MapHtmlRowToModel(row, nhlSeasonType);
+                    if (model.Date < fromDate) { return results; }
+                    else { results.Add(model); }
+                }
+
+            }
+
+            return results;
+        }
+
+        /// <summary>
         /// Gets a list of all the html tables in a stat category
         /// </summary>
+        [Obsolete]
         protected virtual List<HtmlNode> GetAllPagesForSeasonType(int year, NhlSeasonType nhlSeasonType)
         {
             HtmlNode firstPage = this.ParseHtmlTableFromPage(year, nhlSeasonType, 1);
@@ -120,7 +162,8 @@ namespace SportsData.Nhl
             pages.Add(firstPage);
             for (int i = 2; i < numberOfPages + 1; i++)
             {
-                pages.Add(this.ParseHtmlTableFromPage(year, nhlSeasonType, i));
+                HtmlNode tableNode = this.ParseHtmlTableFromPage(year, nhlSeasonType, i);
+                pages.Add(tableNode);
             }
 
             return pages;
@@ -169,6 +212,16 @@ namespace SportsData.Nhl
         #endregion
 
         #region Static Methods
+
+
+        protected static void UpdateSeason<T>(int year, [Optional] DateTime fromDate) where T : NhlBaseClass, new()
+        {
+            T instance = new T();
+
+            List<NhlGameStatsBaseModel> results = instance.GetSeason(year, fromDate);
+
+            instance.AddOrUpdateDb(results);
+        }
 
         /// <summary>
         /// Given a <![CDATA[<table>]]> element, pull out the <![CDATA[<tr>]]> rows

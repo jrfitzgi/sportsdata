@@ -11,15 +11,8 @@ using SportsData.Models;
 namespace SportsDataTests
 {
     [TestClass]
-    public class NhlRtssReportTests
+    public class NhlRtssReportTests : SportsDataTestsBaseClass
     {
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
-        }
-
         [TestMethod]
         public void NhlRtssGetSeason()
         {
@@ -30,32 +23,5 @@ namespace SportsDataTests
 
             Assert.AreEqual(806, results.Count);
         }
-
-        [TestMethod]
-        public void NhlRtssGetSeasonAndUpdateDb()
-        {
-            int year = 2013;
-
-            NhlRtssReport.UpdateSeason(year);
-
-            // Need to add verification here
-
-        }
-
-        // Used for debugging. Need to change some protected methods to public for this to run.
-        //[TestMethod]
-        //public void NhlParseRtssReportRow()
-        //{
-        //    NhlSeasonType nhlSeasonType = NhlSeasonType.RegularSeason;
-        //    int year = 2014;
-
-        //    NhlRtssReport nhlRtssReport = new NhlRtssReport();
-        //    HtmlNode tableNode = nhlRtssReport.ParseHtmlTableFromPage(year, nhlSeasonType, 1);
-
-        //    List<HtmlNode> rowNodes = NhlRtssReport.ParseRowsFromTable(tableNode);
-        //    Assert.AreEqual(30, rowNodes.Count);
-
-        //    NhlRtssReportModel model = nhlRtssReport.MapHtmlRowToModel(rowNodes[0], nhlSeasonType) as NhlRtssReportModel;
-        //}
     }
 }
