@@ -72,7 +72,7 @@
     <Compile Include="Social\Facebook\FacebookQuery.cs" />
     <Compile Include="Sports\Mlb\MlbAttendanceData.cs" />
     <Compile Include="Sports\Mlb\MlbAttendanceQuery.cs" />
-    <Compile Include="Sports\Nhl\NhlSummaryQuery.cs" />
+    <Compile Include="Sports\Nhl\NhlGameSummary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Social\Twitter\TwitterData.cs" />
     <Compile Include="Social\Twitter\TwitterQuery.cs" />

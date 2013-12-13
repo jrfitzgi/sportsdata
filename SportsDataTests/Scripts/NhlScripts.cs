@@ -22,6 +22,28 @@ namespace SportsDataTests
         }
 
         [TestMethod]
+        public void Script_NhlGetGameSummary()
+        {
+            NhlGameSummary.UpdateSeason(2014);
+        }
+
+        [TestMethod]
+        public void Script_NhlGetAllGameSummary()
+        {
+            // Create a list of years to collect data for
+            List<int> years = new List<int>();
+            for (int i = 2014; i >= 1998; i--)
+            {
+                years.Add(i);
+            }
+
+            foreach (int year in years)
+            {
+                NhlGameSummary.UpdateSeason(year);
+            }
+        }
+
+        [TestMethod]
         public void Script_NhlGetRtssReport()
         {
             NhlRtssReport.UpdateSeason(2014);

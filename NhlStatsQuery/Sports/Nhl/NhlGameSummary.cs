@@ -18,7 +18,7 @@ namespace SportsData.Nhl
     /// <summary>
     /// Represents a query that will be used to retrieve stats from a url
     /// </summary>
-    public partial class NhlSummaryQuery : NhlBaseClass
+    public partial class NhlGameSummary : NhlBaseClass
     {
         #region Public Methods
 
@@ -33,12 +33,12 @@ namespace SportsData.Nhl
 
             }
 
-            NhlSummaryQuery.UpdateSeason(year, latestResultDate.AddDays(-1));
+            NhlGameSummary.UpdateSeason(year, latestResultDate.AddDays(-1));
         }
         
         public static void UpdateSeason(int year, [Optional] DateTime fromDate)
         {
-            NhlBaseClass.UpdateSeason<NhlSummaryQuery>(year, fromDate);
+            NhlBaseClass.UpdateSeason<NhlGameSummary>(year, fromDate);
         }
 
         #endregion

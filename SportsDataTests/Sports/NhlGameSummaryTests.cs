@@ -17,7 +17,7 @@ namespace SportsDataTests
         public void NhlGameSummaryUpdateLatestOnly()
         {
             int year = 2012;
-            NhlSummaryQuery.UpdateSeasonWithLatestOnly(year);
+            NhlGameSummary.UpdateSeasonWithLatestOnly(year);
 
         }
 

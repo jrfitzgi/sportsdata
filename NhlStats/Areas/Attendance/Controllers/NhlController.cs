@@ -43,7 +43,7 @@ namespace SportsData.Areas.Attendance.Controllers
 
             if (performUpdate)
             {
-                NhlSummaryQuery.UpdateSeason(Convert.ToInt32(year));
+                NhlGameSummary.UpdateSeason(Convert.ToInt32(year));
             }
 
             return RedirectToAction("Index", "Nhl", new { seasonYear = Convert.ToInt32(year), update = performUpdate });
