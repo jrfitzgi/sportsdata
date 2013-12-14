@@ -36,7 +36,7 @@ namespace SportsData.Nhl
             NhlGameSummary.UpdateSeason(year, latestResultDate.AddDays(-1));
         }
         
-        public static void UpdateSeason(int year, [Optional] DateTime fromDate)
+        public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate)
         {
             NhlBaseClass.UpdateSeason<NhlGameSummary>(year, fromDate);
         }

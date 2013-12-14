@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using HtmlAgilityPack;
-using SportsData;
 using SportsData.Models;
 
 using System.Runtime.CompilerServices;
@@ -62,7 +56,7 @@ namespace SportsData.Nhl
 
         #region Public Methods
 
-        public List<NhlGameStatsBaseModel> GetSeason(int year, [Optional] DateTime fromDate)
+        public List<NhlGameStatsBaseModel> GetSeason([Optional] int year, [Optional] DateTime fromDate)
         {
             List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
 
@@ -98,10 +92,18 @@ namespace SportsData.Nhl
         /// <remarks>
         /// This method assumes that rows are sorted in descending order by date (newest to oldest).
         ///
+        /// year defaults to the current year
         /// fromDate defaults to DateTime.MinValue
+        /// 
         /// </remarks>
-        protected virtual List<NhlGameStatsBaseModel> GetAllResultsForSeasonType(int year, NhlSeasonType nhlSeasonType, [Optional] DateTime fromDate)
+        protected virtual List<NhlGameStatsBaseModel> GetAllResultsForSeasonType([Optional] int year, NhlSeasonType nhlSeasonType, [Optional] DateTime fromDate)
         {
+            if (year == 0)
+            {
+                // Default to the current year
+                year = NhlGameStatsBaseModel.GetSeason(DateTime.Now).Item2;
+            }
+
             List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
 
             HtmlNode firstPageTableNode = this.ParseHtmlTableFromPage(year, nhlSeasonType, 1);
@@ -214,7 +216,7 @@ namespace SportsData.Nhl
         #region Static Methods
 
 
-        protected static void UpdateSeason<T>(int year, [Optional] DateTime fromDate) where T : NhlBaseClass, new()
+        protected static void UpdateSeason<T>([Optional] int year, [Optional] DateTime fromDate) where T : NhlBaseClass, new()
         {
             T instance = new T();
 

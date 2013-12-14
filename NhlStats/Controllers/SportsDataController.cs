@@ -11,7 +11,7 @@ namespace SportsData.Controllers
         public ActionResult Result<T>(T model)
         {
             string acceptHeader = this.Request.Headers["Accept"];
-            if (acceptHeader.IndexOf("application/json", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            if (null != acceptHeader && acceptHeader.IndexOf("application/json", StringComparison.InvariantCultureIgnoreCase) >= 0)
             {
                 return Json(model, JsonRequestBehavior.AllowGet);
             }

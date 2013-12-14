@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Net;
 using System.Runtime.InteropServices;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
 
 using HtmlAgilityPack;
 using SportsData.Models;
@@ -33,7 +27,7 @@ namespace SportsData.Nhl
             NhlRtssReport.UpdateSeason(year, latestResultDate);
         }
 
-        public static void UpdateSeason(int year, [Optional] DateTime fromDate)
+        public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate)
         {
             NhlBaseClass.UpdateSeason<NhlRtssReport>(year, fromDate);
         }
