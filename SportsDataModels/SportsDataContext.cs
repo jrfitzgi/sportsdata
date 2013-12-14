@@ -7,13 +7,13 @@ namespace SportsData.Models
     public class SportsDataContext : DbContext
     {
         public SportsDataContext()
-            //: base("DefaultConnection")
-            : base("ProdConnection")
+            : base("DefaultConnection")
+            //: base("ProdConnection")
         {
         }
 
         // RawDataTables
-        public DbSet<RawDataTable> RawDataTables { get; set; }
+        public DbSet<HtmlBlob> RawDataTables { get; set; }
 
         // Mlb
         public DbSet<MlbTeam> MlbTeams { get; set; }

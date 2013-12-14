@@ -10,22 +10,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    [Table("RawDataTables")]
-    public class RawDataTable
+    [Table("HtmlBlobs")]
+    public class HtmlBlob
     {
         [Key]
         [Required]
-        public string SourceUrl { get; set; }
+        public string Url { get; set; }
         
-        [Required]
-        public int RawDataType { get; set; }
-
-        [Required]
-        public DateTime LastUpdated { get; set; }
-
         [MaxLength]
         public string RawData { get; set; }
 
-        public string Log { get; set; }
+        public string Type { get; set; }
     }
 }
