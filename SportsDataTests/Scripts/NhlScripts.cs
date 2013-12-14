@@ -11,16 +11,8 @@ using SportsData.Models;
 namespace SportsDataTests
 {
     [TestClass]
-    public class NhlScripts
+    public class NhlScripts : SportsDataScriptsBaseClass
     {
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            Database.SetInitializer<SportsDataContext>(new SportsDataContextMigrateDatabaseToLatestVersion());
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseAlways());
-            //Database.SetInitializer<SportsDataContext>(new SportsDataContextDropCreateDatabaseIfNotExists());
-        }
-
         [TestMethod]
         public void Script_NhlGetGameSummary()
         {
@@ -32,7 +24,7 @@ namespace SportsDataTests
         {
             // Create a list of years to collect data for
             List<int> years = new List<int>();
-            for (int i = 2014; i >= 1998; i--)
+            for (int i = 2001; i >= 2000; i--)
             {
                 years.Add(i);
             }

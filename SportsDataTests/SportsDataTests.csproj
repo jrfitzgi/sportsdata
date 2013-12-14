@@ -64,7 +64,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Scripts\MlbScripts.cs" />
     <Compile Include="Scripts\NhlScripts.cs" />
+    <Compile Include="Scripts\SportsDataScriptsBaseClass.cs" />
     <Compile Include="Social\FacebookTests.cs" />
     <Compile Include="Social\TwitterTests.cs" />
     <Compile Include="SportsDataTestsBaseClass.cs" />
