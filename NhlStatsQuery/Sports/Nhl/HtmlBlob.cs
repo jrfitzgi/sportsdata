@@ -102,29 +102,16 @@ namespace SportsData.Nhl
 
         }
 
-        private static string GetHtmlPage(string uri)
-        {
-            return HtmlBlob.GetHtmlPage(new Uri(uri));
-        }
-
         public static void SaveAsBlob(HtmlBlobType htmlBlobType, Uri uri, string html)
         {
-            HtmlBlob.SaveAsBlob(HtmlBlob.ConstructBlobName(htmlBlobType, uri), html);
-        }
-
-        private static void SaveAsBlob(string blobName, string html)
-        {
+            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
             cloudBlockBlob.UploadText(html);
         }
 
         public static string RetrieveBlob(HtmlBlobType htmlBlobType, Uri uri)
         {
-            return HtmlBlob.RetrieveBlob(HtmlBlob.ConstructBlobName(htmlBlobType, uri));
-        }
-
-        private static string RetrieveBlob(string blobName)
-        {
+            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
             string result = cloudBlockBlob.DownloadText();
             return result;
