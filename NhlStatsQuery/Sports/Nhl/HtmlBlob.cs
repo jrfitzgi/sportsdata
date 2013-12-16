@@ -20,6 +20,9 @@ namespace SportsData.Nhl
 {
     public class HtmlBlob
     {
+        // Start using other prefixes if/when we start storing blobs from other sources
+        private const string nhlBlobNamePrefix = "sports/nhl";
+
         #region Properties
 
         private static string storageConnectionString = null;
@@ -84,6 +87,12 @@ namespace SportsData.Nhl
 
         #endregion
 
+        public static void GetAndStoreHtmlBlob(Uri uri, HtmlBlobType htmlBlobType)
+        {
+            string htmlBlob = HtmlBlob.GetHtmlPage(uri);
+
+        }
+
         public static string GetHtmlPage(Uri uri)
         {
             HttpClient httpClient = new HttpClient();
@@ -93,35 +102,45 @@ namespace SportsData.Nhl
 
         }
 
-        public static string GetHtmlPage(string uri)
+        private static string GetHtmlPage(string uri)
         {
             return HtmlBlob.GetHtmlPage(new Uri(uri));
         }
 
-        public static void SaveAsBlob(Uri uri, string html)
+        public static void SaveAsBlob(HtmlBlobType htmlBlobType, Uri uri, string html)
         {
-            HtmlBlob.SaveAsBlob(uri.RemoveHttpFromUri(), html);
+            HtmlBlob.SaveAsBlob(HtmlBlob.ConstructBlobName(htmlBlobType, uri), html);
         }
 
-        public static void SaveAsBlob(string blobName, string html)
+        private static void SaveAsBlob(string blobName, string html)
         {
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
             cloudBlockBlob.UploadText(html);
         }
 
-        public static string RetrieveBlob(Uri uri)
+        public static string RetrieveBlob(HtmlBlobType htmlBlobType, Uri uri)
         {
-            return HtmlBlob.RetrieveBlob(uri.RemoveHttpFromUri());
+            return HtmlBlob.RetrieveBlob(HtmlBlob.ConstructBlobName(htmlBlobType, uri));
         }
 
-        public static string RetrieveBlob(string blobName)
+        private static string RetrieveBlob(string blobName)
         {
-            //IEnumerable<IListBlobItem> blobs = HtmlBlob.CloudBlobContainer.ListBlobs(null, false);
-
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
             string result = cloudBlockBlob.DownloadText();
             return result;
         }
 
+        public static bool BlobExists(HtmlBlobType htmlBlobType, Uri uri)
+        {
+            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, uri);
+            CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
+            return cloudBlockBlob.Exists();
+        }
+
+        private static string ConstructBlobName(HtmlBlobType htmlBlobType, Uri uri)
+        {
+            string blobName = String.Join("/", HtmlBlob.nhlBlobNamePrefix, htmlBlobType.ToString(), uri.RemoveHttpFromUri());
+            return blobName;
+        }
     }
 }

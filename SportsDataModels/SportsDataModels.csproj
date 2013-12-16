@@ -49,13 +49,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Sports\Nhl\HtmlBlobType.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModelComparer.cs" />
     <Compile Include="Sports\Nhl\NhlRtssReportModel.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModel.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
     <Compile Include="Sports\Nhl\NhlGameSummaryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sports\Nhl\HtmlBlobs.cs" />
+    <Compile Include="Sports\Nhl\HtmlBlobsModel.cs" />
     <Compile Include="Social\FacebookModel.cs" />
     <Compile Include="Social\SocialBaseModel.cs" />
     <Compile Include="Social\TwitterModels.cs" />

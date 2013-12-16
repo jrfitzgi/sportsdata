@@ -20,8 +20,13 @@ namespace SportsDataTests
             Uri url = new Uri("http://www.nhl.com/scores/htmlreports/20132014/RO020502.HTM");
             string result = HtmlBlob.GetHtmlPage(url);
 
-            HtmlBlob.SaveAsBlob(url, result);
-            string downloadedBlob = HtmlBlob.RetrieveBlob(url);
+            //Assert.IsFalse(HtmlBlobType.NhlRoster, HtmlBlob.BlobExists(url));
+
+            HtmlBlob.SaveAsBlob(HtmlBlobType.NhlRoster, url, result);
+            string downloadedBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, url);
+
+            Assert.IsTrue(HtmlBlob.BlobExists(HtmlBlobType.NhlRoster, url));
+            
         }
     }
 }
