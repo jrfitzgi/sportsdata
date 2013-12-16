@@ -10,16 +10,29 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
+    public enum HtmlBlobType
+    {
+        None = 0,
+        NhlRoster,
+        NhlGame,
+        NhlEvents,
+        NhlFaceOffs,
+        NhlShots,
+        NhlHomeToi,
+        NhlVisitorToi,
+        NhlShootout
+    }
+
     [Table("HtmlBlobs")]
-    public class HtmlBlob
+    public class HtmlBlobModel
     {
         [Key]
         [Required]
         public string Url { get; set; }
-        
+
         [MaxLength]
         public string RawData { get; set; }
 
-        public string Type { get; set; }
+        public HtmlBlobType Type { get; set; }
     }
 }

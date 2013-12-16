@@ -14,5 +14,10 @@ namespace SportsData
             text = text.Replace("\t", "");
             return text;
         }
+
+        public static string RemoveHttpFromUri(this Uri uri)
+        {
+            return uri.Host + uri.AbsolutePath;
+        }
     }
 }

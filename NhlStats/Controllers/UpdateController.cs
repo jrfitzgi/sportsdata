@@ -26,8 +26,8 @@ namespace SportsData.Controllers
 
             if (keyIsValid)
             {
-                //results.Add("FacebookData", this.Update(delegate() { FacebookData.UpdateAllSnapshotsInDb(); }));
-                //results.Add("TwitterData", this.Update(delegate() { TwitterData.UpdateAllSnapshotsInDb(); }));
+                results.Add("FacebookData", this.Update(delegate() { FacebookData.UpdateAllSnapshotsInDb(); }));
+                results.Add("TwitterData", this.Update(delegate() { TwitterData.UpdateAllSnapshotsInDb(); }));
                 results.Add("NhlGameSummary", this.Update(delegate() { NhlGameSummary.UpdateSeason(); }));
                 results.Add("NhlRtssReport", this.Update(delegate() { NhlRtssReport.UpdateSeason(); }));
 
