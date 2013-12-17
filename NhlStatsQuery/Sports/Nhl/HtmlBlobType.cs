@@ -1,5 +1,5 @@
 ﻿
-namespace SportsData.Models
+namespace SportsData
 {
     public enum HtmlBlobType
     {

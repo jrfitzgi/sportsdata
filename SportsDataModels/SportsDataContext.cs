@@ -12,9 +12,6 @@ namespace SportsData.Models
         {
         }
 
-        // RawDataTables
-        public DbSet<HtmlBlobModel> RawDataTables { get; set; }
-
         // Mlb
         public DbSet<MlbTeam> MlbTeams { get; set; }
         public DbSet<MlbGameSummaryModel> MlbGameSummaries { get; set; }

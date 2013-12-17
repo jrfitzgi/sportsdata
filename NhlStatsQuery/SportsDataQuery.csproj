@@ -90,9 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="RawDataTables\HtmlBlob.cs" />
     <Compile Include="Sports\Nhl\HtmlBlob.cs" />
     <Compile Include="Sports\Nhl\HockeySeason.cs" />
+    <Compile Include="Sports\Nhl\HtmlBlobType.cs" />
     <Compile Include="Sports\Nhl\NhlBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlRtssReports.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />

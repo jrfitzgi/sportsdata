@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using HtmlAgilityPack;
 using SportsData;
 using SportsData.Nhl;
 using SportsData.Models;
