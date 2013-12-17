@@ -22,7 +22,7 @@ namespace SportsDataTests
 
             //Assert.IsFalse(HtmlBlobType.NhlRoster, HtmlBlob.BlobExists(url));
 
-            HtmlBlob.SaveAsBlob(HtmlBlobType.NhlRoster, url, result);
+            HtmlBlob.SaveBlob(HtmlBlobType.NhlRoster, url, result);
             string downloadedBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, url);
 
             Assert.IsTrue(HtmlBlob.BlobExists(HtmlBlobType.NhlRoster, url));

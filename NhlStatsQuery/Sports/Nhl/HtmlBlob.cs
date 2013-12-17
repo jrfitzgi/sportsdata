@@ -87,14 +87,30 @@ namespace SportsData.Nhl
 
         #endregion
 
-        public static void GetAndStoreHtmlBlob(Uri uri, HtmlBlobType htmlBlobType)
+        public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, List<Uri> uris, [Optional] bool forceOverwrite)
         {
-            string htmlBlob = HtmlBlob.GetHtmlPage(uri);
+            foreach (Uri uri in uris)
+            {
+                HtmlBlob.GetAndStoreHtmlBlob(htmlBlobType, uri, forceOverwrite);
+            }
+        }
 
+        public static void GetAndStoreHtmlBlob(HtmlBlobType htmlBlobType, Uri uri, [Optional] bool forceOverwrite)
+        {
+            if (HtmlBlob.BlobExists(htmlBlobType, uri) && forceOverwrite == false)
+            {
+                // Blob exists and we don't want to force an overwrite so do nothing
+                return;
+            }
+
+            string htmlBlob = HtmlBlob.GetHtmlPage(uri);
+            HtmlBlob.SaveBlob(htmlBlobType, uri, htmlBlob);
         }
 
         public static string GetHtmlPage(Uri uri)
         {
+            // TODO: handle 404's, eg. 2014 preseason game 103 http://www.nhl.com/scores/htmlreports/20132014/RO010103.HTM
+
             HttpClient httpClient = new HttpClient();
             Task<string> response = httpClient.GetStringAsync(uri);
             string responseString = response.Result;
@@ -102,7 +118,7 @@ namespace SportsData.Nhl
 
         }
 
-        public static void SaveAsBlob(HtmlBlobType htmlBlobType, Uri uri, string html)
+        public static void SaveBlob(HtmlBlobType htmlBlobType, Uri uri, string html)
         {
             string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
