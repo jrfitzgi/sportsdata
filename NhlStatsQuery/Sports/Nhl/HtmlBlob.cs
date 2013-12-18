@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -81,17 +82,18 @@ namespace SportsData.Nhl
 
         #endregion
 
-        public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, List<Uri> uris, [Optional] bool forceOverwrite)
+        //public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, List<Uri> uris, [Optional] bool forceOverwrite)
+        public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, Dictionary<Uri,string> items, [Optional] bool forceOverwrite)
         {
-            foreach (Uri uri in uris)
+            foreach (Uri uri in items.Keys)
             {
-                HtmlBlob.GetAndStoreHtmlBlob(htmlBlobType, uri, forceOverwrite);
+                HtmlBlob.GetAndStoreHtmlBlob(htmlBlobType, items[uri], uri, forceOverwrite);
             }
         }
 
-        public static void GetAndStoreHtmlBlob(HtmlBlobType htmlBlobType, Uri uri, [Optional] bool forceOverwrite)
+        public static void GetAndStoreHtmlBlob(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri, [Optional] bool forceOverwrite)
         {
-            if (HtmlBlob.BlobExists(htmlBlobType, uri) && forceOverwrite == false)
+            if (HtmlBlob.BlobExists(htmlBlobType, htmlBlobId, uri) && forceOverwrite == false)
             {
                 // Blob exists and we don't want to force an overwrite so do nothing
                 return;
@@ -101,15 +103,13 @@ namespace SportsData.Nhl
 
             if (!String.IsNullOrWhiteSpace(htmlBlob))
             {
-                HtmlBlob.SaveBlob(htmlBlobType, uri, htmlBlob);
+                HtmlBlob.SaveBlob(htmlBlobType, htmlBlobId, uri, htmlBlob);
             }
 
         }
 
         public static string GetHtmlPage(Uri uri)
         {
-            // TODO: handle 404's, eg. 2014 preseason game 103 http://www.nhl.com/scores/htmlreports/20132014/RO010103.HTM
-
             string responseString = null;
 
             try
@@ -118,47 +118,60 @@ namespace SportsData.Nhl
                 Task<string> response = httpClient.GetStringAsync(uri);
                 responseString = response.Result;
             }
-            catch (System.Net.Http.HttpRequestException e)
-            {
-
-            }
             catch (System.AggregateException e)
             {
+                HtmlBlob.PrintGetHtmlPageException(uri, e);
 
+                bool is404Exception = e.InnerExceptions.Where(ie =>
+                    ie.GetType() == typeof(HttpRequestException) &&
+                    ie.Message.IndexOf("404 (Not Found).", StringComparison.InvariantCultureIgnoreCase) >= 0).Any();
+
+                if (!is404Exception)
+                {
+                    //throw;
+                }
             }
             catch (Exception e)
             {
-
+                HtmlBlob.PrintGetHtmlPageException(uri, e);
+                //throw;
             }
-            
+
             return responseString;
         }
 
-        public static void SaveBlob(HtmlBlobType htmlBlobType, Uri uri, string html)
+        private static void PrintGetHtmlPageException(Uri uri, Exception e)
         {
-            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, uri);
+            Console.WriteLine(uri.AbsoluteUri);
+            Console.WriteLine(e.ToString());
+            Console.WriteLine();
+        }
+
+        public static void SaveBlob(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri, string html)
+        {
+            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, htmlBlobId, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
             cloudBlockBlob.UploadText(html);
         }
 
-        public static string RetrieveBlob(HtmlBlobType htmlBlobType, Uri uri)
+        public static string RetrieveBlob(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri)
         {
-            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, uri);
+            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, htmlBlobId, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
             string result = cloudBlockBlob.DownloadText();
             return result;
         }
 
-        public static bool BlobExists(HtmlBlobType htmlBlobType, Uri uri)
+        public static bool BlobExists(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri)
         {
-            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, uri);
+            string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, htmlBlobId, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
             return cloudBlockBlob.Exists();
         }
 
-        private static string ConstructBlobName(HtmlBlobType htmlBlobType, Uri uri)
+        private static string ConstructBlobName(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri)
         {
-            string blobName = String.Join("/", HtmlBlob.nhlBlobNamePrefix, htmlBlobType.ToString(), uri.RemoveHttpFromUri());
+            string blobName = String.Join("/", HtmlBlob.nhlBlobNamePrefix, htmlBlobType.ToString(), htmlBlobId, uri.RemoveHttpFromUri());
             return blobName;
         }
     }

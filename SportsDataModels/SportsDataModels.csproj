@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModelComparer.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportRosterModel.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportSummaryModel.cs" />
     <Compile Include="Sports\Nhl\NhlRtssReportModel.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModel.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
@@ -59,6 +61,7 @@
     <Compile Include="Social\SocialBaseModel.cs" />
     <Compile Include="Social\TwitterModels.cs" />
     <Compile Include="SportsDataContext.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportBaseModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

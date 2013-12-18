@@ -18,14 +18,15 @@ namespace SportsDataTests
         public void HtmlBlobTest()
         {
             Uri url = new Uri("http://www.nhl.com/scores/htmlreports/20132014/RO020502.HTM");
+            string id = (new Guid()).ToString();
             string result = HtmlBlob.GetHtmlPage(url);
 
-            //Assert.IsFalse(HtmlBlobType.NhlRoster, HtmlBlob.BlobExists(url));
+            Assert.IsFalse(HtmlBlob.BlobExists(HtmlBlobType.NhlRoster, id, url));
 
-            HtmlBlob.SaveBlob(HtmlBlobType.NhlRoster, url, result);
-            string downloadedBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, url);
+            HtmlBlob.SaveBlob(HtmlBlobType.NhlRoster, id, url, result);
+            string downloadedBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, id, url);
 
-            Assert.IsTrue(HtmlBlob.BlobExists(HtmlBlobType.NhlRoster, url));
+            Assert.IsTrue(HtmlBlob.BlobExists(HtmlBlobType.NhlRoster, id, url));
             
         }
     }
