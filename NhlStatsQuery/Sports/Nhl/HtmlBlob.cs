@@ -98,18 +98,40 @@ namespace SportsData.Nhl
             }
 
             string htmlBlob = HtmlBlob.GetHtmlPage(uri);
-            HtmlBlob.SaveBlob(htmlBlobType, uri, htmlBlob);
+
+            if (!String.IsNullOrWhiteSpace(htmlBlob))
+            {
+                HtmlBlob.SaveBlob(htmlBlobType, uri, htmlBlob);
+            }
+
         }
 
         public static string GetHtmlPage(Uri uri)
         {
             // TODO: handle 404's, eg. 2014 preseason game 103 http://www.nhl.com/scores/htmlreports/20132014/RO010103.HTM
 
-            HttpClient httpClient = new HttpClient();
-            Task<string> response = httpClient.GetStringAsync(uri);
-            string responseString = response.Result;
-            return responseString;
+            string responseString = null;
 
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                Task<string> response = httpClient.GetStringAsync(uri);
+                responseString = response.Result;
+            }
+            catch (System.Net.Http.HttpRequestException e)
+            {
+
+            }
+            catch (System.AggregateException e)
+            {
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            
+            return responseString;
         }
 
         public static void SaveBlob(HtmlBlobType htmlBlobType, Uri uri, string html)
