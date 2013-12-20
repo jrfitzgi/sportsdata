@@ -7,7 +7,7 @@
     <ProjectGuid>{BDB38E09-D95E-442C-BCDA-8C4986A3BB14}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SportsData.Nhl.Query</RootNamespace>
+    <RootNamespace>SportsData</RootNamespace>
     <AssemblyName>NhlStatsQuery</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -90,10 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="Sports\Nhl\HtmlBlob.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportSummary.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlob.cs" />
     <Compile Include="Sports\Nhl\HockeySeason.cs" />
-    <Compile Include="Sports\Nhl\HtmlBlobType.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobType.cs" />
     <Compile Include="Sports\Nhl\NhlBaseClass.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportRoster.cs" />
     <Compile Include="Sports\Nhl\NhlRtssReports.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />
     <Compile Include="Social\Facebook\FacebookData.cs" />

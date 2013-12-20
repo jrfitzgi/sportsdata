@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,7 +18,9 @@ namespace SportsDataTests
         [TestMethod]
         public void HtmlBlobTest()
         {
-            Uri url = new Uri("http://www.nhl.com/scores/htmlreports/20132014/RO020502.HTM");
+            Uri url = new Uri("http://www.nhl.com/scores/htmlreports/20132014/RO020527.HTM");
+            //Uri url = new Uri("http://www.nhl.com/scores/htmlreports/20132014/RO020502.HTM");
+
             string id = (new Guid()).ToString();
             string result = HtmlBlob.GetHtmlPage(url);
 
@@ -29,5 +32,24 @@ namespace SportsDataTests
             Assert.IsTrue(HtmlBlob.BlobExists(HtmlBlobType.NhlRoster, id, url));
             
         }
+        
+        [TestMethod]
+        public void ParseHtmlReportSummaryOfflineTest()
+        {
+            string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\FrenchRegSeason\Playing Roster.htm";
+            string html = File.ReadAllText(path);
+
+            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(html);
+        }
+
+        [TestMethod]
+        public void ParseHtmlReportRosterOfflineTest()
+        {
+            string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\FrenchRegSeason\Playing Roster.htm";
+            string html = File.ReadAllText(path);
+
+            NhlHtmlReportRosterModel model = NhlHtmlReportRoster.ParseHtmlBlob(html);
+        }
+
     }
 }
