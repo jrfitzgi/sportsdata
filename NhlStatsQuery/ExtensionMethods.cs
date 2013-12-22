@@ -10,8 +10,9 @@ namespace SportsData
     {
         public static string RemoveSpecialWhitespaceCharacters(this string text)
         {
-            text = text.Replace("\n", "");
-            text = text.Replace("\t", "");
+            text = text.Replace("\n", String.Empty);
+            text = text.Replace("\r", String.Empty); 
+            text = text.Replace("\t", String.Empty);
             return text;
         }
 

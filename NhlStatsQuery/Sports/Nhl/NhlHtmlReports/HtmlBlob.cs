@@ -82,7 +82,6 @@ namespace SportsData.Nhl
 
         #endregion
 
-        //public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, List<Uri> uris, [Optional] bool forceOverwrite)
         public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, Dictionary<Uri,string> items, [Optional] bool forceOverwrite)
         {
             foreach (Uri uri in items.Keys)
