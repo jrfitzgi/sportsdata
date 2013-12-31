@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportBase.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportSummary.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlob.cs" />
     <Compile Include="Sports\Nhl\HockeySeason.cs" />

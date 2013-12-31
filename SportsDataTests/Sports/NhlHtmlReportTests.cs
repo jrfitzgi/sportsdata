@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -39,7 +40,7 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(html);
+            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
         }
 
         [TestMethod]
@@ -48,28 +49,13 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\EnglishInProgressRoster.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(html);
+            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
         }
 
         [TestMethod]
         public void ParseMultipleHtmlGameSummaries()
         {
-            List<NhlRtssReportModel> models;
-            using (SportsDataContext db = new SportsDataContext())
-            {
-                models = (from m in db.NhlRtssReports
-                          where
-                             m.NhlSeasonType == NhlSeasonType.RegularSeason &&
-                             m.Year == 2014
-                          select m).ToList();
-            }
-
-            foreach (NhlRtssReportModel model in models)
-            {
-                string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink));
-                NhlHtmlReportSummaryModel report = NhlHtmlReportSummary.ParseHtmlBlob(htmlBlob);
-            }
-
+            NhlHtmlReportSummary.UpdateSeason(2014);
         }
 
         [TestMethod]
@@ -78,7 +64,64 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportRosterModel model = NhlHtmlReportRoster.ParseHtmlBlob(html);
+            NhlHtmlReportRosterModel model = NhlHtmlReportRoster.ParseHtmlBlob(-1, html);
+        }
+
+        [TestMethod]
+        public void ParseHtmlReportRosterFrenchRegSeason_AndPersist()
+        {
+            string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
+            string html = File.ReadAllText(path);
+
+            NhlHtmlReportRosterModel model = NhlHtmlReportRoster.ParseHtmlBlob(-1, html);
+
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                db.NhlHtmlReportRosters.AddOrUpdate(
+                    m => m.Id,
+                    model);
+                db.SaveChanges();
+                
+                model = db.NhlHtmlReportRosters.FirstOrDefault(m => m.Id == model.Id);
+                model.VisitorRoster.Add(new NhlHtmlReportRosterEntryModel("visitor player 1", model.Id));
+                model.VisitorRoster.Add(new NhlHtmlReportRosterEntryModel("visitor player 2", model.Id));
+                model.VisitorScratches.Add(new NhlHtmlReportRosterEntryModel("visitor scratch 1", model.Id));
+                model.VisitorScratches.Add(new NhlHtmlReportRosterEntryModel("visitor scratch 2", model.Id));
+                model.VisitorHeadCoach.Add(new NhlHtmlReportRosterEntryModel("visitor head coach 1", model.Id));
+ 
+                model.HomeRoster.Add(new NhlHtmlReportRosterEntryModel("home player 1", model.Id));
+                model.HomeRoster.Add(new NhlHtmlReportRosterEntryModel("home player 2", model.Id));
+                model.HomeScratches.Add(new NhlHtmlReportRosterEntryModel("home scratch 1", model.Id));
+                model.HomeScratches.Add(new NhlHtmlReportRosterEntryModel("home scratch 2", model.Id));
+                model.HomeHeadCoach.Add(new NhlHtmlReportRosterEntryModel("home head coach 1", model.Id));
+
+                model.Referees.Add(new NhlHtmlReportRosterEntryModel("referee 1", model.Id));
+                model.Referees.Add(new NhlHtmlReportRosterEntryModel("referee 2", model.Id));
+                model.Linesman.Add(new NhlHtmlReportRosterEntryModel("linesman 1", model.Id));
+                model.Linesman.Add(new NhlHtmlReportRosterEntryModel("linesman 2", model.Id));
+
+                db.NhlHtmlReportRosters.AddOrUpdate(
+                    m => m.Id,
+                    model);
+
+                db.SaveChanges();
+            }
+
+            List<NhlHtmlReportRosterModel> models;
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                models = (from m in db.NhlHtmlReportRosters
+                              .Include(x => x.VisitorRoster)
+                              .Include(x => x.VisitorScratches)
+                              .Include(x => x.VisitorHeadCoach)
+                              .Include(x => x.HomeRoster)
+                              .Include(x => x.HomeScratches)
+                              .Include(x => x.HomeHeadCoach)
+                              .Include(x => x.Referees)
+                              .Include(x => x.Linesman)
+                          select m).ToList();
+                
+            }
         }
 
     }

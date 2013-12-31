@@ -7,8 +7,8 @@ namespace SportsData.Models
     public class SportsDataContext : DbContext
     {
         public SportsDataContext()
-            //: base("DefaultConnection")
-            : base("ProdConnection")
+            : base("DefaultConnection")
+            //: base("ProdConnection")
         {
         }
 
@@ -19,6 +19,9 @@ namespace SportsData.Models
         // Nhl
         public DbSet<NhlGameSummaryModel> NhlGameSummaries { get; set; }
         public DbSet<NhlRtssReportModel> NhlRtssReports { get; set; }
+
+        public DbSet<NhlHtmlReportSummaryModel> NhlHtmlReportSummaries { get; set; }
+        public DbSet<NhlHtmlReportRosterModel> NhlHtmlReportRosters { get; set; }
 
         // Twitter
         public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }
@@ -172,6 +175,18 @@ namespace SportsData.Models
             #endregion
 
         }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<NhlHtmlReportRosterEntryModel>().HasRequired(x => x.NhlHtmlReportRosterModel)
+        //            .WithMany(x => x.VisitorRoster);
+
+        //    modelBuilder.Entity<NhlHtmlReportRosterEntryModel>().HasRequired(x => x.NhlHtmlReportRosterModel)
+        //        .WithMany(x => x.VisitorRoster)
+        //        .HasForeignKey(x => x.NhlHtmlReportRosterModelId);
+
+        //    base.OnModelCreating(modelBuilder);
+        //}
 
     }
 

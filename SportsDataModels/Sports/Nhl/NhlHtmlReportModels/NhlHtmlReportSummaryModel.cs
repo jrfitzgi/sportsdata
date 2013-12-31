@@ -34,11 +34,12 @@ namespace SportsData.Models
 
         public string ArenaName { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public string StartTime { get; set; }
 
-        public DateTime EndTime { get; set; }
+        public string EndTime { get; set; }
 
         public int LeagueGameNumber { get; set; }
 
+        public string GameStatus { get; set; }
     }
 }

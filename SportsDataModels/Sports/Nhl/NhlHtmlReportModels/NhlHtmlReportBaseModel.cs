@@ -10,8 +10,8 @@ namespace SportsData.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string NhlRtssReportModelId { get; set; }
-        [ForeignKey("NhlRtssReportModelId")]
-        public NhlRtssReportModel NhlRtssReportModel { get; set; }
+        public int NhlRtssReportModelId { get; set; }
+        //[ForeignKey("NhlRtssReportModelId")]
+        //public NhlRtssReportModel NhlRtssReportModel { get; set; }
     }
 }

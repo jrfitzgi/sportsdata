@@ -22,8 +22,13 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGetRtssReport()
         {
-            NhlRtssReport.UpdateSeason(1999);
-            NhlRtssReport.UpdateSeason(1998);
+            NhlRtssReport.UpdateSeason(2014);
+        }
+
+        [TestMethod]
+        public void Script_NhlGetHtmlReportSummary()
+        {
+            NhlHtmlReportSummary.UpdateSeason(2014);
         }
     }
 }

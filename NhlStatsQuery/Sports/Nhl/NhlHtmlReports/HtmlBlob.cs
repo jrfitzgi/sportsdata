@@ -82,7 +82,7 @@ namespace SportsData.Nhl
 
         #endregion
 
-        public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, Dictionary<Uri,string> items, [Optional] bool forceOverwrite)
+        public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, Dictionary<Uri, string> items, [Optional] bool forceOverwrite)
         {
             foreach (Uri uri in items.Keys)
             {
@@ -139,11 +139,16 @@ namespace SportsData.Nhl
             return responseString;
         }
 
-        private static void PrintGetHtmlPageException(Uri uri, Exception e)
+        private static void PrintGetHtmlPageException(string uri, Exception e)
         {
-            Console.WriteLine(uri.AbsoluteUri);
+            Console.WriteLine(uri);
             Console.WriteLine(e.ToString());
             Console.WriteLine();
+        }
+
+        private static void PrintGetHtmlPageException(Uri uri, Exception e)
+        {
+            HtmlBlob.PrintGetHtmlPageException(uri.AbsoluteUri, e);
         }
 
         public static void SaveBlob(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri, string html)
@@ -157,7 +162,32 @@ namespace SportsData.Nhl
         {
             string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, htmlBlobId, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
-            string result = cloudBlockBlob.DownloadText();
+            string result = null;
+
+            try
+            {
+
+                result = cloudBlockBlob.DownloadText();
+            }
+            catch (System.AggregateException e)
+            {
+                HtmlBlob.PrintGetHtmlPageException(cloudBlockBlob.SnapshotQualifiedUri, e);
+
+                bool is404Exception = e.InnerExceptions.Where(ie =>
+                    ie.GetType() == typeof(HttpRequestException) &&
+                    ie.Message.IndexOf("404 (Not Found).", StringComparison.InvariantCultureIgnoreCase) >= 0).Any();
+
+                if (!is404Exception)
+                {
+                    //throw;
+                }
+            }
+            catch (Exception e)
+            {
+                HtmlBlob.PrintGetHtmlPageException(cloudBlockBlob.SnapshotQualifiedUri, e);
+                //throw;
+            }
+
             return result;
         }
 

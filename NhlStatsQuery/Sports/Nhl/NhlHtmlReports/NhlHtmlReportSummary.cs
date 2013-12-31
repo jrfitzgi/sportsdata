@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,30 +12,48 @@ using SportsData.Models;
 
 namespace SportsData.Nhl
 {
-    public class NhlHtmlReportSummary
+    public class NhlHtmlReportSummary : NhlHtmlReportBase
     {
-        public static NhlHtmlReportSummaryModel ParseHtmlBlob(string html)
+        public static void UpdateSeason(int year)
         {
+            // Get the RtssReports for the specified year
+            List<NhlRtssReportModel> models = NhlHtmlReportBase.GetRtssReports(year);
+
+            // For each report, get the html blob from blob storage and parse the blob to a report
+            List<NhlHtmlReportSummaryModel> results = new List<NhlHtmlReportSummaryModel>();
+            foreach (NhlRtssReportModel model in models)
+            {
+                string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink));
+                NhlHtmlReportSummaryModel report = NhlHtmlReportSummary.ParseHtmlBlob(model.Id, htmlBlob);
+
+                if (null != report)
+                {
+                    results.Add(report);
+                }
+            }
+
+            // Save the reports to the db
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                db.NhlHtmlReportSummaries.AddOrUpdate<NhlHtmlReportSummaryModel>(
+                    m => m.NhlRtssReportModelId,
+                    results.ToArray());
+                db.SaveChanges();
+            }
+        }
+
+        public static NhlHtmlReportSummaryModel ParseHtmlBlob(int rtssReportId, string html)
+        {
+            if (String.IsNullOrWhiteSpace(html)) { return null; }
+
             NhlHtmlReportSummaryModel model = new NhlHtmlReportSummaryModel();
+            model.NhlRtssReportModelId = rtssReportId;
 
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
             HtmlNode tableNode = htmlDocument.DocumentNode.SelectSingleNode(@".//table[.//table[@id='GameInfo']]");
-            
-            //HtmlNode titleNode = htmlDocument.DocumentNode.SelectSingleNode(@"//title[text()='Playing Roster']");
-            
-            //// Get the top level table for the summary
-            //HtmlNode tableNode = titleNode.NextSibling;
-            //while (tableNode != null)
-            //{
-            //    if (tableNode.Name.Equals("table"))
-            //    {
-            //        break;
-            //    }
 
-            //    tableNode = tableNode.NextSibling;
-            //}
             if (null == tableNode) { return null; }
 
             #region Get team names, score, game numbers
@@ -45,8 +64,8 @@ namespace SportsData.Nhl
             HtmlNode visitorScoreNode = visitorTableNode.SelectNodes(@".//tr").ElementAt(1).SelectNodes(@".//tr/td").ElementAt(1);
             HtmlNode homeScoreNode = homeTableNode.SelectNodes(@".//tr").ElementAt(1).SelectNodes(@".//tr/td").ElementAt(1);
 
-            int visitorScore = Convert.ToInt32(visitorScoreNode.InnerText);
-            int homeScore = Convert.ToInt32(homeScoreNode.InnerText);
+            model.VisitorScore = Convert.ToInt32(visitorScoreNode.InnerText);
+            model.HomeScore = Convert.ToInt32(homeScoreNode.InnerText);
 
             HtmlNode visitorNameNode;
             if (visitorTableNode.SelectSingleNode(@"./tbody") != null)
@@ -69,16 +88,16 @@ namespace SportsData.Nhl
             }
 
             string[] visitorInfo = visitorNameNode.InnerHtml.RemoveSpecialWhitespaceCharacters().Split(new string[] {"<br>"}, StringSplitOptions.None);
-            string visitorName = visitorInfo.ElementAt(0);
+            model.Visitor = visitorInfo.ElementAt(0);
             MatchCollection visitorGameNumbers = Regex.Matches(visitorInfo.ElementAt(1), @"\d+");
-            int visitorGameNumber = Convert.ToInt32(visitorGameNumbers[0].Value);
-            int visitorAwayGameNumber = Convert.ToInt32(visitorGameNumbers[1].Value);
+            model.VisitorGameNumber = Convert.ToInt32(visitorGameNumbers[0].Value);
+            model.VisitorAwayGameNumber = Convert.ToInt32(visitorGameNumbers[1].Value);
 
             string[] homeInfo = homeNameNode.InnerHtml.RemoveSpecialWhitespaceCharacters().Split(new string[] { "<br>" }, StringSplitOptions.None);
-            string homeName = homeInfo.ElementAt(0);
+            model.Home = homeInfo.ElementAt(0);
             MatchCollection homeGameNumbers = Regex.Matches(homeInfo.ElementAt(1), @"\d+");
-            int homeGameNumber = Convert.ToInt32(homeGameNumbers[0].Value);
-            int homeHomeGameNumber = Convert.ToInt32(homeGameNumbers[1].Value);
+            model.HomeGameNumber = Convert.ToInt32(homeGameNumbers[0].Value);
+            model.HomeHomeGameNumber = Convert.ToInt32(homeGameNumbers[1].Value);
 
             #endregion
 
@@ -87,6 +106,7 @@ namespace SportsData.Nhl
             HtmlNode gameInfoTableNode = tableNode.SelectSingleNode(@".//table[@id='GameInfo']");
             HtmlNodeCollection gameInfoRowNodes = gameInfoTableNode.SelectNodes(@".//tr");
             DateTime gameDate = DateTime.Parse(gameInfoRowNodes[3].InnerText);
+            model.Date = gameDate;
 
             string attendanceAndArenaText = gameInfoRowNodes[4].InnerText.RemoveSpecialWhitespaceCharacters();
             string[] attendanceAndArena = attendanceAndArenaText.Split(new string[] {"&nbsp;"}, StringSplitOptions.RemoveEmptyEntries) ;
@@ -94,25 +114,28 @@ namespace SportsData.Nhl
             if (attendanceAndArena.Count() == 3)
             {
                 Match attendanceMatch = Regex.Match(attendanceAndArena[0].Replace(",", String.Empty), @"\d+");
-                int attendance = Convert.ToInt32(attendanceMatch.Value);
-                string arena = attendanceAndArena[2];
+                string attendanceAsString = String.IsNullOrWhiteSpace(attendanceMatch.Value) ? "0" : attendanceMatch.Value;
+                model.Attendance = Convert.ToInt32(attendanceAsString);
+                model.ArenaName = attendanceAndArena[2];
             }
             else
             {
-                string arena = attendanceAndArena[0];
+                model.ArenaName = attendanceAndArena[0];
             }
 
-            string gameStatus = gameInfoRowNodes[7].InnerText.RemoveSpecialWhitespaceCharacters();
+            model.ArenaName = model.ArenaName.Replace("&amp;", "&");
 
-            if (gameStatus.Equals("Final", StringComparison.InvariantCultureIgnoreCase))
+            model.GameStatus = gameInfoRowNodes[7].InnerText.RemoveSpecialWhitespaceCharacters();
+
+            if (model.GameStatus.Equals("Final", StringComparison.InvariantCultureIgnoreCase))
             {
                 string[] startAndEndTimes = gameInfoRowNodes[5].InnerText.RemoveSpecialWhitespaceCharacters().Split(new string[] { ";", "&nbsp;" }, StringSplitOptions.None);
-                string startTime = String.Concat(startAndEndTimes[1], " ", startAndEndTimes[2]);
-                string endTime = String.Concat(startAndEndTimes[4], " ", startAndEndTimes[5]);
+                model.StartTime = String.Concat(startAndEndTimes[1], " ", startAndEndTimes[2]);
+                model.EndTime = String.Concat(startAndEndTimes[4], " ", startAndEndTimes[5]);
             }
-
+            
             Match leagueGameNumberMatch = Regex.Match(gameInfoRowNodes[6].InnerText, @"\d+");
-            int leagueGameNumber = Convert.ToInt32(leagueGameNumberMatch.Value);
+            model.LeagueGameNumber = Convert.ToInt32(leagueGameNumberMatch.Value);
 
             #endregion
 

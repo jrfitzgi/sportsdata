@@ -20,12 +20,9 @@ namespace SportsDataTests
             {
                 models = (from m in db.NhlRtssReports
                           where
-                            m.NhlSeasonType == NhlSeasonType.RegularSeason &&
                             m.Year == 2014
                           select m).ToList();
             }
-
-            //HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, models.Select(m => new Uri(m.RosterLink)).ToList(), false);
 
             Dictionary<Uri, string> items = new Dictionary<Uri, string>();
             models.ForEach(m => items.Add(new Uri(m.RosterLink), m.Id.ToString()));
