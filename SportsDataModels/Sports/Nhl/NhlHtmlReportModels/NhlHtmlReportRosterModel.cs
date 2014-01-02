@@ -10,58 +10,74 @@ namespace SportsData.Models
     {
         public NhlHtmlReportRosterModel()
         {
-            this.VisitorRoster = new Collection<NhlHtmlReportRosterEntryModel>();
-            this.VisitorScratches = new Collection<NhlHtmlReportRosterEntryModel>();
-            this.VisitorHeadCoach = new Collection<NhlHtmlReportRosterEntryModel>();
+            this.VisitorRoster = new Collection<NhlHtmlReportRosterParticipantModel>();
+            this.VisitorScratches = new Collection<NhlHtmlReportRosterParticipantModel>();
+            this.VisitorHeadCoach = new Collection<NhlHtmlReportRosterParticipantModel>();
 
-            this.HomeRoster = new Collection<NhlHtmlReportRosterEntryModel>();
-            this.HomeScratches = new Collection<NhlHtmlReportRosterEntryModel>();
-            this.HomeHeadCoach = new Collection<NhlHtmlReportRosterEntryModel>();
+            this.HomeRoster = new Collection<NhlHtmlReportRosterParticipantModel>();
+            this.HomeScratches = new Collection<NhlHtmlReportRosterParticipantModel>();
+            this.HomeHeadCoach = new Collection<NhlHtmlReportRosterParticipantModel>();
 
-            this.Referees = new Collection<NhlHtmlReportRosterEntryModel>();
-            this.Linesman = new Collection<NhlHtmlReportRosterEntryModel>();
+            this.Referees = new Collection<NhlHtmlReportRosterParticipantModel>();
+            this.Linesman = new Collection<NhlHtmlReportRosterParticipantModel>();
         }
 
         [InverseProperty("NhlHtmlReportRosterModel_VisitorRoster")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> VisitorRoster { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> VisitorRoster { get; set; }
         [InverseProperty("NhlHtmlReportRosterModel_VisitorScratches")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> VisitorScratches { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> VisitorScratches { get; set; }
         [InverseProperty("NhlHtmlReportRosterModel_VisitorHeadCoach")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> VisitorHeadCoach { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> VisitorHeadCoach { get; set; }
 
         [InverseProperty("NhlHtmlReportRosterModel_HomeRoster")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> HomeRoster { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> HomeRoster { get; set; }
         [InverseProperty("NhlHtmlReportRosterModel_HomeScratches")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> HomeScratches { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> HomeScratches { get; set; }
         [InverseProperty("NhlHtmlReportRosterModel_HomeHeadCoach")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> HomeHeadCoach { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> HomeHeadCoach { get; set; }
 
         [InverseProperty("NhlHtmlReportRosterModel_Referees")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> Referees { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> Referees { get; set; }
         [InverseProperty("NhlHtmlReportRosterModel_Linesman")]
-        public virtual ICollection<NhlHtmlReportRosterEntryModel> Linesman { get; set; }
+        public virtual ICollection<NhlHtmlReportRosterParticipantModel> Linesman { get; set; }
     }
 
-    public class NhlHtmlReportRosterEntryModel
+    public enum ParticipantType
+    {
+        None = 0,
+        Player,
+        Official,
+        Coach
+    }
+
+    public enum Designation
+    {
+        None = 0,
+        Captain,
+        AssistantCaptain,
+        HeadCoach,
+        AssistantCoach,
+        Referee,
+        Linesman
+    }
+
+    public class NhlHtmlReportRosterParticipantModel
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public NhlHtmlReportRosterEntryModel()
+        public NhlHtmlReportRosterParticipantModel()
         {
-        }
-
-        public NhlHtmlReportRosterEntryModel(string name, int id)
-        {
-            this.Name = name;
-            //this.NhlHtmlReportRosterModelId = id;
         }
 
         public string Name { get; set; }
+        public ParticipantType ParticipantType { get; set; }
+        public Designation Designation { get; set; }
+        public int Number { get; set; }
+        public string Position { get; set; }
+        public bool StartingLineup { get; set; }
 
-        //public int NhlHtmlReportRosterModelId { get; set; }
-        //[ForeignKey("NhlHtmlReportRosterModelId")]
         [InverseProperty("VisitorRoster")]
         public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_VisitorRoster { get; set; }
 

@@ -83,22 +83,22 @@ namespace SportsDataTests
                 db.SaveChanges();
                 
                 model = db.NhlHtmlReportRosters.FirstOrDefault(m => m.Id == model.Id);
-                model.VisitorRoster.Add(new NhlHtmlReportRosterEntryModel("visitor player 1", model.Id));
-                model.VisitorRoster.Add(new NhlHtmlReportRosterEntryModel("visitor player 2", model.Id));
-                model.VisitorScratches.Add(new NhlHtmlReportRosterEntryModel("visitor scratch 1", model.Id));
-                model.VisitorScratches.Add(new NhlHtmlReportRosterEntryModel("visitor scratch 2", model.Id));
-                model.VisitorHeadCoach.Add(new NhlHtmlReportRosterEntryModel("visitor head coach 1", model.Id));
- 
-                model.HomeRoster.Add(new NhlHtmlReportRosterEntryModel("home player 1", model.Id));
-                model.HomeRoster.Add(new NhlHtmlReportRosterEntryModel("home player 2", model.Id));
-                model.HomeScratches.Add(new NhlHtmlReportRosterEntryModel("home scratch 1", model.Id));
-                model.HomeScratches.Add(new NhlHtmlReportRosterEntryModel("home scratch 2", model.Id));
-                model.HomeHeadCoach.Add(new NhlHtmlReportRosterEntryModel("home head coach 1", model.Id));
+                model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Name = "visitor player 1" });
+                model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Name = "visitor player 2" });
+                model.VisitorScratches.Add(new NhlHtmlReportRosterParticipantModel { Name = "visitor scratch 1" });
+                model.VisitorScratches.Add(new NhlHtmlReportRosterParticipantModel { Name = "visitor scratch 2" });
+                model.VisitorHeadCoach.Add(new NhlHtmlReportRosterParticipantModel { Name = "visitor head coach 1" });
 
-                model.Referees.Add(new NhlHtmlReportRosterEntryModel("referee 1", model.Id));
-                model.Referees.Add(new NhlHtmlReportRosterEntryModel("referee 2", model.Id));
-                model.Linesman.Add(new NhlHtmlReportRosterEntryModel("linesman 1", model.Id));
-                model.Linesman.Add(new NhlHtmlReportRosterEntryModel("linesman 2", model.Id));
+                model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Name = "home player 1" });
+                model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Name = "home player 2" });
+                model.HomeScratches.Add(new NhlHtmlReportRosterParticipantModel { Name = "home scratch 1" });
+                model.HomeScratches.Add(new NhlHtmlReportRosterParticipantModel { Name = "home scratch 2" });
+                model.HomeHeadCoach.Add(new NhlHtmlReportRosterParticipantModel { Name = "home head coach 1" });
+
+                model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Name = "referee 1" });
+                model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Name = "referee 2" });
+                model.Linesman.Add(new NhlHtmlReportRosterParticipantModel { Name = "linesman 1" });
+                model.Linesman.Add(new NhlHtmlReportRosterParticipantModel { Name = "linesman 2" });
 
                 db.NhlHtmlReportRosters.AddOrUpdate(
                     m => m.Id,

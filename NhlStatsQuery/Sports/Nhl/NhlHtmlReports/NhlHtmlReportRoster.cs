@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using HtmlAgilityPack;
 using SportsData;
@@ -49,97 +50,96 @@ namespace SportsData.Nhl
             NhlHtmlReportRosterModel model = new NhlHtmlReportRosterModel();
             model.NhlRtssReportModelId = rtssReportId;
 
-            //HtmlDocument htmlDocument = new HtmlDocument();
-            //htmlDocument.LoadHtml(html);
+            HtmlDocument htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
+            HtmlNode documentNode = htmlDocument.DocumentNode;
 
-            //HtmlNode tableNode = htmlDocument.DocumentNode.SelectSingleNode(@".//table[.//table[@id='GameInfo']]");
+            // Get the teams
+            HtmlNodeCollection teamNodes = documentNode.SelectNodes(@".//tr/td[contains(@class,'teamHeading + border')]");
+            string team1 = teamNodes[0].InnerText;
+            string team2 = teamNodes[1].InnerText;
 
-            //if (null == tableNode) { return null; }
+            // Get the tables that contain a header with '#'
+            HtmlNodeCollection rosterTables = documentNode.SelectNodes(@".//table[tbody/tr/td[text()='#'] or tr/td[text()='#']]");
+            
+            // Pull out the rows for rosters and scratches. Assume the order of:
+            // 1. visitor roster
+            // 2. home roster
+            // 3. visitor scratches
+            // 4. home scratches
+            // Also, ignore the first rows because they are header fields.
+            HtmlNodeCollection team1RosterNodes = rosterTables[0].SelectNodes(@".//tr[position() > 1]");
+            HtmlNodeCollection team2RosterNodes = rosterTables[1].SelectNodes(@".//tr[position() > 1]");
+            HtmlNodeCollection team1ScratchesNodes = rosterTables[2].SelectNodes(@".//tr[position() > 1]");
+            HtmlNodeCollection team2ScratchesNodes = rosterTables[3].SelectNodes(@".//tr[position() > 1]");
+            Assert.IsTrue(team1RosterNodes.Count > 10, "team1Roster count");
+            Assert.IsTrue(team2RosterNodes.Count > 10, "team2Roster count");
+            Assert.IsTrue(team1ScratchesNodes.Count >= 0, "team1Scratches count");
+            Assert.IsTrue(team2ScratchesNodes.Count >= 0, "team2Scratches count"); 
 
-            //#region Get team names, score, game numbers
+            // Parse the players out of the lists
+            List<NhlHtmlReportRosterParticipantModel> team1Roster = NhlHtmlReportRoster.ParsePlayers(team1RosterNodes);
+            List<NhlHtmlReportRosterParticipantModel> team2Roster = NhlHtmlReportRoster.ParsePlayers(team2RosterNodes);
+            List<NhlHtmlReportRosterParticipantModel> team1Scratches = NhlHtmlReportRoster.ParsePlayers(team1ScratchesNodes);
+            List<NhlHtmlReportRosterParticipantModel> team2Scratches = NhlHtmlReportRoster.ParsePlayers(team2ScratchesNodes);
 
-            //HtmlNode visitorTableNode = tableNode.SelectSingleNode(@".//table[@id='Visitor']");
-            //HtmlNode homeTableNode = tableNode.SelectSingleNode(@".//table[@id='Home']");
+            string x = "X";
 
-            //HtmlNode visitorScoreNode = visitorTableNode.SelectNodes(@".//tr").ElementAt(1).SelectNodes(@".//tr/td").ElementAt(1);
-            //HtmlNode homeScoreNode = homeTableNode.SelectNodes(@".//tr").ElementAt(1).SelectNodes(@".//tr/td").ElementAt(1);
 
-            //model.VisitorScore = Convert.ToInt32(visitorScoreNode.InnerText);
-            //model.HomeScore = Convert.ToInt32(homeScoreNode.InnerText);
-
-            //HtmlNode visitorNameNode;
-            //if (visitorTableNode.SelectSingleNode(@"./tbody") != null)
-            //{
-            //    visitorNameNode = visitorTableNode.SelectNodes(@"./tbody/tr").ElementAt(2).SelectSingleNode(@"./td");
-            //}
-            //else
-            //{
-            //    visitorNameNode = visitorTableNode.SelectNodes(@"./tr").ElementAt(2).SelectSingleNode(@"./td");
-            //}
-
-            //HtmlNode homeNameNode;
-            //if (homeTableNode.SelectSingleNode(@"./tbody") != null)
-            //{
-            //    homeNameNode = homeTableNode.SelectNodes(@"./tbody/tr").ElementAt(2).SelectSingleNode(@"./td");
-            //}
-            //else
-            //{
-            //    homeNameNode = homeTableNode.SelectNodes(@"./tr").ElementAt(2).SelectSingleNode(@"./td");
-            //}
-
-            //string[] visitorInfo = visitorNameNode.InnerHtml.RemoveSpecialWhitespaceCharacters().Split(new string[] {"<br>"}, StringSplitOptions.None);
-            //model.Visitor = visitorInfo.ElementAt(0);
-            //MatchCollection visitorGameNumbers = Regex.Matches(visitorInfo.ElementAt(1), @"\d+");
-            //model.VisitorGameNumber = Convert.ToInt32(visitorGameNumbers[0].Value);
-            //model.VisitorAwayGameNumber = Convert.ToInt32(visitorGameNumbers[1].Value);
-
-            //string[] homeInfo = homeNameNode.InnerHtml.RemoveSpecialWhitespaceCharacters().Split(new string[] { "<br>" }, StringSplitOptions.None);
-            //model.Home = homeInfo.ElementAt(0);
-            //MatchCollection homeGameNumbers = Regex.Matches(homeInfo.ElementAt(1), @"\d+");
-            //model.HomeGameNumber = Convert.ToInt32(homeGameNumbers[0].Value);
-            //model.HomeHomeGameNumber = Convert.ToInt32(homeGameNumbers[1].Value);
-
-            //#endregion
-
-            //#region Date, time, attendance, league game number
-
-            //HtmlNode gameInfoTableNode = tableNode.SelectSingleNode(@".//table[@id='GameInfo']");
-            //HtmlNodeCollection gameInfoRowNodes = gameInfoTableNode.SelectNodes(@".//tr");
-            //DateTime gameDate = DateTime.Parse(gameInfoRowNodes[3].InnerText);
-            //model.Date = gameDate;
-
-            //string attendanceAndArenaText = gameInfoRowNodes[4].InnerText.RemoveSpecialWhitespaceCharacters();
-            //string[] attendanceAndArena = attendanceAndArenaText.Split(new string[] {"&nbsp;"}, StringSplitOptions.RemoveEmptyEntries) ;
-
-            //if (attendanceAndArena.Count() == 3)
-            //{
-            //    Match attendanceMatch = Regex.Match(attendanceAndArena[0].Replace(",", String.Empty), @"\d+");
-            //    string attendanceAsString = String.IsNullOrWhiteSpace(attendanceMatch.Value) ? "0" : attendanceMatch.Value;
-            //    model.Attendance = Convert.ToInt32(attendanceAsString);
-            //    model.ArenaName = attendanceAndArena[2];
-            //}
-            //else
-            //{
-            //    model.ArenaName = attendanceAndArena[0];
-            //}
-
-            //model.ArenaName = model.ArenaName.Replace("&amp;", "&");
-
-            //model.GameStatus = gameInfoRowNodes[7].InnerText.RemoveSpecialWhitespaceCharacters();
-
-            //if (model.GameStatus.Equals("Final", StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    string[] startAndEndTimes = gameInfoRowNodes[5].InnerText.RemoveSpecialWhitespaceCharacters().Split(new string[] { ";", "&nbsp;" }, StringSplitOptions.None);
-            //    model.StartTime = String.Concat(startAndEndTimes[1], " ", startAndEndTimes[2]);
-            //    model.EndTime = String.Concat(startAndEndTimes[4], " ", startAndEndTimes[5]);
-            //}
-
-            //Match leagueGameNumberMatch = Regex.Match(gameInfoRowNodes[6].InnerText, @"\d+");
-            //model.LeagueGameNumber = Convert.ToInt32(leagueGameNumberMatch.Value);
-
-            //#endregion
 
             return model;
+        }
+
+        private static List<NhlHtmlReportRosterParticipantModel> ParsePlayers(HtmlNodeCollection rows)
+        {
+            List<NhlHtmlReportRosterParticipantModel> players = new List<NhlHtmlReportRosterParticipantModel>();
+            
+            foreach (HtmlNode row in rows)
+            {
+                NhlHtmlReportRosterParticipantModel player = NhlHtmlReportRoster.ParsePlayer(row);
+                if (null != player)
+                {
+                    players.Add(player);
+                }
+            }
+
+            return players;
+        }
+
+        private static NhlHtmlReportRosterParticipantModel ParsePlayer(HtmlNode row)
+        {
+            NhlHtmlReportRosterParticipantModel player = new NhlHtmlReportRosterParticipantModel();
+
+            // Assume it is a Player
+            player.ParticipantType = ParticipantType.Player;
+
+            HtmlNodeCollection columnNodes = row.SelectNodes(@"./td");
+            player.Number = Convert.ToInt32(columnNodes[0].InnerText);
+            player.Position = columnNodes[1].InnerText;
+
+            // Parse out the name, captaincy, starting lineup
+            string nameText = columnNodes[2].InnerText;
+            if (columnNodes[2].Attributes["class"].Value.IndexOf("bold", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            {
+                player.StartingLineup = true;
+            }
+
+            if (nameText.IndexOf("(C)", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            {
+                player.Designation = Designation.Captain;
+                player.Name = nameText.Replace("(C)", String.Empty).Trim();
+            }
+            else if (nameText.IndexOf("(A)", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            {
+                player.Designation = Designation.AssistantCaptain;
+                player.Name = nameText.Replace("(A)", String.Empty).Trim();
+            }
+            else
+            {
+                player.Name = nameText.Trim();
+            }
+
+            return player;
         }
 
     }
