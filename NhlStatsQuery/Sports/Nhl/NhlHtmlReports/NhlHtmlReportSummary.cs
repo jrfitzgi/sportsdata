@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -14,16 +15,28 @@ namespace SportsData.Nhl
 {
     public class NhlHtmlReportSummary : NhlHtmlReportBase
     {
-        public static void UpdateSeason(int year)
+        public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
         {
             // Get the RtssReports for the specified year
             List<NhlRtssReportModel> models = NhlHtmlReportBase.GetRtssReports(year);
+            List<NhlHtmlReportSummaryModel> existingModels = null;
+            if (forceOverwrite == false)
+            {
+                // Only query for existing if we are not going to force overwrite all
+                existingModels = NhlHtmlReportSummary.GetHtmlSummaryReports(year, fromDate);
+            }
 
             // For each report, get the html blob from blob storage and parse the blob to a report
             List<NhlHtmlReportSummaryModel> results = new List<NhlHtmlReportSummaryModel>();
             foreach (NhlRtssReportModel model in models)
             {
-                string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink));
+                if (forceOverwrite == false && existingModels.Exists(m => m.NhlRtssReportModelId == model.Id))
+                {
+                    // In this case, only get data if it is not already populated
+                    continue;
+                }
+
+                string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
                 NhlHtmlReportSummaryModel report = NhlHtmlReportSummary.ParseHtmlBlob(model.Id, htmlBlob);
 
                 if (null != report)
@@ -44,7 +57,7 @@ namespace SportsData.Nhl
 
         public static NhlHtmlReportSummaryModel ParseHtmlBlob(int rtssReportId, string html)
         {
-            if (String.IsNullOrWhiteSpace(html)) { return null; }
+            if (String.IsNullOrWhiteSpace(html) || html.Equals("404")) { return null; }
 
             NhlHtmlReportSummaryModel model = new NhlHtmlReportSummaryModel();
             model.NhlRtssReportModelId = rtssReportId;
@@ -142,5 +155,24 @@ namespace SportsData.Nhl
             return model;
         }
 
+        /// <summary>
+        /// Get the NhlHtmlReportSummaryModels for the specified year
+        /// </summary>
+        private static List<NhlHtmlReportSummaryModel> GetHtmlSummaryReports([Optional] int year, [Optional] DateTime fromDate)
+        {
+            year = NhlGameStatsBaseModel.SetDefaultYear(year);
+
+            List<NhlHtmlReportSummaryModel> existingModels = new List<NhlHtmlReportSummaryModel>();
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                existingModels = (from m in db.NhlHtmlReportSummaries
+                                  where
+                                      m.NhlRtssReportModel.Year == year &&
+                                      m.NhlRtssReportModel.Date >= fromDate
+                                  select m).ToList();
+            }
+
+            return existingModels;
+        }
     }
 }

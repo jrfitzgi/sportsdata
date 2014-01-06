@@ -7,8 +7,8 @@ namespace SportsData.Models
     public class SportsDataContext : DbContext
     {
         public SportsDataContext()
-            : base("DefaultConnection")
-            //: base("ProdConnection")
+            //: base("DefaultConnection")
+            : base("ProdConnection")
         {
         }
 

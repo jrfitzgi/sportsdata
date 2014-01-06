@@ -98,11 +98,7 @@ namespace SportsData.Nhl
         /// </remarks>
         protected virtual List<NhlGameStatsBaseModel> GetAllResultsForSeasonType([Optional] int year, NhlSeasonType nhlSeasonType, [Optional] DateTime fromDate)
         {
-            if (year == 0)
-            {
-                // Default to the current year
-                year = NhlGameStatsBaseModel.GetSeason(DateTime.Now).Item2;
-            }
+            year = NhlGameStatsBaseModel.SetDefaultYear(year);
 
             List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
 

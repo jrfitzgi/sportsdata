@@ -26,7 +26,6 @@ namespace SportsDataTests
                 new KeyValuePair<string,string>("key","5774B680-047B-47EB-B465-3DBF946C3E7A")
             });
 
-
             Task<HttpResponseMessage> response = httpClient.PostAsync(requestUri, content);
             string result = response.Result.Content.ReadAsStringAsync().Result;
         }

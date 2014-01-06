@@ -38,6 +38,20 @@ namespace SportsData.Models
         public int Year { get; set; }
 
         /// <summary>
+        /// If the year is 0, set it to the default. Else, leave it as is.
+        /// </summary>
+        public static int SetDefaultYear(int year)
+        {
+            if (year == 0)
+            {
+                // Default to the current year
+                year = NhlGameStatsBaseModel.GetSeason(DateTime.Now).Item2;
+            }
+
+            return year;
+        }
+
+        /// <summary>
         /// Gets the NHL season in YYYN-YYYM format, where M = N+1. Eg. 2012-2013.
         /// </summary>
         public static Tuple<int, int> GetSeason(DateTime date)

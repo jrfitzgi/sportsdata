@@ -13,7 +13,11 @@ namespace SportsData.Nhl
     {
         #region Public Methods
 
-        public static void UpdateSeasonWithLatestOnly(int year)
+        /// <summary>
+        /// Get all the results starting from the last date of the data in the db. If a year is specified then only get latest for that year.
+        /// </summary>
+        /// <param name="year"></param>
+        public static void UpdateSeasonWithLatestOnly([Optional] int year)
         {
             DateTime latestResultDate;
             using (SportsDataContext db = new SportsDataContext())

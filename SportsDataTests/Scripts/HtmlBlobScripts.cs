@@ -12,8 +12,11 @@ namespace SportsDataTests
     [TestClass]
     public class HtmlBlobScripts : SportsDataTestsBaseClass
     {
+        /// <summary>
+        /// Get the html blobs for rosters
+        /// </summary>
         [TestMethod]
-        public void Script_HtmlBlobs()
+        public void Script_HtmlBlobs_Roster()
         {
             List<NhlRtssReportModel> models;
             using (SportsDataContext db = new SportsDataContext())

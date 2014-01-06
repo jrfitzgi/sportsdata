@@ -13,22 +13,40 @@ namespace SportsDataTests
     [TestClass]
     public class NhlScripts : SportsDataScriptsBaseClass
     {
+        /// <summary>
+        /// Get the game summaries for a season. No pre-reqs in the DB.
+        /// </summary>
         [TestMethod]
         public void Script_NhlGetGameSummary()
         {
             NhlGameSummary.UpdateSeason(2014);
         }
 
+        /// <summary>
+        /// Get the RTSS Reports for a season. No pre-reqs in the DB.
+        /// </summary>
         [TestMethod]
         public void Script_NhlGetRtssReport()
         {
-            NhlRtssReport.UpdateSeason(2014);
+            NhlRtssReport.UpdateSeason(2013);
         }
 
+        /// <summary>
+        /// Get the game summaries for a season from the existing HTML blobs in blob storage.
+        /// </summary>
         [TestMethod]
         public void Script_NhlGetHtmlReportSummary()
         {
-            NhlHtmlReportSummary.UpdateSeason(2014);
+            NhlHtmlReportSummary.UpdateSeason(2012);
+        }
+
+        /// <summary>
+        /// Get the rosters for a season from the existing HTML blobs in blob storage.
+        /// </summary>
+        [TestMethod]
+        public void Script_NhlGetHtmlReportRoster()
+        {
+            NhlHtmlReportRoster.UpdateSeason(2014);
         }
     }
 }

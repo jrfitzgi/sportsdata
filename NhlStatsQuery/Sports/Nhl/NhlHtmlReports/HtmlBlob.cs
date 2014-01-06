@@ -129,6 +129,10 @@ namespace SportsData.Nhl
                 {
                     //throw;
                 }
+                else
+                {
+                    responseString = "404";
+                }
             }
             catch (Exception e)
             {
@@ -158,10 +162,18 @@ namespace SportsData.Nhl
             cloudBlockBlob.UploadText(html);
         }
 
-        public static string RetrieveBlob(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri)
+        public static string RetrieveBlob(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri, bool getIfNotExists = false)
         {
+            // Get the blob if it doesn't exist
+            if (getIfNotExists == true)
+            {
+                // This method will not do anything if the blob already exists
+                HtmlBlob.GetAndStoreHtmlBlob(htmlBlobType, htmlBlobId, uri);
+            }
+            
             string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, htmlBlobId, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
+            
             string result = null;
 
             try
