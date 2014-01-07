@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Data.Objects;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -50,10 +52,33 @@ namespace SportsData.Nhl
             // Save the reports to the db
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlHtmlReportRosters.AddOrUpdate<NhlHtmlReportRosterModel>(
-                    m => m.NhlRtssReportModelId,
-                    results.ToArray());
-                db.SaveChanges();
+                //db.NhlHtmlReportRosters.AddOrUpdate<NhlHtmlReportRosterModel>(
+                //    m => m.NhlRtssReportModelId,
+                //    results.ToArray());
+                //db.SaveChanges();
+
+                int counter = 0;
+                int counterMax = 100;
+                foreach (NhlHtmlReportRosterModel model in results)
+                {
+                    counter++;
+
+                    if (model.Id != 0)
+                    {
+                        db.NhlHtmlReportRosters.Attach(model);
+                        db.Entry(model).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.Entry(model).State = EntityState.Added;
+                    }
+
+                    if (counter >= counterMax)
+                    {
+                        db.SaveChanges();
+                        counter = 0;
+                    }
+                }
             }
         }
 
@@ -82,14 +107,24 @@ namespace SportsData.Nhl
             // 3. visitor scratches
             // 4. home scratches
             // Also, ignore the first rows because they are header fields.
-            HtmlNodeCollection team1RosterNodes = rosterTables[0].SelectNodes(@".//tr[position() > 1]");
-            HtmlNodeCollection team2RosterNodes = rosterTables[1].SelectNodes(@".//tr[position() > 1]");
-            HtmlNodeCollection team1ScratchesNodes = rosterTables[2].SelectNodes(@".//tr[position() > 1]");
-            HtmlNodeCollection team2ScratchesNodes = rosterTables[3].SelectNodes(@".//tr[position() > 1]");
-            Assert.IsTrue(team1RosterNodes.Count > 10, "team1Roster count");
-            Assert.IsTrue(team2RosterNodes.Count > 10, "team2Roster count");
-            Assert.IsTrue(team1ScratchesNodes.Count >= 0, "team1Scratches count");
-            Assert.IsTrue(team2ScratchesNodes.Count >= 0, "team2Scratches count");
+            HtmlNodeCollection team1RosterNodes = null;
+            HtmlNodeCollection team2RosterNodes = null;
+            if (null != rosterTables && rosterTables.Count >= 2)
+            {
+                team1RosterNodes = rosterTables[0].SelectNodes(@".//tr[position() > 1]");
+                team2RosterNodes = rosterTables[1].SelectNodes(@".//tr[position() > 1]");
+                Assert.IsTrue(team1RosterNodes.Count > 10, "team1Roster count");
+                Assert.IsTrue(team2RosterNodes.Count > 10, "team2Roster count");
+            }
+
+            HtmlNodeCollection scratchesNodes = documentNode.SelectNodes(@".//tr[@id='Scratches']/td");
+            HtmlNodeCollection team1ScratchesNodes = null;
+            HtmlNodeCollection team2ScratchesNodes = null;
+            if (null != scratchesNodes)
+            {
+                team1ScratchesNodes = scratchesNodes[0].SelectNodes(@"./table/tr[position() > 1] | ./table/tbody/tr[position() > 1]");
+                team2ScratchesNodes = scratchesNodes[1].SelectNodes(@"./table/tr[position() > 1] | ./table/tbody/tr[position() > 1]");
+            }
 
             // Parse the players out of the lists
             List<NhlHtmlReportRosterParticipantModel> team1Roster = NhlHtmlReportRoster.ParsePlayers(team1RosterNodes);
@@ -108,10 +143,17 @@ namespace SportsData.Nhl
             HtmlNodeCollection refereesNodes = officialsSubTableNodes[0].SelectNodes(@".//tr");
             HtmlNodeCollection linesmenNodes = officialsSubTableNodes[1].SelectNodes(@".//tr");
 
-            NhlHtmlReportRosterParticipantModel referee1 = NhlHtmlReportRoster.ParseReferee(refereesNodes[0]);
-            NhlHtmlReportRosterParticipantModel referee2 = NhlHtmlReportRoster.ParseReferee(refereesNodes[1]);
-            NhlHtmlReportRosterParticipantModel linesman1 = NhlHtmlReportRoster.ParseReferee(linesmenNodes[0]);
-            NhlHtmlReportRosterParticipantModel linesman2 = NhlHtmlReportRoster.ParseReferee(linesmenNodes[1]);
+            NhlHtmlReportRosterParticipantModel referee1 = null;
+            if (refereesNodes != null && refereesNodes.Count >= 1) { referee1 = NhlHtmlReportRoster.ParseReferee(refereesNodes[0]); }
+
+            NhlHtmlReportRosterParticipantModel referee2 = null;
+            if (refereesNodes != null && refereesNodes.Count >= 2) { referee2 = NhlHtmlReportRoster.ParseReferee(refereesNodes[1]); }
+
+            NhlHtmlReportRosterParticipantModel linesman1 = null;
+            if (linesmenNodes != null && linesmenNodes.Count >= 1) { linesman1 = NhlHtmlReportRoster.ParseLinesman(linesmenNodes[0]); }
+
+            NhlHtmlReportRosterParticipantModel linesman2 = null;
+            if (linesmenNodes != null && linesmenNodes.Count >= 2) { linesman2 = NhlHtmlReportRoster.ParseLinesman(linesmenNodes[1]); }
 
             // Check for standby officials
             HtmlNodeCollection standbyOfficialsNodes1 = officialsSubTableNodes[2].SelectNodes(@".//tr");
@@ -139,6 +181,8 @@ namespace SportsData.Nhl
 
         private static List<NhlHtmlReportRosterParticipantModel> ParsePlayers(HtmlNodeCollection rows)
         {
+            if (null == rows) { return null; }
+
             List<NhlHtmlReportRosterParticipantModel> players = new List<NhlHtmlReportRosterParticipantModel>();
 
             foreach (HtmlNode row in rows)

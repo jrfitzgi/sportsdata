@@ -46,7 +46,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGetHtmlReportRoster()
         {
-            NhlHtmlReportRoster.UpdateSeason(2014);
+            NhlHtmlReportRoster.UpdateSeason(2011);
         }
     }
 }
