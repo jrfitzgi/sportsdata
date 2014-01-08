@@ -64,8 +64,16 @@ namespace SportsData.Nhl
 
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
+            HtmlNode documentNode = htmlDocument.DocumentNode;
 
-            HtmlNode tableNode = htmlDocument.DocumentNode.SelectSingleNode(@".//table[.//table[@id='GameInfo']]");
+            // Special Case
+            // The html for this game doesn't follow the same format as the other games 
+            if (null != documentNode.SelectSingleNode(@"./html/head/link[@href='RO010002_files/editdata.mso']"))
+            {
+                return NhlHtmlReportSummary.BruinsRangersSpecialCase(rtssReportId);
+            }
+
+            HtmlNode tableNode = documentNode.SelectSingleNode(@".//table[.//table[@id='GameInfo']]");
 
             if (null == tableNode) { return null; }
 
@@ -118,7 +126,16 @@ namespace SportsData.Nhl
 
             HtmlNode gameInfoTableNode = tableNode.SelectSingleNode(@".//table[@id='GameInfo']");
             HtmlNodeCollection gameInfoRowNodes = gameInfoTableNode.SelectNodes(@".//tr");
-            DateTime gameDate = DateTime.Parse(gameInfoRowNodes[3].InnerText);
+            
+            // Special Case
+            // A workaround for a bug in one of the reports which should actually be Wednesday, October 3, 2007
+            string gameDateText = gameInfoRowNodes[3].InnerText.RemoveSpecialWhitespaceCharacters();
+            if (gameDateText.Equals("Saturday, October 2, 2007", StringComparison.InvariantCultureIgnoreCase))
+            {
+                gameDateText = "Wednesday, October 3, 2007";
+            }
+
+            DateTime gameDate = DateTime.Parse(gameDateText);
             model.Date = gameDate;
 
             string attendanceAndArenaText = gameInfoRowNodes[4].InnerText.RemoveSpecialWhitespaceCharacters();
@@ -174,5 +191,32 @@ namespace SportsData.Nhl
 
             return existingModels;
         }
+
+        private static NhlHtmlReportSummaryModel BruinsRangersSpecialCase(int rtssReportId)
+        {
+            NhlHtmlReportSummaryModel model = new NhlHtmlReportSummaryModel();
+            model.NhlRtssReportModelId = rtssReportId;
+
+            model.VisitorScore = 2;
+            model.Visitor = "BOSTON BRUINS";
+            model.VisitorAwayGameNumber = 1;
+            model.VisitorGameNumber = 1;
+
+            model.HomeScore = 1;
+            model.Home = "NEW YORK RANGERS";
+            model.HomeHomeGameNumber = 1;
+            model.HomeGameNumber = 1;
+
+            model.Date = new DateTime(2009, 9, 15);
+            model.Attendance = 11111;
+            model.ArenaName = "Madison Square Garden";
+            model.StartTime = "7:12 EDT";
+            model.EndTime = "9:24 EDT";
+            model.LeagueGameNumber = 2;
+            model.GameStatus = "Final";
+
+            return model;
+        }
+
     }
 }

@@ -37,7 +37,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGetHtmlReportSummary()
         {
-            NhlHtmlReportSummary.UpdateSeason(2012);
+            NhlHtmlReportSummary.UpdateSeason(year: 2007, forceOverwrite: true);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGetHtmlReportRoster()
         {
-            NhlHtmlReportRoster.UpdateSeason(2011);
+            NhlHtmlReportRoster.UpdateSeason(year: 2008, forceOverwrite: true);
         }
     }
 }

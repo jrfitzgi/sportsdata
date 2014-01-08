@@ -49,14 +49,9 @@ namespace SportsData.Nhl
                 }
             }
 
-            // Save the reports to the db
+            // Save the reports to the db 100 records at a time
             using (SportsDataContext db = new SportsDataContext())
             {
-                //db.NhlHtmlReportRosters.AddOrUpdate<NhlHtmlReportRosterModel>(
-                //    m => m.NhlRtssReportModelId,
-                //    results.ToArray());
-                //db.SaveChanges();
-
                 int counter = 0;
                 int counterMax = 100;
                 foreach (NhlHtmlReportRosterModel model in results)
@@ -92,6 +87,13 @@ namespace SportsData.Nhl
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
             HtmlNode documentNode = htmlDocument.DocumentNode;
+
+            // Special Case
+            // The html for this game doesn't follow the same format as the other games 
+            if (null != documentNode.SelectSingleNode(@"./html/head/link[@href='RO010002_files/editdata.mso']"))
+            {
+                return NhlHtmlReportRoster.BruinsRangersSpecialCase(rtssReportId);
+            }
 
             // Get the teams
             HtmlNodeCollection teamNodes = documentNode.SelectNodes(@".//tr/td[contains(@class,'teamHeading + border')]");
@@ -165,7 +167,7 @@ namespace SportsData.Nhl
 
 
             // Fill out the model
-            model.VisitorHeadCoach = new List<NhlHtmlReportRosterParticipantModel> {coach1};
+            model.VisitorHeadCoach = new List<NhlHtmlReportRosterParticipantModel> { coach1 };
             model.HomeHeadCoach = new List<NhlHtmlReportRosterParticipantModel> { coach2 };
             model.VisitorRoster = team1Roster;
             model.HomeRoster = team2Roster;
@@ -243,6 +245,7 @@ namespace SportsData.Nhl
 
             NhlHtmlReportRosterParticipantModel coach = new NhlHtmlReportRosterParticipantModel();
             coach.ParticipantType = ParticipantType.Coach;
+            coach.Designation = Designation.HeadCoach;
             coach.Name = columnNode.InnerText.Trim();
             return coach;
         }
@@ -287,7 +290,7 @@ namespace SportsData.Nhl
                 official.Name = regex.Match(nameText).Groups["name"].Value.Trim();
             }
 
-           
+
 
             return official;
         }
@@ -312,6 +315,78 @@ namespace SportsData.Nhl
             }
 
             return existingModels;
+        }
+
+        private static NhlHtmlReportRosterModel BruinsRangersSpecialCase(int rtssReportId)
+        {
+            NhlHtmlReportRosterModel model = new NhlHtmlReportRosterModel();
+            model.NhlRtssReportModelId = rtssReportId;
+
+            model.VisitorRoster = new List<NhlHtmlReportRosterParticipantModel>();
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 12, Position = "R", Name = "CHUCK KOBASEW", Designation = Designation.AssistantCaptain });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 16, Position = "L", Name = "MARCO STRUM", Designation = Designation.AssistantCaptain });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 17, Position = "L", Name = "MILAN LUCIC" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 26, Position = "R", Name = "BLAKE WHEELER" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 33, Position = "D", Name = "ZDENO CHARA", Designation = Designation.Captain });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 42, Position = "C", Name = "TRENT WHITFIELD" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 48, Position = "D", Name = "MATT HUNWICK" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 52, Position = "C", Name = "ZACH HAMILL" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 54, Position = "D", Name = "ADAM MCQUAID" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 55, Position = "D", Name = "JOHNNY BOYCHUK" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 60, Position = "C", Name = "VLADIMIR SOBOTKA" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 61, Position = "R", Name = "BYRON BITZ" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 62, Position = "D", Name = "JEFFREY PENNER" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 63, Position = "C", Name = "BRAD MARCHAND" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 65, Position = "D", Name = "ANDREW BODNARCHUK" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 68, Position = "R", Name = "MIKKO LEHTONEN" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 72, Position = "C", Name = "JAMIE ARNIEL" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 74, Position = "C", Name = "MAX SAUVE" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 32, Position = "G", Name = "DANY SABOURIN" });
+            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 40, Position = "G", Name = "TUUKKA RASK" });
+            model.VisitorRoster.ToList().ForEach(m => m.ParticipantType = ParticipantType.Player);
+
+            model.HomeRoster = new List<NhlHtmlReportRosterParticipantModel>();
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 5, Position = "D", Name = "DAN GIRARDI" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 12, Position = "R", Name = "ALES KOTALIK" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 18, Position = "D", Name = "MARC STAAL" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 21, Position = "L", Name = "CHRISTOPHER HIGGINS" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 22, Position = "C", Name = "BRIAN BOYLE" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 23, Position = "C", Name = "CHRIS DRURY", Designation = Designation.Captain });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 24, Position = "R", Name = "RYAN CALLAHAN" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 25, Position = "D", Name = "ALEXEI SEMENOV" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 32, Position = "D", Name = "MICHAEL SAUER" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 36, Position = "L", Name = "DANE BYERS" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 38, Position = "R", Name = "PIERRE PARENTEAU" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 42, Position = "C", Name = "ARTEM ANISIMOV" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 43, Position = "D", Name = "MICHAEL DEL ZOTTO" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 59, Position = "C", Name = "EVGENY GRACHEV" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 81, Position = "R", Name = "ENVER LISIN" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 85, Position = "L", Name = "MATT MACCARONE" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 87, Position = "L", Name = "DONALD BRASHEAR" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 97, Position = "D", Name = "MATT GILROY" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 31, Position = "G", Name = "MATT ZABA" });
+            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 40, Position = "G", Name = "STEPHEN VALIQUETTE" });
+            model.HomeRoster.ToList().ForEach(m => m.ParticipantType = ParticipantType.Player);
+
+            // Since this is a preseason game, don't bother filling in the scratches. The data is available here http://www.nhl.com/scores/htmlreports/20092010/RO010002.HTM
+            model.VisitorScratches = new List<NhlHtmlReportRosterParticipantModel>();
+            model.HomeScratches = new List<NhlHtmlReportRosterParticipantModel>();
+
+            model.VisitorHeadCoach = new List<NhlHtmlReportRosterParticipantModel>();
+            model.VisitorHeadCoach.Add(new NhlHtmlReportRosterParticipantModel { Name = "CLAUDE JULIEN", Designation = Designation.HeadCoach, ParticipantType = ParticipantType.Coach });
+
+            model.HomeHeadCoach = new List<NhlHtmlReportRosterParticipantModel>();
+            model.HomeHeadCoach.Add(new NhlHtmlReportRosterParticipantModel { Name = "JOHN TORTORELLA", Designation = Designation.HeadCoach, ParticipantType = ParticipantType.Coach });
+
+            model.Referees = new List<NhlHtmlReportRosterParticipantModel>();
+            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 8, Name = "Dave Jackson", Designation = Designation.Referee, ParticipantType = ParticipantType.Official });
+            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 41, Name = "Chris Ciamaga", Designation = Designation.Referee, ParticipantType = ParticipantType.Official });
+
+            model.Linesman = new List<NhlHtmlReportRosterParticipantModel>();
+            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 84, Name = "Tony Sericolo", Designation = Designation.Linesman, ParticipantType = ParticipantType.Official });
+            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 77, Name = "Tim Nowak", Designation = Designation.Linesman, ParticipantType = ParticipantType.Official });
+
+            return model;
         }
     }
 }
