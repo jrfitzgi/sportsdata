@@ -207,7 +207,12 @@ namespace SportsData.Nhl
             player.ParticipantType = ParticipantType.Player;
 
             HtmlNodeCollection columnNodes = row.SelectNodes(@"./td");
-            player.Number = Convert.ToInt32(columnNodes[0].InnerText);
+
+            string numberText = columnNodes[0].InnerText;
+            if (!String.IsNullOrWhiteSpace(numberText))
+            {
+                player.Number = Convert.ToInt32(numberText);
+            }
             player.Position = columnNodes[1].InnerText;
 
             // Parse out the name, captaincy, starting lineup

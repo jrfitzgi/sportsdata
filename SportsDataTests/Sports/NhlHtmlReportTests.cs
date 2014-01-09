@@ -53,6 +53,15 @@ namespace SportsDataTests
         }
 
         [TestMethod]
+        public void ParseHtmlReportSummaryCapsThrashers2007()
+        {
+            string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\CapsThrashers_10.05.2007.htm";
+            string html = File.ReadAllText(path);
+
+            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
+        }
+        
+        [TestMethod]
         public void ParseMultipleHtmlGameSummaries()
         {
             NhlHtmlReportSummary.UpdateSeason(2014);

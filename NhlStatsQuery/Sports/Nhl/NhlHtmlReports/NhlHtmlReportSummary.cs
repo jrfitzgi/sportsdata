@@ -108,7 +108,7 @@ namespace SportsData.Nhl
                 homeNameNode = homeTableNode.SelectNodes(@"./tr").ElementAt(2).SelectSingleNode(@"./td");
             }
 
-            string[] visitorInfo = visitorNameNode.InnerHtml.RemoveSpecialWhitespaceCharacters().Split(new string[] {"<br>"}, StringSplitOptions.None);
+            string[] visitorInfo = visitorNameNode.InnerHtml.RemoveSpecialWhitespaceCharacters().Split(new string[] { "<br>" }, StringSplitOptions.None);
             model.Visitor = visitorInfo.ElementAt(0);
             MatchCollection visitorGameNumbers = Regex.Matches(visitorInfo.ElementAt(1), @"\d+");
             model.VisitorGameNumber = Convert.ToInt32(visitorGameNumbers[0].Value);
@@ -126,7 +126,7 @@ namespace SportsData.Nhl
 
             HtmlNode gameInfoTableNode = tableNode.SelectSingleNode(@".//table[@id='GameInfo']");
             HtmlNodeCollection gameInfoRowNodes = gameInfoTableNode.SelectNodes(@".//tr");
-            
+
             // Special Case
             // A workaround for a bug in one of the reports which should actually be Wednesday, October 3, 2007
             string gameDateText = gameInfoRowNodes[3].InnerText.RemoveSpecialWhitespaceCharacters();
@@ -139,21 +139,51 @@ namespace SportsData.Nhl
             model.Date = gameDate;
 
             string attendanceAndArenaText = gameInfoRowNodes[4].InnerText.RemoveSpecialWhitespaceCharacters();
-            string[] attendanceAndArena = attendanceAndArenaText.Split(new string[] {"&nbsp;"}, StringSplitOptions.RemoveEmptyEntries) ;
+            attendanceAndArenaText = attendanceAndArenaText.Replace("&nbsp;", " ").Replace(",", String.Empty);
 
-            if (attendanceAndArena.Count() == 3)
+            Match attendanceMatch = Regex.Match(attendanceAndArenaText, @"\d+");
+            string attendanceAsString = String.IsNullOrWhiteSpace(attendanceMatch.Value) ? "0" : attendanceMatch.Value;
+            model.Attendance = Convert.ToInt32(attendanceAsString);
+            
+            // Find 'at' and assume the arena name follows
+            string token = " at ";
+            int tokenIndex = attendanceAndArenaText.IndexOf(token, StringComparison.InvariantCultureIgnoreCase);
+            
+            // If 'at' can't be found, try '@'
+            if (token < 0)
             {
-                Match attendanceMatch = Regex.Match(attendanceAndArena[0].Replace(",", String.Empty), @"\d+");
-                string attendanceAsString = String.IsNullOrWhiteSpace(attendanceMatch.Value) ? "0" : attendanceMatch.Value;
-                model.Attendance = Convert.ToInt32(attendanceAsString);
-                model.ArenaName = attendanceAndArena[2];
+                token = " @ ";
+                tokenIndex = attendanceAndArenaText.IndexOf(token, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            int arenaNameIndex = tokenIndex + token.Length;
+
+            if (tokenIndex >= 0)
+            {
+                model.ArenaName = attendanceAndArenaText.Substring(arenaNameIndex);
             }
             else
             {
-                model.ArenaName = attendanceAndArena[0];
+                // just take the whole string
+                model.ArenaName = attendanceAndArenaText;
             }
 
-            model.ArenaName = model.ArenaName.Replace("&amp;", "&");
+            //string attendanceAndArenaText = gameInfoRowNodes[4].InnerText.RemoveSpecialWhitespaceCharacters();
+            //string[] attendanceAndArena = attendanceAndArenaText.Split(new string[] {"&nbsp;"}, StringSplitOptions.RemoveEmptyEntries) ;
+
+            //if (attendanceAndArena.Count() == 3)
+            //{
+            //    Match attendanceMatch = Regex.Match(attendanceAndArena[0].Replace(",", String.Empty), @"\d+");
+            //    string attendanceAsString = String.IsNullOrWhiteSpace(attendanceMatch.Value) ? "0" : attendanceMatch.Value;
+            //    model.Attendance = Convert.ToInt32(attendanceAsString);
+            //    model.ArenaName = attendanceAndArena[2];
+            //}
+            //else
+            //{
+            //    model.ArenaName = attendanceAndArena[0];
+            //}
+
+            model.ArenaName = model.ArenaName.Replace("&amp;", "&").Trim();
 
             model.GameStatus = gameInfoRowNodes[7].InnerText.RemoveSpecialWhitespaceCharacters();
 
@@ -163,7 +193,7 @@ namespace SportsData.Nhl
                 model.StartTime = String.Concat(startAndEndTimes[1], " ", startAndEndTimes[2]);
                 model.EndTime = String.Concat(startAndEndTimes[4], " ", startAndEndTimes[5]);
             }
-            
+
             Match leagueGameNumberMatch = Regex.Match(gameInfoRowNodes[6].InnerText, @"\d+");
             model.LeagueGameNumber = Convert.ToInt32(leagueGameNumberMatch.Value);
 
