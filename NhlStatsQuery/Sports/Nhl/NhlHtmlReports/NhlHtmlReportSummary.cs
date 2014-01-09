@@ -150,7 +150,7 @@ namespace SportsData.Nhl
             int tokenIndex = attendanceAndArenaText.IndexOf(token, StringComparison.InvariantCultureIgnoreCase);
             
             // If 'at' can't be found, try '@'
-            if (token < 0)
+            if (tokenIndex < 0)
             {
                 token = " @ ";
                 tokenIndex = attendanceAndArenaText.IndexOf(token, StringComparison.InvariantCultureIgnoreCase);
