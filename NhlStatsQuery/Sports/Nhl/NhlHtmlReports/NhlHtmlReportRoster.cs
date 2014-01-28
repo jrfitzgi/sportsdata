@@ -27,7 +27,7 @@ namespace SportsData.Nhl
             if (forceOverwrite == false)
             {
                 // Only query for existing if we are not going to force overwrite all
-                existingModels = NhlHtmlReportRoster.GetHtmlRtssReports(year, fromDate);
+                existingModels = NhlHtmlReportRoster.GetHtmlRosterReports(year, fromDate);
             }
 
             // For each report, get the html blob from blob storage and parse the blob to a report
@@ -305,7 +305,7 @@ namespace SportsData.Nhl
         /// <summary>
         /// Get the NhlHtmlReportRosterModel for the specified year
         /// </summary>
-        private static List<NhlHtmlReportRosterModel> GetHtmlRtssReports([Optional] int year, [Optional] DateTime fromDate)
+        private static List<NhlHtmlReportRosterModel> GetHtmlRosterReports([Optional] int year, [Optional] DateTime fromDate)
         {
             year = NhlGameStatsBaseModel.SetDefaultYear(year);
 
