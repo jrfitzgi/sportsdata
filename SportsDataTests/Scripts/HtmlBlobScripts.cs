@@ -18,18 +18,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_HtmlBlobs_Roster()
         {
-            List<NhlRtssReportModel> models;
-            using (SportsDataContext db = new SportsDataContext())
-            {
-                models = (from m in db.NhlRtssReports
-                          where
-                            m.Year == 2014
-                          select m).ToList();
-            }
-
-            Dictionary<Uri, string> items = new Dictionary<Uri, string>();
-            models.ForEach(m => items.Add(new Uri(m.RosterLink), m.Id.ToString()));
-            HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, items, false);
+            HtmlBlob.UpdateSeason();
         }
     }
 }

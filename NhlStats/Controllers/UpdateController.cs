@@ -13,8 +13,6 @@ namespace SportsData.Controllers
 {
     public class UpdateController : SportsDataController
     {
-
-
         [HttpPost]
         public ActionResult Index()
         {
@@ -30,6 +28,8 @@ namespace SportsData.Controllers
                 results.Add("TwitterData", this.Update(delegate() { TwitterData.UpdateAllSnapshotsInDb(); }));
                 results.Add("NhlGameSummary", this.Update(delegate() { NhlGameSummary.UpdateSeasonWithLatestOnly(); }));
                 results.Add("NhlRtssReport", this.Update(delegate() { NhlRtssReport.UpdateSeasonWithLatestOnly(); }));
+
+                results.Add("HtmlBlobs", this.Update(delegate() { HtmlBlob.UpdateSeason(); }));
                 results.Add("NhlHtmlReportSummary", this.Update(delegate() { NhlHtmlReportSummary.UpdateSeason(); }));
                 results.Add("NhlHtmlReportRoster", this.Update(delegate() { NhlHtmlReportRoster.UpdateSeason(); }));
 

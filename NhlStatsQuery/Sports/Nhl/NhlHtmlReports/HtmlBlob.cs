@@ -13,7 +13,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace SportsData.Nhl
 {
-    public class HtmlBlob
+    public partial class HtmlBlob
     {
         // Start using other prefixes if/when we start storing blobs from other sources
         private const string nhlBlobNamePrefix = "sports/nhl";
