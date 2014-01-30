@@ -74,6 +74,8 @@ namespace SportsData.Nhl
                         counter = 0;
                     }
                 }
+
+                db.SaveChanges();
             }
         }
 

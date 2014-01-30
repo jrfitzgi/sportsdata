@@ -66,6 +66,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Scripts\HtmlBlobScripts.cs" />
+    <Compile Include="Sports\HtmlBlobTests.cs" />
     <Compile Include="Sports\NhlHtmlReportTests.cs" />
     <Compile Include="UpdateControllerTests.cs" />
     <Compile Include="Scripts\MlbScripts.cs" />
