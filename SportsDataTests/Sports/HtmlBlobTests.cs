@@ -23,8 +23,8 @@ namespace SportsDataTests
             {
                 models = (from m in db.NhlRtssReports
                           where
-                            (m.Home == "WASHINGTON" || m.Visitor == "WASHINGTON") &&
-                            m.Date >= new DateTime(2014,1,27)
+                            (m.Home == "VANCOUVER" || m.Visitor == "VANCOUVER") &&
+                            m.Date >= new DateTime(2014,1,29)
                           select m).ToList();
             }
 
@@ -32,10 +32,10 @@ namespace SportsDataTests
             models.ForEach(m => items.Add(new Uri(m.RosterLink), m.Id.ToString()));
             HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, items, false);
 
-            //foreach (NhlRtssReportModel model in models)
-            //{
-            //    string html = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
-            //}
+            foreach (NhlRtssReportModel model in models)
+            {
+                string html = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
+            }
         }
     }
 }

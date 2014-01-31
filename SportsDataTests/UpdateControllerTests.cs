@@ -16,8 +16,9 @@ namespace SportsDataTests
         public void UpdateControllerTest()
         {
             HttpClient httpClient = new HttpClient();
-            httpClient.Timeout = new TimeSpan(0, 5, 0);
+            httpClient.Timeout = new TimeSpan(1, 0, 0);
             httpClient.BaseAddress = new Uri("http://localhost:51714");
+            //httpClient.BaseAddress = new Uri("http://nhlstats.azurewebsites.net");
 
             Uri requestUri = new Uri("update/index", UriKind.Relative);
 
