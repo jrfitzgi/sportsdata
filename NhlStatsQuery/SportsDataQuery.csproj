@@ -91,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Demographics\DemographicsQuery.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobUpdateMethods.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportBase.cs" />
