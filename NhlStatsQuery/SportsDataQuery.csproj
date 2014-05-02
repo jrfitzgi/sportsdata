@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Demographics\DemographicsQuery.cs" />
+    <Compile Include="Demographics\DemographicsData.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobUpdateMethods.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportBase.cs" />

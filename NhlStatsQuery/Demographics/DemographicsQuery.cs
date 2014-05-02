@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using HtmlAgilityPack;
 using SportsData.Models;
@@ -36,6 +37,8 @@ namespace SportsData.Demographics
 
         public static DemographicsModel GetDemographic(int zipCode)
         {
+            Assert.IsTrue(zipCode <= 99999, "Zip Code {0} cannot be more than 5 digits", zipCode);
+
             string page = DemographicsQuery.GetPage(zipCode);
             DemographicsModel result = DemographicsQuery.ParsePage(page);
             return result;
@@ -78,7 +81,48 @@ namespace SportsData.Demographics
                 data.Add(fields[i], values[i]);
             }
 
-            return null;
+            // Now populate the object with data from the dictionary
+            DemographicsModel result = new DemographicsModel();
+            result.Zip = Convert.ToInt32(data["zip"]);
+            result.City = data["city"];
+            result.State = data["state"];
+            result.MedianIncome = Convert.ToInt32(data["MedianIncome"]);
+            result.MedianIncomeRank = Convert.ToInt32(data["MedianIncomeRank"]);
+            result.CostOfLivingIndex = Convert.ToDouble(data["CostOfLivingIndex"]);
+            result.CostOfLivingRank = Convert.ToInt32(data["CostOfLivingRank"]);
+            result.MedianMortgageToIncomeRatio = Convert.ToDouble(data["MedianMortgageToIncomeRatio"]);
+            result.MedianMortgageToIncomeRank = Convert.ToInt32(data["MedianMortgageToIncomeRank"]);
+            result.OwnerOccupiedHomesPercent = Convert.ToDouble(data["OwnerOccupiedHomesPercent"]);
+            result.OwnerOccupiedHomesRank = Convert.ToInt32(data["OwnerOccupiedHomesRank"]);
+            result.MedianRoomsInHome = Convert.ToDouble(data["MedianRoomsInHome"]);
+            result.MedianRoomsInHomeRank = Convert.ToInt32(data["MedianRoomsInHomeRank"]);
+            result.CollegeDegreePercent = Convert.ToDouble(data["CollegeDegreePercent"]);
+            result.CollegeDegreeRank = Convert.ToInt32(data["CollegeDegreeRank"]);
+            result.ProfessionalPercent = Convert.ToDouble(data["ProfessionalPercent"]);
+            result.ProfessionalRank = Convert.ToInt32(data["ProfessionalRank"]);
+            result.Population = Convert.ToInt32(data["Population"]);
+            result.PopulationRank = Convert.ToInt32(data["PopulationRank"]);
+            result.AverageHouseholdSize = Convert.ToDouble(data["AverageHouseholdSize"]);
+            result.AverageHouseholdSizeRank = Convert.ToInt32(data["AverageHouseholdSizeRank"]);
+            result.MedianAge = Convert.ToDouble(data["MedianAge"]);
+            result.MedianAgeRank = Convert.ToInt32(data["MedianAgeRank"]);
+            result.MaleToFemaleRatio = Convert.ToDouble(data["MaleToFemaleRatio"]);
+            result.MaleToFemaleRank = Convert.ToInt32(data["MaleToFemaleRank"]);
+            result.MarriedPercent = Convert.ToDouble(data["MarriedPercent"]);
+            result.MarriedRank = Convert.ToInt32(data["MarriedRank"]);
+            result.DivorcedPercent = Convert.ToDouble(data["DivorcedPercent"]);
+            result.DivorcedRank = Convert.ToInt32(data["DivorcedRank"]);
+            result.WhitePercent = Convert.ToDouble(data["WhitePercent"]);
+            result.WhiteRank = Convert.ToInt32(data["WhiteRank"]);
+            result.BlackPercent = Convert.ToDouble(data["BlackPercent"]);
+            result.BlackRank = Convert.ToInt32(data["BlackRank"]);
+            result.AsianPercent = Convert.ToDouble(data["AsianPercent"]);
+            result.AsianRank = Convert.ToInt32(data["AsianRank"]);
+            result.HispanicEthnicityPercent = Convert.ToDouble(data["HispanicEthnicityPercent"]);
+            result.HispanicEthnicityRank = Convert.ToInt32(data["HispanicEthnicityRank"]);
+
+            result.LastUpdated = DateTime.UtcNow;
+            return result;
         }
     }
 }

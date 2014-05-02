@@ -31,6 +31,9 @@ namespace SportsData.Models
         public DbSet<FacebookAccount> FacebookAccountsToFollow { get; set; }
         public DbSet<FacebookSnapshot> FacebookSnapshots { get; set; }
 
+        // Demographics
+        public DbSet<DemographicsModel> Demographics { get; set; }
+
         public static void Seed(SportsDataContext context)
         {
             #region Mlb
