@@ -23,8 +23,9 @@ namespace SportsData.Demographics
         /// Get the demographics data for all zipcodes in the list
         /// </summary>
         /// <param name="zipCodes"></param>
+        /// <param name="saveToDb">Save each demographic as it is retrieved</param>
         /// <param name="randomWaitSeconds">Sleep for between 0 and randomWaitSeconds between each request</param>
-        public static List<DemographicsModel> GetDemographics(List<int> zipCodes, [Optional] int randomWaitSeconds)
+        public static List<DemographicsModel> GetDemographics(List<int> zipCodes, [Optional] bool saveToDb, [Optional] int randomWaitSeconds)
         {
             List<DemographicsModel> results = new List<DemographicsModel>();
 
@@ -40,6 +41,7 @@ namespace SportsData.Demographics
                 if (null != result)
                 {
                     results.Add(result);
+                    DemographicsData.UpdateDatabase(new List<DemographicsModel> {result});
                 }
                 else
                 {
