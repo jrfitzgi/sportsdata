@@ -41,6 +41,11 @@ namespace SportsData.Demographics
                 {
                     results.Add(result);
                 }
+                else
+                {
+                    // We hit a ? and are blocked
+                    break;
+                }
             }
 
             return results;
