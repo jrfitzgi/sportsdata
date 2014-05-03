@@ -51,6 +51,12 @@ namespace SportsData.Demographics
             Assert.IsTrue(zipCode <= 99999, "Zip Code {0} cannot be more than 5 digits", zipCode);
 
             string page = DemographicsQuery.GetPage(zipCode);
+            if (page.Equals("?"))
+            {
+                Console.WriteLine("Page for {0} contains '?'", zipCode);
+                return null;
+            }
+
             DemographicsModel result = DemographicsQuery.ParsePage(page, zipCode);
             return result;
         }
