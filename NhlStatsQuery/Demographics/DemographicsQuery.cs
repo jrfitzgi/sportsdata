@@ -41,7 +41,7 @@ namespace SportsData.Demographics
                 if (null != result)
                 {
                     results.Add(result);
-                    DemographicsData.UpdateDatabase(new List<DemographicsModel> {result});
+                    if (saveToDb == true) { DemographicsData.UpdateDatabase(new List<DemographicsModel> { result }); }
                 }
                 else
                 {
@@ -97,10 +97,10 @@ namespace SportsData.Demographics
 
             string[] fields = fieldsCsv.Split(',');
             string[] values = valuesCsv.Split(',');
-            
+
             // Fields and values should align by their index. Put them into a dictionary.
             Dictionary<string, string> data = new Dictionary<string, string>();
-            for (int i=0; i<fields.Length; i++)
+            for (int i = 0; i < fields.Length; i++)
             {
                 data.Add(fields[i], values[i]);
             }
