@@ -20,7 +20,7 @@ namespace SportsDataTests
         {
 
             List<int> allZipCodes = zipCsv.Replace(" ", String.Empty).Split(',').ToList().ConvertAll<int>(x => Convert.ToInt32(x));
-            List<int> selectedZipCodes = allZipCodes.GetRange(145, 100);
+            List<int> selectedZipCodes = allZipCodes.GetRange(412, 100);
 
             List<DemographicsModel> results = DemographicsQuery.GetDemographics(selectedZipCodes, false, 0);
             DemographicsData.UpdateDatabase(results);
