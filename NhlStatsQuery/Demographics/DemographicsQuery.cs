@@ -56,7 +56,7 @@ namespace SportsData.Demographics
 
         public static DemographicsModel GetDemographic(int zipCode)
         {
-            if (zipCode <= 99999)
+            if (zipCode > 99999)
             {
                 Console.WriteLine("Zip Code {0} cannot be more than 5 digits. Skipping it.", zipCode);
                 return null;
