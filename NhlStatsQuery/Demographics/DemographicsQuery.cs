@@ -50,17 +50,22 @@ namespace SportsData.Demographics
                 }
             }
 
+            Console.WriteLine("Queried a total of {0} zip codes", results.Count);
             return results;
         }
 
         public static DemographicsModel GetDemographic(int zipCode)
         {
-            Assert.IsTrue(zipCode <= 99999, "Zip Code {0} cannot be more than 5 digits", zipCode);
+            if (zipCode <= 99999)
+            {
+                Console.WriteLine("Zip Code {0} cannot be more than 5 digits. Skipping it.", zipCode);
+                return null;
+            }
 
             string page = DemographicsQuery.GetPage(zipCode);
             if (page.Equals("?"))
             {
-                Console.WriteLine("Page for {0} contains '?'", zipCode);
+                Console.WriteLine("Request for {0} contains '?' which means that this IP address is blocked by zipwho.com. Use www.whatismyip.com to see your IP address.", zipCode);
                 return null;
             }
 
@@ -152,6 +157,8 @@ namespace SportsData.Demographics
                 result.AsianRank = Convert.ToInt32(data["AsianRank"]);
                 result.HispanicEthnicityPercent = Convert.ToDouble(data["HispanicEthnicityPercent"]);
                 result.HispanicEthnicityRank = Convert.ToInt32(data["HispanicEthnicityRank"]);
+
+                Console.WriteLine("Data found for {0}", zipCode);
             }
 
             result.LastUpdated = DateTime.UtcNow;

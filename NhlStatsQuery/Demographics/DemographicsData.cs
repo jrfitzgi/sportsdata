@@ -16,12 +16,16 @@ namespace SportsData.Demographics
     {
         public static void UpdateDatabase(List<DemographicsModel> data)
         {
+            Console.WriteLine("Saving {0} records", data.Count);
+
             using (SportsDataContext db = new SportsDataContext())
             {
                 db.Demographics.AddOrUpdate(x => x.Zip, data.ToArray());
 
                 db.SaveChanges();
             }
+
+            Console.WriteLine("Done saving {0} records", data.Count);
 
         }
 
