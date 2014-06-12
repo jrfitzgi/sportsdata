@@ -50,6 +50,9 @@
   <ItemGroup>
     <Compile Include="Demographics\DemographicsModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Sports\Nhl\NhlModelHelper.cs" />
+    <Compile Include="Sports\Nhl\NhlPlayerBaseModel.cs" />
+    <Compile Include="Sports\Nhl\NhlPlayerStatsBioModel.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseModelComparer.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportRosterModel.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportSummaryModel.cs" />
