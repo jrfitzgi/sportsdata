@@ -15,9 +15,9 @@ namespace SportsData.Models
 
         public string BirthCountry { get; set; }
 
-        public int Height { get; set; }
+        public int HeightInches { get; set; }
 
-        public int Weight { get; set; }
+        public int WeightLbs { get; set; }
 
         public string Shoots { get; set; }
 

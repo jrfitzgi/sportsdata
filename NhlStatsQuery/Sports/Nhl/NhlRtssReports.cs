@@ -65,7 +65,7 @@ namespace SportsData.Nhl
 
             model.NhlSeasonType = nhlSeasonType;
             model.Date = Convert.ToDateTime(tdNodes[0].InnerText.Replace("'", "/"));
-            model.Year = NhlGameSummaryModel.GetSeason(model.Date).Item2;
+            model.Year = NhlModelHelper.GetSeason(model.Date).Item2;
 
             model.GameNumber = Convert.ToInt32(tdNodes[1].InnerText);
             model.Visitor = tdNodes[2].InnerText;

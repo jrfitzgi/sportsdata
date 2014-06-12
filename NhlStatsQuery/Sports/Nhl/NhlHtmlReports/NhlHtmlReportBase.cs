@@ -20,7 +20,7 @@ namespace SportsData.Nhl
         /// </summary>
         public static List<NhlRtssReportModel> GetRtssReports([Optional] int year, [Optional] DateTime fromDate)
         {
-            year = NhlGameStatsBaseModel.SetDefaultYear(year);
+            year = NhlModelHelper.SetDefaultYear(year);
 
             List<NhlRtssReportModel> models;
             using (SportsDataContext db = new SportsDataContext())

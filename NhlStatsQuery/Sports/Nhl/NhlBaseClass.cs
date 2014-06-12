@@ -98,7 +98,7 @@ namespace SportsData.Nhl
         /// </remarks>
         protected virtual List<NhlGameStatsBaseModel> GetAllResultsForSeasonType([Optional] int year, NhlSeasonType nhlSeasonType, [Optional] DateTime fromDate)
         {
-            year = NhlGameStatsBaseModel.SetDefaultYear(year);
+            year = NhlModelHelper.SetDefaultYear(year);
 
             List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
 
@@ -140,34 +140,6 @@ namespace SportsData.Nhl
         }
 
         /// <summary>
-        /// Gets a list of all the html tables in a stat category
-        /// </summary>
-        [Obsolete]
-        protected virtual List<HtmlNode> GetAllPagesForSeasonType(int year, NhlSeasonType nhlSeasonType)
-        {
-            HtmlNode firstPage = this.ParseHtmlTableFromPage(year, nhlSeasonType, 1);
-
-            int numberOfResults = NhlBaseClass.GetResultsCount(firstPage);
-            if (numberOfResults <= 0)
-            {
-                return new List<HtmlNode>();
-            }
-
-            // Get number of pages
-            int numberOfPages = NhlBaseClass.GetPageCount(firstPage);
-
-            List<HtmlNode> pages = new List<HtmlNode>();
-            pages.Add(firstPage);
-            for (int i = 2; i < numberOfPages + 1; i++)
-            {
-                HtmlNode tableNode = this.ParseHtmlTableFromPage(year, nhlSeasonType, i);
-                pages.Add(tableNode);
-            }
-
-            return pages;
-        }
-
-        /// <summary>
         /// Gets the html table of a page specified by the xpath query
         /// </summary>
         protected virtual HtmlNode ParseHtmlTableFromPage(int year, NhlSeasonType nhlSeasonType, int page)
@@ -198,15 +170,6 @@ namespace SportsData.Nhl
             return responseString;
         }
 
-        protected virtual void CheckType<T>()
-        {
-            // Check that T is of the right type
-            if (typeof(T) != this.ModelType)
-            {
-                throw new ArgumentException("T must be of type " + this.ModelType.ToString());
-            }
-        }
-
         #endregion
 
         #region Static Methods
@@ -228,23 +191,6 @@ namespace SportsData.Nhl
         {
             HtmlNodeCollection rowNodes = table.SelectNodes(@"./tbody/tr");
             return rowNodes.ToList();
-        }
-
-        /// <summary>
-        /// Counts the number of rows in an html table
-        /// </summary>
-        protected static int GetRowCountInTable(HtmlNode table)
-        {
-            HtmlNodeCollection rows = table.SelectNodes("./tbody/tr");
-
-            // Verify that the tables contain rows
-            if (null == rows)
-            {
-                // This is unexpected but could occur
-                return 0;
-            }
-
-            return rows.Count;
         }
 
         /// <summary>
@@ -283,45 +229,44 @@ namespace SportsData.Nhl
             }
         }
 
-        /// <summary>
-        /// Given a <![CDATA[<table>]]> element, pull out the header names from the <![CDATA[<th>]]>
-        /// </summary>
-        /// TODO: make this protected when done testing
-        protected static List<string> GetHeaderNames(HtmlNode table)
-        {
-            HtmlNodeCollection headerColumnNodes = table.SelectNodes(@"//thead/tr/th");
-            return headerColumnNodes.Select(n => n.InnerText.RemoveSpecialWhitespaceCharacters()).ToList();
-        }
-
-        /// <summary>
-        /// Remove the footer from the stats table
-        /// </summary>
-        protected static void RemoveFooter(HtmlNode tableNode)
-        {
-            HtmlNode footerNode = tableNode.SelectSingleNode(@"//tfoot");
-            tableNode.RemoveChild(footerNode);
-        }
-
         #endregion
 
         #region Unused Code
 
-        //public abstract T MapHtmlRowToModel<T>(HtmlNode row, NhlSeasonType nhlSeasonType) where T : NhlGameStatsBaseModel;
-
-        //public List<T> GetSeason<T>(int year) where T:NhlGameStatsBaseModel
+        ///// <summary>
+        ///// Counts the number of rows in an html table
+        ///// </summary>
+        //protected static int GetRowCountInTable(HtmlNode table)
         //{
-        //    List<HtmlNode> rows = new List<HtmlNode>();
-        //    rows.AddRange(this.GetAllPagesForSeasonType(year, NhlSeasonType.PreSeason));
-        //    rows.AddRange(this.GetAllPagesForSeasonType(year, NhlSeasonType.RegularSeason));
-        //    rows.AddRange(this.GetAllPagesForSeasonType(year, NhlSeasonType.Playoff));
+        //    HtmlNodeCollection rows = table.SelectNodes("./tbody/tr");
 
-        //    List<T> results = new List<T>();
-        //    foreach (HtmlNode row in rows)
+        //    // Verify that the tables contain rows
+        //    if (null == rows)
         //    {
-        //         results.Add(this.MapHtmlRowToModel<T>(row, NhlSeasonType.None));
+        //        // This is unexpected but could occur
+        //        return 0;
         //    }
 
-        //    return results;
+        //    return rows.Count;
+        //}
+
+        ///// <summary>
+        ///// Given a <![CDATA[<table>]]> element, pull out the header names from the <![CDATA[<th>]]>
+        ///// </summary>
+        ///// TODO: make this protected when done testing
+        //protected static List<string> GetHeaderNames(HtmlNode table)
+        //{
+        //    HtmlNodeCollection headerColumnNodes = table.SelectNodes(@"//thead/tr/th");
+        //    return headerColumnNodes.Select(n => n.InnerText.RemoveSpecialWhitespaceCharacters()).ToList();
+        //}
+
+        ///// <summary>
+        ///// Remove the footer from the stats table
+        ///// </summary>
+        //protected static void RemoveFooter(HtmlNode tableNode)
+        //{
+        //    HtmlNode footerNode = tableNode.SelectSingleNode(@"//tfoot");
+        //    tableNode.RemoveChild(footerNode);
         //}
 
         #endregion

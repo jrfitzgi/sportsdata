@@ -19,7 +19,7 @@ namespace SportsData.Nhl
     {
         public static void UpdateSeason([Optional] int year, [Optional] bool forceOverwrite)
         {
-            year = NhlGameStatsBaseModel.SetDefaultYear(year);
+            year = NhlModelHelper.SetDefaultYear(year);
 
             List<NhlRtssReportModel> models;
             using (SportsDataContext db = new SportsDataContext())

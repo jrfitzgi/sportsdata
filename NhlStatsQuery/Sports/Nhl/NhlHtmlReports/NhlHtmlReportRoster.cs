@@ -309,7 +309,7 @@ namespace SportsData.Nhl
         /// </summary>
         private static List<NhlHtmlReportRosterModel> GetHtmlRosterReports([Optional] int year, [Optional] DateTime fromDate)
         {
-            year = NhlGameStatsBaseModel.SetDefaultYear(year);
+            year = NhlModelHelper.SetDefaultYear(year);
 
             List<NhlHtmlReportRosterModel> existingModels = new List<NhlHtmlReportRosterModel>();
             using (SportsDataContext db = new SportsDataContext())

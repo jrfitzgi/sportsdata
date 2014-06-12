@@ -207,7 +207,7 @@ namespace SportsData.Nhl
         /// </summary>
         private static List<NhlHtmlReportSummaryModel> GetHtmlSummaryReports([Optional] int year, [Optional] DateTime fromDate)
         {
-            year = NhlGameStatsBaseModel.SetDefaultYear(year);
+            year = NhlModelHelper.SetDefaultYear(year);
 
             List<NhlHtmlReportSummaryModel> existingModels = new List<NhlHtmlReportSummaryModel>();
             using (SportsDataContext db = new SportsDataContext())

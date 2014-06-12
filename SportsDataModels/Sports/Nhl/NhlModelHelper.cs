@@ -22,7 +22,7 @@ namespace SportsData.Models
             if (year == 0)
             {
                 // Default to the current year
-                year = NhlGameStatsBaseModel.GetSeason(DateTime.Now).Item2;
+                year = NhlModelHelper.GetSeason(DateTime.Now).Item2;
             }
 
             return year;
