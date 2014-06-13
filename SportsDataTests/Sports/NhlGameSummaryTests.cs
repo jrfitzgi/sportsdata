@@ -17,7 +17,7 @@ namespace SportsDataTests
         public void NhlGameSummaryUpdateLatestOnly()
         {
             int year = 2012;
-            NhlGameSummary.UpdateSeasonWithLatestOnly(year);
+            NhlGameStatsSummary.GetNewResultsOnly(year);
 
         }
 
@@ -25,9 +25,7 @@ namespace SportsDataTests
         public void NhlGameSummaryGetPartialSeason()
         {
             int year = 2012;
-
-            NhlRtssReport nhlRtssReport = new NhlRtssReport();
-            List<NhlGameStatsBaseModel> results = nhlRtssReport.GetSeason(year, new DateTime(2012, 4, 6));
+            List<NhlGameSummaryModel> results = NhlGameStatsSummary.GetFullSeason(year, new DateTime(2012, 4, 6));
             Assert.AreEqual(16 + 86, results.Count);
         }
 
@@ -35,9 +33,7 @@ namespace SportsDataTests
         public void NhlGameSummaryGetFullSeason()
         {
             int year = 2013;
-
-            NhlRtssReport nhlRtssReport = new NhlRtssReport();
-            List<NhlGameStatsBaseModel> results = nhlRtssReport.GetSeason(year);
+            List<NhlRtssReportModel> results = NhlGameStatsRtssReport.GetFullSeason(year);
             Assert.AreEqual(806, results.Count);
         }
     }

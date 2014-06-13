@@ -94,6 +94,8 @@
     <Compile Include="Demographics\DemographicsQuery.cs" />
     <Compile Include="Demographics\DemographicsData.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Sports\Nhl\NhlGameStatsBaseClass.cs" />
+    <Compile Include="Sports\Nhl\Copy of NhlBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobUpdateMethods.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportBase.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportSummary.cs" />
@@ -102,13 +104,13 @@
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobType.cs" />
     <Compile Include="Sports\Nhl\NhlBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportRoster.cs" />
-    <Compile Include="Sports\Nhl\NhlRtssReports.cs" />
+    <Compile Include="Sports\Nhl\NhlGameStatsRtssReports.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />
     <Compile Include="Social\Facebook\FacebookData.cs" />
     <Compile Include="Social\Facebook\FacebookQuery.cs" />
     <Compile Include="Sports\Mlb\MlbAttendanceData.cs" />
     <Compile Include="Sports\Mlb\MlbAttendanceQuery.cs" />
-    <Compile Include="Sports\Nhl\NhlGameSummary.cs" />
+    <Compile Include="Sports\Nhl\NhlGameStatsSummary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Social\Twitter\TwitterData.cs" />
     <Compile Include="Social\Twitter\TwitterQuery.cs" />

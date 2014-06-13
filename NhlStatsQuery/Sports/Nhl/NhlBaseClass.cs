@@ -30,42 +30,39 @@ namespace SportsData.Nhl
         /// 2. page number
         /// 
         /// Example: "/ice/gamestats.htm?season={0}&gameType={1}&viewName=teamRTSSreports&sort=date&pg={2}"
-        /// 
+        ///           /ice/playerstats.htm?season=20122013&gameType=3&viewName=bios&pg=3
         /// </remarks>
         protected abstract string RelativeUrlFormatString
         {
             get;
         }
 
-        protected abstract Type ModelType
-        {
-            get;
-        }
-
-        protected abstract NhlGameStatsBaseModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType);
+        ///// <summary>
+        ///// Update the db with the results from specified year and date
+        ///// </summary>
+        //protected abstract void AddOrUpdateDb(int year, [Optional] DateTime fromDate);
 
         /// <summary>
-        /// Update the db with the results in the list.
+        /// Implemented by the subclass to parse out the date of the result
         /// </summary>
-        /// <remarks>
-        /// When this is overridden, the List<NhlGameStatsBaseModel> must be converted to List<T> where T is the model type that the subclass uses.
-        /// </remarks>
-        protected abstract void AddOrUpdateDb(List<NhlGameStatsBaseModel> models);
+        /// <param name="htmlNode"></param>
+        /// <returns></returns>
+        protected abstract DateTime ParseDateFromHtmlRow(HtmlNode row);
 
         #endregion
 
         #region Public Methods
 
-        public List<NhlGameStatsBaseModel> GetSeason([Optional] int year, [Optional] DateTime fromDate)
+        public List<HtmlNode> GetResultsForSeason([Optional] int year, [Optional] DateTime fromDate)
         {
-            List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
+            List<HtmlNode> results = new List<HtmlNode>();
 
             // The season types to collect results for
             List<NhlSeasonType> nhlSeasonTypes = new List<NhlSeasonType> { NhlSeasonType.PreSeason, NhlSeasonType.RegularSeason, NhlSeasonType.Playoff };
 
             foreach (NhlSeasonType nhlSeasonType in nhlSeasonTypes)
             {
-                results.AddRange(this.GetAllResultsForSeasonType(year, nhlSeasonType, fromDate));
+                results.AddRange(this.GetResultsForSeasonType(year, nhlSeasonType, fromDate));
             }
 
             return results;
@@ -74,17 +71,6 @@ namespace SportsData.Nhl
         #endregion
 
         #region Protected Methods
-
-        /// <summary>
-        /// Extract the items that have the special case of the FLA/NSH double header on 9/16/2013
-        /// </summary>
-        protected virtual IEnumerable<NhlGameStatsBaseModel> GetSpecialCaseModels(IEnumerable<NhlGameStatsBaseModel> models)
-        {
-            Func<NhlGameStatsBaseModel, bool> specialCasePredicate = new Func<NhlGameStatsBaseModel, bool>(m => m.Date == Convert.ToDateTime("9/16/2013") && m.Home.Equals("Florida", StringComparison.InvariantCultureIgnoreCase));
-            IEnumerable<NhlGameStatsBaseModel> specialCaseModels = models.Where(specialCasePredicate);
-
-            return specialCaseModels;
-        }
 
         /// <summary>
         /// Gets a list of all the results in a stat category on fromDate and later
@@ -96,11 +82,11 @@ namespace SportsData.Nhl
         /// fromDate defaults to DateTime.MinValue
         /// 
         /// </remarks>
-        protected virtual List<NhlGameStatsBaseModel> GetAllResultsForSeasonType([Optional] int year, NhlSeasonType nhlSeasonType, [Optional] DateTime fromDate)
+        protected virtual List<HtmlNode> GetResultsForSeasonType([Optional] int year, NhlSeasonType nhlSeasonType, [Optional] DateTime fromDate)
         {
             year = NhlModelHelper.SetDefaultYear(year);
 
-            List<NhlGameStatsBaseModel> results = new List<NhlGameStatsBaseModel>();
+            List<HtmlNode> results = new List<HtmlNode>();
 
             HtmlNode firstPageTableNode = this.ParseHtmlTableFromPage(year, nhlSeasonType, 1);
 
@@ -116,9 +102,9 @@ namespace SportsData.Nhl
             List<HtmlNode> firstPageRows = NhlBaseClass.ParseRowsFromTable(firstPageTableNode);
             foreach (HtmlNode row in firstPageRows)
             {
-                NhlGameStatsBaseModel model = this.MapHtmlRowToModel(row, nhlSeasonType);
-                if (model.Date < fromDate) { return results; }
-                else { results.Add(model); }
+                DateTime resultDate = this.ParseDateFromHtmlRow(row);
+                if (resultDate < fromDate) { return results; }
+                else { results.Add(row); }
             }
 
             // Now similar code to handle the rest of the pages. Go through each row, add it to the list, stop when we hit a date prior to fromDate.
@@ -129,9 +115,9 @@ namespace SportsData.Nhl
                 List<HtmlNode> rows = NhlBaseClass.ParseRowsFromTable(tableNode);
                 foreach (HtmlNode row in rows)
                 {
-                    NhlGameStatsBaseModel model = this.MapHtmlRowToModel(row, nhlSeasonType);
-                    if (model.Date < fromDate) { return results; }
-                    else { results.Add(model); }
+                    DateTime resultDate = this.ParseDateFromHtmlRow(row);
+                    if (resultDate < fromDate) { return results; }
+                    else { results.Add(row); }
                 }
 
             }
@@ -173,16 +159,6 @@ namespace SportsData.Nhl
         #endregion
 
         #region Static Methods
-
-
-        protected static void UpdateSeason<T>([Optional] int year, [Optional] DateTime fromDate) where T : NhlBaseClass, new()
-        {
-            T instance = new T();
-
-            List<NhlGameStatsBaseModel> results = instance.GetSeason(year, fromDate);
-
-            instance.AddOrUpdateDb(results);
-        }
 
         /// <summary>
         /// Given a <![CDATA[<table>]]> element, pull out the <![CDATA[<tr>]]> rows
@@ -226,6 +202,21 @@ namespace SportsData.Nhl
                 string tempString = Regex.Match(numResults.InnerText, @"\d+ results").Value;
                 tempString = Regex.Match(tempString, @"\d+").Value;
                 return Convert.ToInt32(tempString);
+            }
+        }
+
+        protected static int ConvertStringToInt(string s)
+        {
+            int result;
+            bool success = Int32.TryParse(s, out result);
+
+            if (!success)
+            {
+                return 0;
+            }
+            else
+            {
+                return result;
             }
         }
 

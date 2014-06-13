@@ -19,7 +19,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGetGameSummary()
         {
-            NhlGameSummary.UpdateSeason(2014);
+            NhlGameStatsSummary.GetFullSeason(2014);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGetRtssReport()
         {
-            NhlRtssReport.UpdateSeason(2013);
+            NhlGameStatsRtssReport.GetFullSeason(2013);
         }
 
         /// <summary>
