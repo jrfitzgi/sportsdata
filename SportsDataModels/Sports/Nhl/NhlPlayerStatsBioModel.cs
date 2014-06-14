@@ -27,7 +27,7 @@ namespace SportsData.Models
 
         public int DraftOverall { get; set; }
 
-        public bool Rookie { get; set; }
+        public string Rookie { get; set; }
 
         public int GamesPlayed { get; set; }
 

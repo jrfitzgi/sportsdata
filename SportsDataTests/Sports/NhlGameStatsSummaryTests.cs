@@ -11,10 +11,10 @@ using SportsData.Models;
 namespace SportsDataTests
 {
     [TestClass]
-    public class NhlGameSummaryTests : SportsDataTestsBaseClass
+    public class NhlGameStatsSummaryTests : SportsDataTestsBaseClass
     {
         [TestMethod]
-        public void NhlGameSummaryUpdateLatestOnly()
+        public void NhlGameStatsSummary_GetNewResultsOnly()
         {
             int year = 2012;
             NhlGameStatsSummary.GetNewResultsOnly(year);
@@ -22,7 +22,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void NhlGameSummaryGetPartialSeason()
+        public void NhlGameStatsSummary_GetPartialSeason()
         {
             int year = 2012;
             List<NhlGameSummaryModel> results = NhlGameStatsSummary.GetFullSeason(year, new DateTime(2012, 4, 6));
@@ -30,7 +30,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void NhlGameSummaryGetFullSeason()
+        public void NhlGameStatsSummary_GetFullSeason()
         {
             int year = 2013;
             List<NhlRtssReportModel> results = NhlGameStatsRtssReport.GetFullSeason(year);

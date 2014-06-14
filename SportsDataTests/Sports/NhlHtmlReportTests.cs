@@ -17,7 +17,7 @@ namespace SportsDataTests
     public class NhlHtmlReportTests : SportsDataTestsBaseClass
     {
         [TestMethod]
-        public void HtmlBlobTest()
+        public void NhlHtmlReport_HtmlBlobTest()
         {
             Uri url = new Uri("http://www.nhl.com/scores/htmlreports/20132014/RO020507.HTM ");
             //Uri url = new Uri("http://www.nhl.com/scores/htmlreports/20132014/RO020502.HTM");
@@ -35,7 +35,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void ParseHtmlReportSummaryFrenchRegSeason()
+        public void NhlHtmlReport_ParseSummaryFrenchRegSeason()
         {
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);
@@ -44,7 +44,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void ParseHtmlReportSummaryEnglishInProgressRegSeason()
+        public void NhlHtmlReport_PareSummaryEnglishInProgressRegSeason()
         {
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\EnglishInProgressRoster.htm";
             string html = File.ReadAllText(path);
@@ -53,7 +53,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void ParseHtmlReportSummaryCapsThrashers2007()
+        public void NhlHtmlReport_ParseSummaryCapsThrashers2007()
         {
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\CapsThrashers_10.05.2007.htm";
             string html = File.ReadAllText(path);
@@ -62,13 +62,13 @@ namespace SportsDataTests
         }
         
         [TestMethod]
-        public void ParseMultipleHtmlGameSummaries()
+        public void NhlHtmlReport_ParseMultipleSummaries()
         {
             NhlHtmlReportSummary.UpdateSeason(2014);
         }
 
         [TestMethod]
-        public void ParseHtmlReportRosterFrenchRegSeason()
+        public void NhlHtmlReport_ParseRosterFrenchRegSeason()
         {
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);
@@ -77,7 +77,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void ParseHtmlReportRosterFrenchRegSeason_AndPersist()
+        public void NhlHtmlReport_ParseFrenchRegSeasonAndPersist()
         {
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);

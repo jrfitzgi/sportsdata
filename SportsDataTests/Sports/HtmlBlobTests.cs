@@ -16,7 +16,7 @@ namespace SportsDataTests
         /// Get the html blobs for rosters
         /// </summary>
         [TestMethod]
-        public void HtmlBlobsTest()
+        public void HtmlBlob_Test()
         {
             List<NhlRtssReportModel> models;
             using (SportsDataContext db = new SportsDataContext())

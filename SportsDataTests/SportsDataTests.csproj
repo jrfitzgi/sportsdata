@@ -68,6 +68,7 @@
     <Compile Include="Demographics\DemographicsTests.cs" />
     <Compile Include="Scripts\DemographicsScripts.cs" />
     <Compile Include="Scripts\HtmlBlobScripts.cs" />
+    <Compile Include="Sports\NhlPlayerStatsBioTests.cs" />
     <Compile Include="Sports\HtmlBlobTests.cs" />
     <Compile Include="Sports\NhlHtmlReportTests.cs" />
     <Compile Include="UpdateControllerTests.cs" />
@@ -77,8 +78,8 @@
     <Compile Include="Social\FacebookTests.cs" />
     <Compile Include="Social\TwitterTests.cs" />
     <Compile Include="SportsDataTestsBaseClass.cs" />
-    <Compile Include="Sports\NhlGameSummaryTests.cs" />
-    <Compile Include="Sports\NhlRtssReportTests.cs" />
+    <Compile Include="Sports\NhlGameStatsSummaryTests.cs" />
+    <Compile Include="Sports\NhlGameStatsRtssReportTests.cs" />
     <Compile Include="Sports\MlbTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

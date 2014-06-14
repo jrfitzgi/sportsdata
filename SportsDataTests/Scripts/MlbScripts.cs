@@ -16,7 +16,7 @@ namespace SportsDataTests
 
         [TestMethod]
         [Ignore]
-        public void Script_MlbGetGameSummary()
+        public void Script_Mlb_GetGameSummary()
         {
             int year = 2004;
 

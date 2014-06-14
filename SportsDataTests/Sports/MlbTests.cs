@@ -13,7 +13,7 @@ namespace SportsDataTests
     public class MlbTests : SportsDataTestsBaseClass
     {
         [TestMethod]
-        public void GetSpringSeasonForTeamTest()
+        public void Mlb_GetSpringSeasonForTeamTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.Spring;
             MlbTeamShortName teamName = MlbTeamShortName.NYY;
@@ -30,7 +30,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void UpdateSpringSeasonForTeamTest()
+        public void Mlb_UpdateSpringSeasonForTeamTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.Spring;
             MlbTeamShortName teamName = MlbTeamShortName.TOR;
@@ -51,7 +51,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void GetSpringSeasonForAllTeamsTest()
+        public void Mlb_GetSpringSeasonForAllTeamsTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.Spring;
             int seasonYear = 2011;
@@ -63,7 +63,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void GetRegularSeasonForTeamTest()
+        public void Mlb_GetRegularSeasonForTeamTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.Regular;
             MlbTeamShortName teamName = MlbTeamShortName.SEA;
@@ -87,7 +87,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void UpdateRegularSeasonForTeamTest()
+        public void Mlb_UpdateRegularSeasonForTeamTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.Regular;
             MlbTeamShortName teamName = MlbTeamShortName.SD;
@@ -108,7 +108,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void GetRegularSeasonForAllTeamsTest()
+        public void Mlb_GetRegularSeasonForAllTeamsTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.Regular;
             int seasonYear = 2010;
@@ -120,7 +120,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void GetPostSeasonForTeamTest()
+        public void Mlb_GetPostSeasonForTeamTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.PostSeason;
             MlbTeamShortName teamName = MlbTeamShortName.BOS;
@@ -145,7 +145,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void GetPostSeasonForTeamWithNoPostSeasonTest()
+        public void Mlb_GetPostSeasonForTeamWithNoPostSeasonTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.PostSeason;
             MlbTeamShortName teamName = MlbTeamShortName.MIA;
@@ -158,7 +158,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void UpdatePostSeasonForTeamWithNoPostSeasonTest()
+        public void Mlb_UpdatePostSeasonForTeamWithNoPostSeasonTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.PostSeason;
             MlbTeamShortName teamName = MlbTeamShortName.MIA;
@@ -179,7 +179,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void GetPostSeasonForAllTeamsTest()
+        public void Mlb_GetPostSeasonForAllTeamsTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.PostSeason;
             int seasonYear = 2007;
@@ -191,7 +191,7 @@ namespace SportsDataTests
         }
 
         [TestMethod]
-        public void UpdatePostSeasonForAllTeamsTest()
+        public void Mlb_UpdatePostSeasonForAllTeamsTest()
         {
             MlbSeasonType seasonType = MlbSeasonType.PostSeason;
             int seasonYear = 2002;
