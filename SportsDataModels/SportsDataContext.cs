@@ -17,6 +17,8 @@ namespace SportsData.Models
         public DbSet<MlbGameSummaryModel> MlbGameSummaries { get; set; }
 
         // Nhl
+        public DbSet<NhlPlayerStatsBioModel> NhlPlayerStatsBios { get; set; }
+        
         public DbSet<NhlGameSummaryModel> NhlGameSummaries { get; set; }
         public DbSet<NhlRtssReportModel> NhlRtssReports { get; set; }
 

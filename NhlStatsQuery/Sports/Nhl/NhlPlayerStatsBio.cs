@@ -18,7 +18,7 @@ namespace SportsData.Nhl
     /// <summary>
     /// Represents a query that will be used to retrieve stats from a url
     /// </summary>
-    public partial class NhlPlayerStatsBio : NhlPlayerStatsBaseModel
+    public partial class NhlPlayerStatsBio : NhlPlayerStatsBaseClass
     {
  
         #region Abstract Overrides
@@ -26,7 +26,6 @@ namespace SportsData.Nhl
         protected override string RelativeUrlFormatString
         {
             // Example: "/ice/playerstats.htm?season=20122013&gameType=3&viewName=bios&pg=3"
-
             get { return "/ice/playerstats.htm?season={0}&gameType={1}&viewName=bios&pg={2}"; }
         }
 
@@ -34,33 +33,15 @@ namespace SportsData.Nhl
 
         #region Public Methods
 
-        /// <summary>
-        /// Get all the results starting from the last date of the data in the db. If a year is specified then only get latest for that year.
-        /// </summary>
-        /// <param name="year"></param>
-        public static List<NhlGameSummaryModel> GetNewResultsOnly([Optional] int year, [Optional] bool saveToDb)
+        public static List<NhlPlayerStatsBioModel> GetFullSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool saveToDb)
         {
-            DateTime latestResultDate;
-            using (SportsDataContext db = new SportsDataContext())
-            {
-                latestResultDate = (from m in db.NhlGameSummaries
-                                    orderby m.Date descending
-                                    select m.Date).FirstOrDefault();
-
-            }
-
-            return NhlGameStatsSummary.GetFullSeason(year, latestResultDate, saveToDb);
-        }
-
-        public static List<NhlGameSummaryModel> GetFullSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool saveToDb)
-        {
-            List<NhlGameSummaryModel> results = new List<NhlGameSummaryModel>();
+            List<NhlPlayerStatsBioModel> results = new List<NhlPlayerStatsBioModel>();
 
             foreach (NhlSeasonType seasonType in Enum.GetValues(typeof(NhlSeasonType)))
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<NhlGameSummaryModel> partialResults = NhlGameStatsSummary.UpdateSeason(year, seasonType, fromDate, saveToDb);
+                List<NhlPlayerStatsBioModel> partialResults = NhlPlayerStatsBio.UpdateSeason(year, seasonType, fromDate, saveToDb);
                 if (null != partialResults)
                 {
                     results.AddRange(partialResults);
@@ -74,17 +55,17 @@ namespace SportsData.Nhl
 
         #region Private Methods
 
-        private static List<NhlGameSummaryModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, DateTime fromDate, bool saveToDb)
+        private static List<NhlPlayerStatsBioModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, DateTime fromDate, bool saveToDb)
         {
             // Get HTML rows
-            NhlGameStatsSummary nhl = new NhlGameStatsSummary();
+            NhlPlayerStatsBio nhl = new NhlPlayerStatsBio();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType, fromDate);
 
             // Parse into a list
-            List<NhlGameSummaryModel> results = new List<NhlGameSummaryModel>();
+            List<NhlPlayerStatsBioModel> results = new List<NhlPlayerStatsBioModel>();
             foreach (HtmlNode row in rows)
             {
-                NhlGameSummaryModel result = NhlGameStatsSummary.MapHtmlRowToModel(row, nhlSeasonType);
+                NhlPlayerStatsBioModel result = NhlPlayerStatsBio.MapHtmlRowToModel(row, nhlSeasonType);
 
                 if (null != result)
                 {
@@ -95,55 +76,47 @@ namespace SportsData.Nhl
             // Update DB
             if (saveToDb)
             {
-                NhlGameStatsSummary.AddOrUpdateDb(results);
+                NhlPlayerStatsBio.AddOrUpdateDb(results);
             }
 
             return results;
         }
-        
-        private static NhlGameSummaryModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType)
+
+        private static NhlPlayerStatsBioModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType)
         {
             HtmlNodeCollection tdNodes = row.SelectNodes(@"./td");
 
-            NhlGameSummaryModel model = new NhlGameSummaryModel();
+            NhlPlayerStatsBioModel model = new NhlPlayerStatsBioModel();
 
-            model.NhlSeasonType = nhlSeasonType;
-            model.Date = Convert.ToDateTime(tdNodes[0].InnerText.Replace("'", "/"));
-            model.Year = NhlModelHelper.GetSeason(model.Date).Item2;
+            //model.NhlSeasonType = nhlSeasonType;
+            //model.Date = Convert.ToDateTime(tdNodes[0].InnerText.Replace("'", "/"));
+            //model.Year = NhlModelHelper.GetSeason(model.Date).Item2;
 
-            model.Visitor = tdNodes[1].InnerText;
-            model.VisitorScore = ConvertStringToInt(tdNodes[2].InnerText);
-            model.Home = tdNodes[3].InnerText;
-            model.HomeScore = ConvertStringToInt(tdNodes[4].InnerText);
-            model.OS = tdNodes[5].InnerText;
-            model.WGoalie = tdNodes[6].InnerText;
-            model.WGoal = tdNodes[7].InnerText;
-            model.VisitorShots = ConvertStringToInt(tdNodes[8].InnerText);
-            model.VisitorPPGF = ConvertStringToInt(tdNodes[9].InnerText);
-            model.VisitorPPOpp = ConvertStringToInt(tdNodes[10].InnerText);
-            model.VisitorPIM = ConvertStringToInt(tdNodes[11].InnerText);
-            model.HomeShots = ConvertStringToInt(tdNodes[12].InnerText);
-            model.HomePPGF = ConvertStringToInt(tdNodes[13].InnerText);
-            model.HomePPOpp = ConvertStringToInt(tdNodes[14].InnerText);
-            model.HomePIM = ConvertStringToInt(tdNodes[15].InnerText);
-            model.Attendance = ConvertStringToInt(tdNodes[16].InnerText.Replace(",", String.Empty));
+            //model.Visitor = tdNodes[1].InnerText;
+            //model.VisitorScore = ConvertStringToInt(tdNodes[2].InnerText);
+            //model.Home = tdNodes[3].InnerText;
+            //model.HomeScore = ConvertStringToInt(tdNodes[4].InnerText);
+            //model.OS = tdNodes[5].InnerText;
+            //model.WGoalie = tdNodes[6].InnerText;
+            //model.WGoal = tdNodes[7].InnerText;
+            //model.VisitorShots = ConvertStringToInt(tdNodes[8].InnerText);
+            //model.VisitorPPGF = ConvertStringToInt(tdNodes[9].InnerText);
+            //model.VisitorPPOpp = ConvertStringToInt(tdNodes[10].InnerText);
+            //model.VisitorPIM = ConvertStringToInt(tdNodes[11].InnerText);
+            //model.HomeShots = ConvertStringToInt(tdNodes[12].InnerText);
+            //model.HomePPGF = ConvertStringToInt(tdNodes[13].InnerText);
+            //model.HomePPOpp = ConvertStringToInt(tdNodes[14].InnerText);
+            //model.HomePIM = ConvertStringToInt(tdNodes[15].InnerText);
+            //model.Attendance = ConvertStringToInt(tdNodes[16].InnerText.Replace(",", String.Empty));
 
             return model;
         }
 
-        private static void AddOrUpdateDb(List<NhlGameSummaryModel> models)
+        private static void AddOrUpdateDb(List<NhlPlayerStatsBioModel> models)
         {
-            // Note: downcast for models is not necessary but leave this here in anticipation of moving this method to a base class (and it will be necessary)
-
-            // Special case the FLA/NSH double header on 9/16/2013
-            IEnumerable<NhlGameStatsBaseModel> specialCaseModels = NhlGameStatsBaseClass.GetSpecialCaseModels(models);
-            IEnumerable<NhlGameSummaryModel> downcastSpecialCaseModels = specialCaseModels.ToList().ConvertAll<NhlGameSummaryModel>(m => (NhlGameSummaryModel)m);
-            IEnumerable<NhlGameSummaryModel> downcastModels = models.Except(specialCaseModels, new NhlGameStatsBaseModelComparer()).ToList().ConvertAll<NhlGameSummaryModel>(m => (NhlGameSummaryModel)m);
-
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlGameSummaries.AddOrUpdate<NhlGameSummaryModel>(g => new { g.Date, g.Visitor, g.Home, g.VisitorScore, g.HomeScore }, downcastSpecialCaseModels.ToArray());
-                db.NhlGameSummaries.AddOrUpdate<NhlGameSummaryModel>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
+                db.NhlPlayerStatsBios.AddOrUpdate<NhlPlayerStatsBioModel>(p => new { p.NhlSeasonType, p.Name, p.Year, p.Team }, models.ToArray());
                 db.SaveChanges();
             }
         }
