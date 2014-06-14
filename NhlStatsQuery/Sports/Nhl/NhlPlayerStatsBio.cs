@@ -18,14 +18,16 @@ namespace SportsData.Nhl
     /// <summary>
     /// Represents a query that will be used to retrieve stats from a url
     /// </summary>
-    public partial class NhlGameStatsSummary : NhlGameStatsBaseClass
+    public partial class NhlPlayerStatsBio : NhlPlayerStatsBaseModel
     {
  
         #region Abstract Overrides
 
         protected override string RelativeUrlFormatString
         {
-            get { return "/ice/gamestats.htm?season={0}&gameType={1}&viewName=summary&sort=date&pg={2}"; }
+            // Example: "/ice/playerstats.htm?season=20122013&gameType=3&viewName=bios&pg=3"
+
+            get { return "/ice/playerstats.htm?season={0}&gameType={1}&viewName=bios&pg={2}"; }
         }
 
         #endregion

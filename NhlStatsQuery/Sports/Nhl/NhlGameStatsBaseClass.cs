@@ -16,6 +16,12 @@ namespace SportsData.Nhl
 {
     public abstract class NhlGameStatsBaseClass : NhlBaseClass
     {
+        protected override DateTime ParseDateFromHtmlRow(HtmlNode row)
+        {
+            HtmlNodeCollection tdNodes = row.SelectNodes(@"./td");
+            return Convert.ToDateTime(tdNodes[0].InnerText.Replace("'", "/"));
+        }
+        
         /// <summary>
         /// Extract the items that have the special case of the FLA/NSH double header on 9/16/2013
         /// </summary>

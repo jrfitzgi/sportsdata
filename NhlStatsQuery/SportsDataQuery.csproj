@@ -94,6 +94,8 @@
     <Compile Include="Demographics\DemographicsQuery.cs" />
     <Compile Include="Demographics\DemographicsData.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Sports\Nhl\NhlPlayerStatsBio.cs" />
+    <Compile Include="Sports\Nhl\NhlPlayerStatsBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseClass.cs" />
     <Compile Include="Sports\Nhl\Copy of NhlBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobUpdateMethods.cs" />
@@ -104,7 +106,7 @@
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobType.cs" />
     <Compile Include="Sports\Nhl\NhlBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportRoster.cs" />
-    <Compile Include="Sports\Nhl\NhlGameStatsRtssReports.cs" />
+    <Compile Include="Sports\Nhl\NhlGameStatsRtssReport.cs" />
     <Compile Include="Social\SocialBaseClasses\SocialBaseQuery.cs" />
     <Compile Include="Social\Facebook\FacebookData.cs" />
     <Compile Include="Social\Facebook\FacebookQuery.cs" />

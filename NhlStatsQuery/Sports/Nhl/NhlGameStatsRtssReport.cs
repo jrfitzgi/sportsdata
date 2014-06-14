@@ -22,11 +22,6 @@ namespace SportsData.Nhl
             }
         }
 
-        protected override DateTime ParseDateFromHtmlRow(HtmlNode row)
-        {
-            return DateTime.Now.AddDays(-30);
-        }
-
         #endregion
 
         #region Public Methods
