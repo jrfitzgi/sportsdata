@@ -18,14 +18,14 @@ namespace SportsData.Nhl
     /// <summary>
     /// Represents a query that will be used to retrieve stats from a url
     /// </summary>
-    public partial class NhlPlayerStatsBio : NhlPlayerStatsBaseClass
+    public partial class NhlPlayerStatsBioSkater : NhlPlayerStatsBaseClass
     {
  
         #region Abstract Overrides
 
         protected override string RelativeUrlFormatString
         {
-            // Example: "/ice/playerstats.htm?season=20122013&gameType=3&viewName=bios&pg=3"
+            // Example: "/ice/playerstats.htm?season=2013&gameType=3&viewName=bios&pg=3"
             get { return "/ice/playerstats.htm?season={0}&gameType={1}&viewName=bios&pg={2}"; }
         }
 
@@ -41,7 +41,7 @@ namespace SportsData.Nhl
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<NhlPlayerStatsBioSkaterModel> partialResults = NhlPlayerStatsBio.UpdateSeason(year, seasonType, saveToDb);
+                List<NhlPlayerStatsBioSkaterModel> partialResults = NhlPlayerStatsBioSkater.UpdateSeason(year, seasonType, saveToDb);
                 if (null != partialResults)
                 {
                    results.AddRange(partialResults);
@@ -58,14 +58,14 @@ namespace SportsData.Nhl
         private static List<NhlPlayerStatsBioSkaterModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
         {
             // Get HTML rows
-            NhlPlayerStatsBio nhl = new NhlPlayerStatsBio();
+            NhlPlayerStatsBioSkater nhl = new NhlPlayerStatsBioSkater();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType);
 
             // Parse into a list
             List<NhlPlayerStatsBioSkaterModel> results = new List<NhlPlayerStatsBioSkaterModel>();
             foreach (HtmlNode row in rows)
             {
-                NhlPlayerStatsBioSkaterModel result = NhlPlayerStatsBio.MapHtmlRowToModel(row, nhlSeasonType, year);
+                NhlPlayerStatsBioSkaterModel result = NhlPlayerStatsBioSkater.MapHtmlRowToModel(row, nhlSeasonType, year);
 
                 if (null != result)
                 {
@@ -76,7 +76,7 @@ namespace SportsData.Nhl
             // Update DB
             if (saveToDb)
             {
-                NhlPlayerStatsBio.AddOrUpdateDb(results);
+                NhlPlayerStatsBioSkater.AddOrUpdateDb(results);
             }
 
             return results;

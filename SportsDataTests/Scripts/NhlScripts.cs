@@ -51,26 +51,39 @@ namespace SportsDataTests
         }
 
         /// <summary>
-        /// Get the Player Stats Bios for a season
+        /// Get the Player Stats Bios Skaters for a season
         /// </summary>
         [TestMethod]
-        public void Script_NhlPlayerStatsBio()
+        public void Script_NhlPlayerStatsBioSkater()
         {
             for (int y = 2004; y >=1998; y--)
             {
-                NhlPlayerStatsBio.GetFullSeason(year: y, saveToDb: true);
+                NhlPlayerStatsBioSkater.GetFullSeason(year: y, saveToDb: true);
             }
         }
 
         /// <summary>
-        /// Get the Player Stats Real-time Stats for a season
+        /// Get the Player Stats Bio Goalies for a season
         /// </summary>
         [TestMethod]
-        public void Script_NhlPlayerStatsRtss()
+        public void Script_NhlPlayerStatsBioGoalies()
+        {
+            for (int y = 2003; y >= 1998; y--)
+            {
+                NhlPlayerStatsBioGoalie.GetFullSeason(year: y, saveToDb: true);
+            }
+        }
+
+
+        /// <summary>
+        /// Get the Player Stats Real-time Stats Skaters for a season
+        /// </summary>
+        [TestMethod]
+        public void Script_NhlPlayerStatsRtssSkater()
         {
             for (int y = 2004; y >= 1998; y--)
             {
-                NhlPlayerStatsRtss.GetFullSeason(year: y, saveToDb: true);
+                NhlPlayerStatsRtssSkater.GetFullSeason(year: y, saveToDb: true);
             }
         }
     }

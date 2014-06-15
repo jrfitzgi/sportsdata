@@ -17,16 +17,12 @@ namespace SportsData.Models
         /// </summary>
         public int Year { get; set; }
 
-        [Required]
         public int Number { get; set; }
 
-        [Required]
         public string Name { get; set; }
 
-        [Required]
         public string Position { get; set; }
 
-        [Required]
         public string Team { get; set; }
 
     }

@@ -15,14 +15,14 @@ using SportsData.Models;
 
 namespace SportsData.Nhl
 {
-    public partial class NhlPlayerStatsRtss : NhlPlayerStatsBaseClass
+    public partial class NhlPlayerStatsRtssSkater : NhlPlayerStatsBaseClass
     {
  
         #region Abstract Overrides
 
         protected override string RelativeUrlFormatString
         {
-            // Example: "/ice/playerstats.htm?season=20122013&gameType=3&viewName=rtssPlayerStats&pg=3"
+            // Example: "/ice/playerstats.htm?season=2013&gameType=3&viewName=rtssPlayerStats&pg=3"
             get { return "/ice/playerstats.htm?season={0}&gameType={1}&viewName=rtssPlayerStats&pg={2}"; }
         }
 
@@ -38,7 +38,7 @@ namespace SportsData.Nhl
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<NhlPlayerStatsRtssSkaterModel> partialResults = NhlPlayerStatsRtss.UpdateSeason(year, seasonType, saveToDb);
+                List<NhlPlayerStatsRtssSkaterModel> partialResults = NhlPlayerStatsRtssSkater.UpdateSeason(year, seasonType, saveToDb);
                 if (null != partialResults)
                 {
                    results.AddRange(partialResults);
@@ -55,14 +55,14 @@ namespace SportsData.Nhl
         private static List<NhlPlayerStatsRtssSkaterModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
         {
             // Get HTML rows
-            NhlPlayerStatsRtss nhl = new NhlPlayerStatsRtss();
+            NhlPlayerStatsRtssSkater nhl = new NhlPlayerStatsRtssSkater();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType);
 
             // Parse into a list
             List<NhlPlayerStatsRtssSkaterModel> results = new List<NhlPlayerStatsRtssSkaterModel>();
             foreach (HtmlNode row in rows)
             {
-                NhlPlayerStatsRtssSkaterModel result = NhlPlayerStatsRtss.MapHtmlRowToModel(row, nhlSeasonType, year);
+                NhlPlayerStatsRtssSkaterModel result = NhlPlayerStatsRtssSkater.MapHtmlRowToModel(row, nhlSeasonType, year);
 
                 if (null != result)
                 {
@@ -73,7 +73,7 @@ namespace SportsData.Nhl
             // Update DB
             if (saveToDb)
             {
-                NhlPlayerStatsRtss.AddOrUpdateDb(results);
+                NhlPlayerStatsRtssSkater.AddOrUpdateDb(results);
             }
 
             return results;

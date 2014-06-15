@@ -11,13 +11,13 @@ using SportsData.Models;
 namespace SportsDataTests
 {
     [TestClass]
-    public class NhlPlayerStatsRtssTests : SportsDataTestsBaseClass
+    public class NhlPlayerStatsRtssSkaterTests : SportsDataTestsBaseClass
     {
         [TestMethod]
-        public void NhlPlayerStatsRtss_GetFullSeason()
+        public void NhlPlayerStatsRtssSkater_GetFullSeason()
         {
             int year = 2013;
-            List<NhlPlayerStatsRtssSkaterModel> results = NhlPlayerStatsRtss.GetFullSeason(year, false);
+            List<NhlPlayerStatsRtssSkaterModel> results = NhlPlayerStatsRtssSkater.GetFullSeason(year, false);
             Assert.AreEqual(1188, results.Count);
         }
     }
