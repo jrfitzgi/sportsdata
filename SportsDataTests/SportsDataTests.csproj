@@ -68,6 +68,7 @@
     <Compile Include="Demographics\DemographicsTests.cs" />
     <Compile Include="Scripts\DemographicsScripts.cs" />
     <Compile Include="Scripts\HtmlBlobScripts.cs" />
+    <Compile Include="Sports\NhlPlayerStatsRtssTests.cs" />
     <Compile Include="Sports\NhlPlayerStatsBioTests.cs" />
     <Compile Include="Sports\HtmlBlobTests.cs" />
     <Compile Include="Sports\NhlHtmlReportTests.cs" />

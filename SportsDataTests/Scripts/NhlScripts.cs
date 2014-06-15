@@ -61,5 +61,17 @@ namespace SportsDataTests
                 NhlPlayerStatsBio.GetFullSeason(year: y, saveToDb: true);
             }
         }
+
+        /// <summary>
+        /// Get the Player Stats Real-time Stats for a season
+        /// </summary>
+        [TestMethod]
+        public void Script_NhlPlayerStatsRtss()
+        {
+            for (int y = 2004; y >= 1998; y--)
+            {
+                NhlPlayerStatsRtss.GetFullSeason(year: y, saveToDb: true);
+            }
+        }
     }
 }

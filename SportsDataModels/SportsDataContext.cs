@@ -18,6 +18,7 @@ namespace SportsData.Models
 
         // Nhl
         public DbSet<NhlPlayerStatsBioModel> NhlPlayerStatsBios { get; set; }
+        public DbSet<NhlPlayerStatsRtssModel> NhlPlayerStatsRtss { get; set; }
         
         public DbSet<NhlGameSummaryModel> NhlGameSummaries { get; set; }
         public DbSet<NhlRtssReportModel> NhlRtssReports { get; set; }

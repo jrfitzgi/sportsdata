@@ -94,10 +94,10 @@
     <Compile Include="Demographics\DemographicsQuery.cs" />
     <Compile Include="Demographics\DemographicsData.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Sports\Nhl\NhlPlayerStatsRtss.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBio.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlGameStatsBaseClass.cs" />
-    <Compile Include="Sports\Nhl\Copy of NhlBaseClass.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\HtmlBlobUpdateMethods.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportBase.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReports\NhlHtmlReportSummary.cs" />
