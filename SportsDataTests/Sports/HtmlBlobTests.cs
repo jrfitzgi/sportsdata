@@ -18,10 +18,10 @@ namespace SportsDataTests
         [TestMethod]
         public void HtmlBlob_Test()
         {
-            List<NhlRtssReportModel> models;
+            List<NhlGameStatsRtssReportModel> models;
             using (SportsDataContext db = new SportsDataContext())
             {
-                models = (from m in db.NhlRtssReports
+                models = (from m in db.NhlGameStatsRtssReports
                           where
                             (m.Home == "VANCOUVER" || m.Visitor == "VANCOUVER") &&
                             m.Date >= new DateTime(2014,1,29)
@@ -32,7 +32,7 @@ namespace SportsDataTests
             models.ForEach(m => items.Add(new Uri(m.RosterLink), m.Id.ToString()));
             HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, items, false);
 
-            foreach (NhlRtssReportModel model in models)
+            foreach (NhlGameStatsRtssReportModel model in models)
             {
                 string html = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
             }

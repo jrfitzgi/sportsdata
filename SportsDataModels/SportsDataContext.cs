@@ -17,11 +17,12 @@ namespace SportsData.Models
         public DbSet<MlbGameSummaryModel> MlbGameSummaries { get; set; }
 
         // Nhl
-        public DbSet<NhlPlayerStatsBioModel> NhlPlayerStatsBios { get; set; }
-        public DbSet<NhlPlayerStatsRtssModel> NhlPlayerStatsRtss { get; set; }
+        public DbSet<NhlPlayerStatsBioSkaterModel> NhlPlayerStatsBioSkaters { get; set; }
+        public DbSet<NhlPlayerStatsBioGoalieModel> NhlPlayerStatsBioGoalies { get; set; }
+        public DbSet<NhlPlayerStatsRtssSkaterModel> NhlPlayerStatsRtssSkaters { get; set; }
         
-        public DbSet<NhlGameSummaryModel> NhlGameSummaries { get; set; }
-        public DbSet<NhlRtssReportModel> NhlRtssReports { get; set; }
+        public DbSet<NhlGameStatsSummaryModel> NhlGameStatsSummaries { get; set; }
+        public DbSet<NhlGameStatsRtssReportModel> NhlGameStatsRtssReports { get; set; }
 
         public DbSet<NhlHtmlReportSummaryModel> NhlHtmlReportSummaries { get; set; }
         public DbSet<NhlHtmlReportRosterModel> NhlHtmlReportRosters { get; set; }

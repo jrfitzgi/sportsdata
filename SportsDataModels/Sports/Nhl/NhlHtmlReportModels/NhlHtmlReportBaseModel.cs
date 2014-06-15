@@ -12,6 +12,6 @@ namespace SportsData.Models
 
         public int NhlRtssReportModelId { get; set; }
         [ForeignKey("NhlRtssReportModelId")]
-        public NhlRtssReportModel NhlRtssReportModel { get; set; }
+        public NhlGameStatsRtssReportModel NhlRtssReportModel { get; set; }
     }
 }

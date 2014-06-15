@@ -17,7 +17,7 @@ namespace SportsDataTests
         public void NhlGameStatsRtssReport_GetFullSeason()
         {
             int year = 2013;
-            List<NhlRtssReportModel> results = NhlGameStatsRtssReport.GetFullSeason(year);
+            List<NhlGameStatsRtssReportModel> results = NhlGameStatsRtssReport.GetFullSeason(year);
             Assert.AreEqual(806, results.Count);
         }
     }

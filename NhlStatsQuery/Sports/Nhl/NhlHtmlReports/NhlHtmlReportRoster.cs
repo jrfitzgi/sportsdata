@@ -22,7 +22,7 @@ namespace SportsData.Nhl
         public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
         {
             // Initialize the rtss reports that we are going to read and parse
-            List<NhlRtssReportModel> models = NhlHtmlReportBase.GetRtssReports(year, fromDate);
+            List<NhlGameStatsRtssReportModel> models = NhlHtmlReportBase.GetRtssReports(year, fromDate);
             List<NhlHtmlReportRosterModel> existingModels = null;
             if (forceOverwrite == false)
             {
@@ -32,7 +32,7 @@ namespace SportsData.Nhl
 
             // For each report, get the html blob from blob storage and parse the blob to a report
             List<NhlHtmlReportRosterModel> results = new List<NhlHtmlReportRosterModel>();
-            foreach (NhlRtssReportModel model in models)
+            foreach (NhlGameStatsRtssReportModel model in models)
             {
                 if (forceOverwrite == false && existingModels.Exists(m => m.NhlRtssReportModelId == model.Id))
                 {

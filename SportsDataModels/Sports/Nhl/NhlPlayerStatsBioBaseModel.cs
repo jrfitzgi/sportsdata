@@ -4,8 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    [Table("NhlPlayerStatsBioModel")]
-    public class NhlPlayerStatsBioModel : NhlPlayerStatsBaseModel
+    public class NhlPlayerStatsBioBaseModel : NhlPlayerStatsBaseModel
     {
         public DateTime DateOfBirth { get; set; }
 
@@ -19,8 +18,6 @@ namespace SportsData.Models
 
         public int WeightLbs { get; set; }
 
-        public string Shoots { get; set; }
-
         public int DraftYear { get; set; }
 
         public int DraftRound { get; set; }
@@ -30,18 +27,6 @@ namespace SportsData.Models
         public string Rookie { get; set; }
 
         public int GamesPlayed { get; set; }
-
-        public int Goals { get; set; }
-
-        public int Assists { get; set; }
-
-        public int Points { get; set; }
-
-        public int PlusMinus { get; set; }
-
-        public int PIM { get; set; }
-
-        public int ToiSecondsPerGame { get; set; }
 
     }
 }

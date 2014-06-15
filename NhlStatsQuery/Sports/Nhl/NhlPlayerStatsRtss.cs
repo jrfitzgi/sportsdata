@@ -30,15 +30,15 @@ namespace SportsData.Nhl
 
         #region Public Methods
 
-        public static List<NhlPlayerStatsRtssModel> GetFullSeason(int year, [Optional] bool saveToDb)
+        public static List<NhlPlayerStatsRtssSkaterModel> GetFullSeason(int year, [Optional] bool saveToDb)
         {
-            List<NhlPlayerStatsRtssModel> results = new List<NhlPlayerStatsRtssModel>();
+            List<NhlPlayerStatsRtssSkaterModel> results = new List<NhlPlayerStatsRtssSkaterModel>();
 
             foreach (NhlSeasonType seasonType in Enum.GetValues(typeof(NhlSeasonType)))
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<NhlPlayerStatsRtssModel> partialResults = NhlPlayerStatsRtss.UpdateSeason(year, seasonType, saveToDb);
+                List<NhlPlayerStatsRtssSkaterModel> partialResults = NhlPlayerStatsRtss.UpdateSeason(year, seasonType, saveToDb);
                 if (null != partialResults)
                 {
                    results.AddRange(partialResults);
@@ -52,17 +52,17 @@ namespace SportsData.Nhl
 
         #region Private Methods
 
-        private static List<NhlPlayerStatsRtssModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
+        private static List<NhlPlayerStatsRtssSkaterModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
         {
             // Get HTML rows
             NhlPlayerStatsRtss nhl = new NhlPlayerStatsRtss();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType);
 
             // Parse into a list
-            List<NhlPlayerStatsRtssModel> results = new List<NhlPlayerStatsRtssModel>();
+            List<NhlPlayerStatsRtssSkaterModel> results = new List<NhlPlayerStatsRtssSkaterModel>();
             foreach (HtmlNode row in rows)
             {
-                NhlPlayerStatsRtssModel result = NhlPlayerStatsRtss.MapHtmlRowToModel(row, nhlSeasonType, year);
+                NhlPlayerStatsRtssSkaterModel result = NhlPlayerStatsRtss.MapHtmlRowToModel(row, nhlSeasonType, year);
 
                 if (null != result)
                 {
@@ -79,11 +79,11 @@ namespace SportsData.Nhl
             return results;
         }
 
-        private static NhlPlayerStatsRtssModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType, int year)
+        private static NhlPlayerStatsRtssSkaterModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType, int year)
         {
             HtmlNodeCollection tdNodes = row.SelectNodes(@"./td");
 
-            NhlPlayerStatsRtssModel model = new NhlPlayerStatsRtssModel();
+            NhlPlayerStatsRtssSkaterModel model = new NhlPlayerStatsRtssSkaterModel();
 
             model.NhlSeasonType = nhlSeasonType;
             model.Year = year;
@@ -111,11 +111,11 @@ namespace SportsData.Nhl
             return model;
         }
 
-        private static void AddOrUpdateDb(List<NhlPlayerStatsRtssModel> models)
+        private static void AddOrUpdateDb(List<NhlPlayerStatsRtssSkaterModel> models)
         {
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlPlayerStatsRtss.AddOrUpdate<NhlPlayerStatsRtssModel>(p => new { p.NhlSeasonType, p.Name, p.Year, p.Team }, models.ToArray());
+                db.NhlPlayerStatsRtssSkaters.AddOrUpdate<NhlPlayerStatsRtssSkaterModel>(p => new { p.NhlSeasonType, p.Name, p.Year, p.Team }, models.ToArray());
                 db.SaveChanges();
             }
         }

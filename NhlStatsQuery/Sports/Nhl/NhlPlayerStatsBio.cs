@@ -33,15 +33,15 @@ namespace SportsData.Nhl
 
         #region Public Methods
 
-        public static List<NhlPlayerStatsBioModel> GetFullSeason(int year, [Optional] bool saveToDb)
+        public static List<NhlPlayerStatsBioSkaterModel> GetFullSeason(int year, [Optional] bool saveToDb)
         {
-            List<NhlPlayerStatsBioModel> results = new List<NhlPlayerStatsBioModel>();
+            List<NhlPlayerStatsBioSkaterModel> results = new List<NhlPlayerStatsBioSkaterModel>();
 
             foreach (NhlSeasonType seasonType in Enum.GetValues(typeof(NhlSeasonType)))
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<NhlPlayerStatsBioModel> partialResults = NhlPlayerStatsBio.UpdateSeason(year, seasonType, saveToDb);
+                List<NhlPlayerStatsBioSkaterModel> partialResults = NhlPlayerStatsBio.UpdateSeason(year, seasonType, saveToDb);
                 if (null != partialResults)
                 {
                    results.AddRange(partialResults);
@@ -55,17 +55,17 @@ namespace SportsData.Nhl
 
         #region Private Methods
 
-        private static List<NhlPlayerStatsBioModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
+        private static List<NhlPlayerStatsBioSkaterModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
         {
             // Get HTML rows
             NhlPlayerStatsBio nhl = new NhlPlayerStatsBio();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType);
 
             // Parse into a list
-            List<NhlPlayerStatsBioModel> results = new List<NhlPlayerStatsBioModel>();
+            List<NhlPlayerStatsBioSkaterModel> results = new List<NhlPlayerStatsBioSkaterModel>();
             foreach (HtmlNode row in rows)
             {
-                NhlPlayerStatsBioModel result = NhlPlayerStatsBio.MapHtmlRowToModel(row, nhlSeasonType, year);
+                NhlPlayerStatsBioSkaterModel result = NhlPlayerStatsBio.MapHtmlRowToModel(row, nhlSeasonType, year);
 
                 if (null != result)
                 {
@@ -82,11 +82,11 @@ namespace SportsData.Nhl
             return results;
         }
 
-        private static NhlPlayerStatsBioModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType, int year)
+        private static NhlPlayerStatsBioSkaterModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType, int year)
         {
             HtmlNodeCollection tdNodes = row.SelectNodes(@"./td");
 
-            NhlPlayerStatsBioModel model = new NhlPlayerStatsBioModel();
+            NhlPlayerStatsBioSkaterModel model = new NhlPlayerStatsBioSkaterModel();
 
             model.NhlSeasonType = nhlSeasonType;
             model.Year = year;
@@ -134,11 +134,11 @@ namespace SportsData.Nhl
             return model;
         }
 
-        private static void AddOrUpdateDb(List<NhlPlayerStatsBioModel> models)
+        private static void AddOrUpdateDb(List<NhlPlayerStatsBioSkaterModel> models)
         {
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlPlayerStatsBios.AddOrUpdate<NhlPlayerStatsBioModel>(p => new { p.NhlSeasonType, p.Name, p.Year, p.Team }, models.ToArray());
+                db.NhlPlayerStatsBioSkaters.AddOrUpdate<NhlPlayerStatsBioSkaterModel>(p => new { p.NhlSeasonType, p.Name, p.Year, p.Team }, models.ToArray());
                 db.SaveChanges();
             }
         }

@@ -18,14 +18,14 @@ namespace SportsData.Nhl
         /// <summary>
         /// Get the RtssReports for the specified year
         /// </summary>
-        public static List<NhlRtssReportModel> GetRtssReports([Optional] int year, [Optional] DateTime fromDate)
+        public static List<NhlGameStatsRtssReportModel> GetRtssReports([Optional] int year, [Optional] DateTime fromDate)
         {
             year = NhlModelHelper.SetDefaultYear(year);
 
-            List<NhlRtssReportModel> models;
+            List<NhlGameStatsRtssReportModel> models;
             using (SportsDataContext db = new SportsDataContext())
             {
-                models = (from m in db.NhlRtssReports
+                models = (from m in db.NhlGameStatsRtssReports
                           where
                              m.Year == year &&
                              m.Date >= fromDate

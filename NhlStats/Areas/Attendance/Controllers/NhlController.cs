@@ -19,12 +19,12 @@ namespace SportsData.Areas.Attendance.Controllers
             ViewBag.GetLatest = update;
             ViewBag.SeasonYear = seasonYear;
 
-            List<NhlGameSummaryModel> games = new List<NhlGameSummaryModel>();
+            List<NhlGameStatsSummaryModel> games = new List<NhlGameStatsSummaryModel>();
             if (seasonYear >= 1998) // check if it is a valid season and if so get the results
             {
                 using (SportsDataContext db = new SportsDataContext())
                 {
-                    IEnumerable<NhlGameSummaryModel> results = from g in db.NhlGameSummaries
+                    IEnumerable<NhlGameStatsSummaryModel> results = from g in db.NhlGameStatsSummaries
                                                           where g.Year == seasonYear
                                                           orderby g.Date
                                                           select g;
