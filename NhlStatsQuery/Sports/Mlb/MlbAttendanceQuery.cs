@@ -162,7 +162,7 @@ namespace SportsData.Mlb
             string opponentTeamCity = opponentTeamNode.InnerText;
 
             // Check if the game was postponed
-            if (columns[2].InnerText.Equals("postponed", StringComparison.InvariantCultureIgnoreCase) || columns[3].InnerText.Equals("delayed", StringComparison.InvariantCultureIgnoreCase))
+            if (columns[2].InnerText.Equals("postponed", StringComparison.InvariantCultureIgnoreCase) || columns[3].InnerText.Equals("delayed", StringComparison.InvariantCultureIgnoreCase) || columns[3].InnerText.Equals("suspended", StringComparison.InvariantCultureIgnoreCase))
             {
                 // The game was postponed. Figure out home/away teams and then return
                 game.Postponed = true;

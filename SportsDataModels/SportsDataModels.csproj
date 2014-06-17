@@ -49,7 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Demographics\DemographicsModel.cs" />
+    <Compile Include="Migrations\201406170242520_draftbook.cs" />
+    <Compile Include="Migrations\201406170242520_draftbook.Designer.cs">
+      <DependentUpon>201406170242520_draftbook.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Sports\Nhl\NhlDraftbookModel.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBioBaseModel.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBioGoalieModel.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsRtssSkaterModel.cs" />
@@ -73,6 +78,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201406170242520_draftbook.resx">
+      <DependentUpon>201406170242520_draftbook.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

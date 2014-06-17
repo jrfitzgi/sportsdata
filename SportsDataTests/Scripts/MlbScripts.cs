@@ -15,10 +15,10 @@ namespace SportsDataTests
     {
 
         [TestMethod]
-        [Ignore]
+        //[Ignore]
         public void Script_Mlb_GetGameSummary()
         {
-            int year = 2004;
+            int year = 2014;
 
             MlbAttendanceData.UpdateSeason(MlbSeasonType.Spring, year);
             MlbAttendanceData.UpdateSeason(MlbSeasonType.Regular, year);

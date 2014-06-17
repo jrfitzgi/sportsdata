@@ -205,7 +205,7 @@ namespace SportsData.Nhl
             }
         }
 
-        protected static int ConvertStringToInt(string s)
+        public static int ConvertStringToInt(string s)
         {
             int result;
             bool success = Int32.TryParse(s, out result);

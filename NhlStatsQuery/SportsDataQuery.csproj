@@ -94,6 +94,7 @@
     <Compile Include="Demographics\DemographicsQuery.cs" />
     <Compile Include="Demographics\DemographicsData.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Sports\Nhl\NhlDraftbook.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBioGoalie.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsRtssSkater.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBioSkater.cs" />

@@ -27,6 +27,8 @@ namespace SportsData.Models
         public DbSet<NhlHtmlReportSummaryModel> NhlHtmlReportSummaries { get; set; }
         public DbSet<NhlHtmlReportRosterModel> NhlHtmlReportRosters { get; set; }
 
+        public DbSet<NhlDraftbookModel> NhlDraftbookModels { get; set; }
+
         // Twitter
         public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }
         public DbSet<TwitterSnapshot> TwitterSnapshots { get; set; }
