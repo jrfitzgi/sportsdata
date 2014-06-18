@@ -1,56 +1,71 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>@ViewBag.Title - @Resources.LocalizedText.Title</title>
-        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta name="viewport" content="width=device-width" />
-        @Styles.Render("~/Content/Site.css")
-        @Scripts.Render("~/bundles/modernizr")
-    </head>
-    <body>
-        <header>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p class="site-title">@Html.ActionLink(@Resources.LocalizedText.Title, "Index", "Home",  new {Area = ""}, new {})</p>
-                </div>
-                <div class="float-right">
-@*                    <section id="login">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - @Resources.LocalizedText.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/Site.css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <header>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p class="site-title">@Html.ActionLink(@Resources.LocalizedText.Title, "Index", "Home", new { Area = "" }, new { })</p>
+            </div>
+            <div class="float-right">
+                @*                    <section id="login">
                         @Html.Partial("_LoginPartial")
                     </section>*@
-                    <nav>
-                        <ul id="menu">
-                            @*<li>@Html.ActionLink("Home", "Index", "Home", new {Area = ""}, new {})</li>*@
-                            
-                            <li>@Html.ActionLink("NHL Attendance", "Index", "Nhl", new { Area = "Attendance" }, new {})</li>
-                            <li>@Html.ActionLink("MLB Attendance", "Index", "Mlb", new { Area = "Attendance" }, new {})</li>
+                <nav>
+                    <ul id="menu">
+                        @*<li>@Html.ActionLink("Home", "Index", "Home", new {Area = ""}, new {})</li>*@
 
-                            <li>@Html.ActionLink("Twitter Followers", "Index", "Twitter", new { Area = "Social" }, new {})</li>
-                            <li>@Html.ActionLink("Facebook Likes", "Index", "Facebook", new { Area = "Social" }, new {})</li>
+                        <li>@Html.ActionLink("NHL Attendance", "Index", "Nhl", new { Area = "Attendance" }, new { })</li>
+                        <li>@Html.ActionLink("MLB Attendance", "Index", "Mlb", new { Area = "Attendance" }, new { })</li>
 
-@*                            <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@Html.ActionLink("Twitter Followers", "Index", "Twitter", new { Area = "Social" }, new { })</li>
+                        <li>@Html.ActionLink("Facebook Likes", "Index", "Facebook", new { Area = "Social" }, new { })</li>
+
+                        @*                            <li>@Html.ActionLink("About", "About", "Home")</li>
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
 
-                        </ul>
-                    </nav>
-                </div>
+                    </ul>
+                </nav>
             </div>
-        </header>
-        <div id="body">
-            @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
-                @RenderBody()
-            </section>
         </div>
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - @Resources.LocalizedText.Title</p>
-                </div>
+    </header>
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+        </section>
+    </div>
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p>&copy; @DateTime.Now.Year - @Resources.LocalizedText.Title</p>
             </div>
-        </footer>
+        </div>
+    </footer>
 
-        @Scripts.Render("~/bundles/jquery")
-        @RenderSection("scripts", required: false)
-    </body>
+    //@Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css">
+
+    <!-- jQuery -->
+    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <!-- DataTables -->
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#draft_info').DataTable();
+        });
+    </script>
+</body>
 </html>

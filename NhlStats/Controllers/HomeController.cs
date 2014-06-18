@@ -12,6 +12,11 @@ namespace SportsData.Controllers
     {
         public ActionResult Index()
         {
+            return RedirectToAction("index", "draft", new { area = "nhl" });
+        }
+        
+        public ActionResult OldIndex()
+        {
             ViewBag.Message = String.Empty;
 
             return View();

@@ -1,0 +1,33 @@
+﻿@using SportsData.Nhl.Query;
+@using SportsData.Nhl;
+@using SportsData.Models;
+
+@model List<NhlPlayerStatsBioSkaterModel>
+
+@{
+    ViewBag.Title = "Nhl Draft";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table id="draft_info" class="display">
+    <thead>
+        <tr>
+            <th>one</th>
+            <th>two</th>
+            <th>three</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (NhlPlayerStatsBioSkaterModel player in Model)
+        {
+            <tr>
+                <td>@player.Name</td>
+                <td>@player.Position</td>
+                <td>@player.DraftOverall</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -180,6 +180,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Attendance\AttendanceAreaRegistration.cs" />
     <Compile Include="Areas\Attendance\Controllers\MlbController.cs" />
+    <Compile Include="Areas\Nhl\Controllers\DraftController.cs" />
+    <Compile Include="Areas\Nhl\NhlAreaRegistration.cs" />
     <Compile Include="Areas\Social\Controllers\Facebook\FacebookController.cs" />
     <Compile Include="Areas\Social\Controllers\SocialBaseController.cs" />
     <Compile Include="Areas\Social\Controllers\Twitter\TwitterController.cs" />
@@ -261,6 +263,8 @@
     <Content Include="Areas\Social\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Social\Views\Twitter\Index.cshtml" />
     <Content Include="Areas\Social\Views\Facebook\Index.cshtml" />
+    <Content Include="Areas\Nhl\Views\Web.config" />
+    <Content Include="Areas\Nhl\Views\Draft\Index.cshtml" />
     <None Include="Properties\PublishProfiles\nhlstats - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\nhlstats - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
@@ -328,6 +332,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Attendance\Models\" />
     <Folder Include="Areas\Attendance\Views\Shared\" />
+    <Folder Include="Areas\Nhl\Models\" />
+    <Folder Include="Areas\Nhl\Views\Shared\" />
     <Folder Include="Areas\Social\Models\" />
     <Folder Include="Areas\Social\Views\Shared\" />
   </ItemGroup>
