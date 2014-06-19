@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using SportsData.Areas.Nhl.Models;
 using SportsData.Models;
 
 namespace SportsData.Areas.Nhl.Controllers
@@ -15,15 +16,28 @@ namespace SportsData.Areas.Nhl.Controllers
 
         public ActionResult Index()
         {
-            List<NhlPlayerStatsBioSkaterModel> model;
+            int draftYear = 2008;
+
+            List<NhlPlayerStatsBioSkaterViewModel> viewModel;
             using (SportsDataContext db = new SportsDataContext())
             {
-                model = (from m in db.NhlPlayerStatsBioSkaters
-                        where m.Year == 2014 && m.NhlSeasonType == NhlSeasonType.RegularSeason
-                        select m).ToList();
+                IEnumerable<NhlPlayerStatsBioSkaterViewModel> queryResult =
+                        from player in db.NhlPlayerStatsBioSkaters
+                        where player.NhlSeasonType == NhlSeasonType.RegularSeason
+                        group player by new { player.Name, player.DraftYear } into playerGroup
+                        select new NhlPlayerStatsBioSkaterViewModel
+                        {
+                            Name = playerGroup.Key.Name,
+                            DraftYear = playerGroup.Key.DraftYear,
+                            SeasonsPlayed = playerGroup.Count(),
+                            AvgGamesPerSeason = Math.Round(playerGroup.Average(p => p.GamesPlayed), 1),
+                            TotalGamesPlayed = playerGroup.Sum(p => p.GamesPlayed)
+                        };
+
+                viewModel = queryResult.ToList();
             }
 
-            return View(model);
+            return View(viewModel);
         }
 
         //

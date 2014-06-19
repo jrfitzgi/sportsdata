@@ -1,12 +1,12 @@
 ﻿@using SportsData.Nhl.Query;
 @using SportsData.Nhl;
-@using SportsData.Models;
+@using SportsData.Areas.Nhl.Models;
 
-@model List<NhlPlayerStatsBioSkaterModel>
+@model List<NhlPlayerStatsBioSkaterViewModel>
 
 @{
     ViewBag.Title = "Nhl Draft";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Nhl/Views/Shared/_NhlLayout.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -14,18 +14,22 @@
 <table id="draft_info" class="display">
     <thead>
         <tr>
-            <th>one</th>
-            <th>two</th>
-            <th>three</th>
+            <th>Name</th>
+            <th>Draft Year</th>
+            <th>Seasons Played</th>
+            <th>Avg Games Per Season</th>
+            <th>Total Games Played</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (NhlPlayerStatsBioSkaterModel player in Model)
+        @foreach (NhlPlayerStatsBioSkaterViewModel player in Model)
         {
             <tr>
                 <td>@player.Name</td>
-                <td>@player.Position</td>
-                <td>@player.DraftOverall</td>
+                <td>@player.DraftYear</td>
+                <td>@player.SeasonsPlayed</td>
+                <td>@player.AvgGamesPerSeason</td>
+                <td>@player.TotalGamesPlayed</td>
             </tr>
         }
     </tbody>
