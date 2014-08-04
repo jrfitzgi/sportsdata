@@ -91,7 +91,24 @@ namespace SportsData.Mlb
             httpClient.BaseAddress = new Uri(MlbAttendanceQuery.baseAddress);
 
             Task<string> httpResponseMessage = httpClient.GetStringAsync(url);
-            string responseString = httpResponseMessage.Result;
+            string responseString = null;
+            int numRetries = 5;
+            for (int i = 0; i < numRetries; i++)
+            {
+                try
+                {
+                    httpResponseMessage = httpClient.GetStringAsync(url);
+                    responseString = httpResponseMessage.Result;
+                    break;
+                }
+                catch (Exception e)
+                {
+                    if (i == numRetries - 1)
+                    {
+                        throw;
+                    }
+                }
+            }
 
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(responseString);
