@@ -24,11 +24,11 @@ namespace SportsData.Controllers
 
             if (keyIsValid)
             {
-                results.Add("FacebookData", this.Update(delegate() { FacebookData.UpdateAllSnapshotsInDb(); }));
-                results.Add("TwitterData", this.Update(delegate() { TwitterData.UpdateAllSnapshotsInDb(); }));
+                //results.Add("FacebookData", this.Update(delegate() { FacebookData.UpdateAllSnapshotsInDb(); }));
+                //results.Add("TwitterData", this.Update(delegate() { TwitterData.UpdateAllSnapshotsInDb(); }));
+
                 results.Add("NhlGameSummary", this.Update(delegate() { NhlGameStatsSummary.GetNewResultsOnly(saveToDb:true); }));
                 results.Add("NhlRtssReport", this.Update(delegate() { NhlGameStatsRtssReport.GetNewResultsOnly(saveToDb:true); }));
-
                 results.Add("HtmlBlobs", this.Update(delegate() { HtmlBlob.UpdateSeason(); }));
                 results.Add("NhlHtmlReportSummary", this.Update(delegate() { NhlHtmlReportSummary.UpdateSeason(); }));
                 results.Add("NhlHtmlReportRoster", this.Update(delegate() { NhlHtmlReportRoster.UpdateSeason(); }));
