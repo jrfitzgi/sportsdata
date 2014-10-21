@@ -28,7 +28,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGameStatsRtssReport()
         {
-            NhlGameStatsRtssReport.GetFullSeason(year:2013, saveToDb:true);
+            NhlGameStatsRtssReport.GetFullSeason(year:2015, saveToDb:true);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlHtmlReportSummary()
         {
-            NhlHtmlReportSummary.UpdateSeason(year: 2014, forceOverwrite: true);
+            NhlHtmlReportSummary.UpdateSeason(year: 2015, forceOverwrite: false);
         }
 
         /// <summary>
