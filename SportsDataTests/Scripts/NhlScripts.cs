@@ -19,7 +19,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGameStatsSummary()
         {
-            NhlGameStatsSummary.GetFullSeason(year: 2014, saveToDb:true);
+            NhlGameStatsSummary.GetFullSeason(year: 2015, saveToDb:true);
         }
 
         /// <summary>

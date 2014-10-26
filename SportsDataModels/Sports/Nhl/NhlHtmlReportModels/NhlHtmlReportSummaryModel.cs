@@ -41,5 +41,42 @@ namespace SportsData.Models
         public int LeagueGameNumber { get; set; }
 
         public string GameStatus { get; set; }
+
+
+        // FK to ScoringSummary
+
+        // FK to PenaltySummary
+
+        // FK to ByPeriod
+
+        public int PowerPlay5v4Goals { get; set; }
+        public int PowerPlay5v4Occurrences { get; set; }
+        public int PowerPlay5v4ToiSeconds { get; set; }
+
+        public int PowerPlay5v3Goals { get; set; }
+        public int PowerPlay5v3Occurrences { get; set; }
+        public int PowerPlay5v3ToiSeconds { get; set; }
+
+        public int PowerPlay4v3Goals { get; set; }
+        public int PowerPlay4v3Occurrences { get; set; }
+        public int PowerPlay4v3ToiSeconds { get; set; }
+
+        public int EvenStrength5v5Goals { get; set; }
+        public int EvenStrength5v5Occurrences { get; set; }
+        public int EvenStrength5v5ToiSeconds { get; set; }
+
+        public int EvenStrength4v4Goals { get; set; }
+        public int EvenStrength4v4Occurrences { get; set; }
+        public int EvenStrength4v4ToiSeconds { get; set; }
+
+        public int EvenStrength3v3Goals { get; set; }
+        public int EvenStrength3v3Occurrences { get; set; }
+        public int EvenStrength3v3ToiSeconds { get; set; }
+
+        // FK to GoaltenderSummary
+
+        // FK to Refs (or re-use roster)
+
+        // FK to 3 stars
     }
 }
