@@ -58,7 +58,8 @@ namespace SportsData.Models
         HeadCoach,
         AssistantCoach,
         Referee,
-        Linesman
+        Linesman,
+        Standby
     }
 
     public class NhlHtmlReportRosterParticipantModel

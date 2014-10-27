@@ -40,8 +40,12 @@ namespace SportsData.Nhl
                     continue;
                 }
 
-                string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
-                NhlHtmlReportRosterModel report = NhlHtmlReportRoster.ParseHtmlBlob(model.Id, htmlBlob);
+                NhlHtmlReportRosterModel report = null;
+                if (!model.GameLink.Equals("#"))
+                {
+                    string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
+                    report = NhlHtmlReportRoster.ParseHtmlBlob(model.Id, htmlBlob);
+                }
 
                 if (null != report)
                 {

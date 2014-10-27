@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -42,8 +43,9 @@ namespace SportsData.Models
 
         public string GameStatus { get; set; }
 
-
-        // FK to ScoringSummary
+        [InverseProperty("NhlHtmlReportSummaryModel")]
+        public ICollection<ScoringSummary> ScoringSummary { get; set; }
+        
 
         // FK to PenaltySummary
 
@@ -77,6 +79,106 @@ namespace SportsData.Models
 
         // FK to Refs (or re-use roster)
 
-        // FK to 3 stars
+        // FK to Stars
     }
+
+
+    public class ScoringSummary
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [InverseProperty("ScoringSummary")]
+        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel { get; set; }
+
+        public int GoalNumber { get; set; }
+        public int Period { get; set; }
+        public int TimeInSeconds { get; set; }
+        public string Strength { get; set; }
+        public string Team { get; set; }
+        public string GoalScorer { get; set; }
+        public string Assist1 { get; set; }
+        public string Assist2 { get; set; }
+        public string VisitorOnIce { get; set; }
+        public string HomeOnIce { get; set; }
+    }
+
+    public class PenaltySummary
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int PenaltyNumber { get; set; }
+        public int Period { get; set; }
+        public int TimeInSeconds { get; set; }
+        public int PlayerNumber { get; set; }
+        public string Name { get; set; }
+        public int PIM { get; set; }
+        public string Penalty { get; set; }   
+    }
+
+    public class ByPeriod
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int Period { get; set; }
+        public int Goals { get; set; }
+        public int Shots { get; set; }
+        public int PN { get; set; }
+        public int PIM { get; set; }
+    }
+
+    public class GoaltenderSummary
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int Number { get; set; }
+        public string Name { get; set; }
+        public int ToiInSecondsEvenStrength { get; set; }
+        public int ToiInSecondsPowerPlay { get; set; }
+        public int ToiInSecondsShortHanded { get; set; }
+        public int ToiInSecondsTotal { get; set; }
+
+        public class PeriodSummary
+        {
+            [Key]
+            [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+            public int Id { get; set; }
+
+            public int Period { get; set; }
+            public int GoalsAgainst { get; set; }
+            public int ShotsAgainst { get; set; }
+        }
+    }
+
+    public class Officials
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public Designation OfficialType { get; set; }
+        public int Number { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Stars
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int StarNumber { get; set; }
+        public int Team { get; set; }
+        public string Position { get; set; }
+        public int PlayerNumber { get; set; }
+        public string Name { get; set; }
+    }
+
 }

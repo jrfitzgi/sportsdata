@@ -47,7 +47,8 @@ namespace SportsDataTests
         public void Script_NhlHtmlReportRoster()
         {
             //NhlHtmlReportRoster.UpdateSeason(year: 2008, forceOverwrite: true);
-            NhlHtmlReportRoster.UpdateSeason();
+            DateTime fromDate = DateTime.Now.AddDays(-2);
+            NhlHtmlReportRoster.UpdateSeason(year: 2015, fromDate: fromDate, forceOverwrite: false);
         }
 
         /// <summary>
