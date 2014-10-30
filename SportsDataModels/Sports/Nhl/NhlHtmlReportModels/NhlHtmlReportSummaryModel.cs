@@ -46,10 +46,10 @@ namespace SportsData.Models
         [InverseProperty("NhlHtmlReportSummaryModel")]
         public ICollection<ScoringSummary> ScoringSummary { get; set; }
 
-        [InverseProperty("NhlHtmlReportSummaryModel")]
+        [InverseProperty("HomePenaltySummary")]
         public List<PenaltySummary> HomePenaltySummary { get; set; }
 
-        [InverseProperty("NhlHtmlReportSummaryModel")]
+        [InverseProperty("VisitorPenaltySummary")]
         public List<PenaltySummary> VisitorPenaltySummary { get; set; }
 
         // FK to ByPeriod
@@ -119,7 +119,11 @@ namespace SportsData.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel { get; set; }
+        [InverseProperty("HomePenaltySummary")]
+        public NhlHtmlReportSummaryModel HomePenaltySummary { get; set; }
+
+        [InverseProperty("VisitorPenaltySummary")]
+        public NhlHtmlReportSummaryModel VisitorPenaltySummary { get; set; }
 
         public int PenaltyNumber { get; set; }
         public int Period { get; set; }
