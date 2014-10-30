@@ -45,9 +45,12 @@ namespace SportsData.Models
 
         [InverseProperty("NhlHtmlReportSummaryModel")]
         public ICollection<ScoringSummary> ScoringSummary { get; set; }
-        
 
-        // FK to PenaltySummary
+        [InverseProperty("NhlHtmlReportSummaryModel")]
+        public List<PenaltySummary> HomePenaltySummary { get; set; }
+
+        [InverseProperty("NhlHtmlReportSummaryModel")]
+        public List<PenaltySummary> VisitorPenaltySummary { get; set; }
 
         // FK to ByPeriod
 
@@ -82,7 +85,9 @@ namespace SportsData.Models
         // FK to Stars
     }
 
-
+    /// <summary>
+    /// The Scoring Summary section of the html report
+    /// </summary>
     public class ScoringSummary
     {
         [Key]
@@ -104,11 +109,17 @@ namespace SportsData.Models
         public string HomeOnIce { get; set; }
     }
 
+    /// <summary>
+    /// The Penalty Summary section of the html report
+    /// </summary>
+
     public class PenaltySummary
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
+        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel { get; set; }
 
         public int PenaltyNumber { get; set; }
         public int Period { get; set; }
@@ -119,6 +130,9 @@ namespace SportsData.Models
         public string Penalty { get; set; }   
     }
 
+    /// <summary>
+    /// The per-period summary of the html report
+    /// </summary>
     public class ByPeriod
     {
         [Key]
@@ -132,6 +146,9 @@ namespace SportsData.Models
         public int PIM { get; set; }
     }
 
+    /// <summary>
+    /// The goaltender summary of the html report
+    /// </summary>
     public class GoaltenderSummary
     {
         [Key]
@@ -157,6 +174,9 @@ namespace SportsData.Models
         }
     }
 
+    /// <summary>
+    /// The Officials section of the html report
+    /// </summary>
     public class Officials
     {
         [Key]
@@ -168,6 +188,9 @@ namespace SportsData.Models
         public string Name { get; set; }
     }
 
+    /// <summary>
+    /// The three stars section of the html report
+    /// </summary>
     public class Stars
     {
         [Key]
