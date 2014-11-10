@@ -44,19 +44,19 @@ namespace SportsData.Models
         public string GameStatus { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_ScoringSummary")]
-        public List<NhlHtmlReportSummaryModel_ScoringSummary> ScoringSummary { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_ScoringSummary_Item> ScoringSummary { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_PenaltySummary_Home")]
-        public List<NhlHtmlReportSummaryModel_PenaltySummary> PenaltySummary_Home { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_PenaltySummary_Item> PenaltySummary_Home { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_PenaltySummary_Visitor")]
-        public List<NhlHtmlReportSummaryModel_PenaltySummary> PenaltySummary_Visitor { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_PenaltySummary_Item> PenaltySummary_Visitor { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_PeriodSummary_Home")]
-        public List<NhlHtmlReportSummaryModel_PeriodSummary> PeriodSummary_Home { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_PeriodSummary_Item> PeriodSummary_Home { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_PeriodSummary_Visitor")]
-        public List<NhlHtmlReportSummaryModel_PeriodSummary> PeriodSummary_Visitor { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_PeriodSummary_Item> PeriodSummary_Visitor { get; set; }
 
         public int PowerPlay5v4Goals { get; set; }
         public int PowerPlay5v4Occurrences { get; set; }
@@ -83,22 +83,23 @@ namespace SportsData.Models
         public int EvenStrength3v3ToiSeconds { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_GoaltenderSummary_Home")]
-        public List<NhlHtmlReportSummaryModel_GoaltenderSummary> GoaltenderSummary_Home { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_GoaltenderSummary_Item> GoaltenderSummary_Home { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_GoaltenderSummary_Visitor")]
-        public List<NhlHtmlReportSummaryModel_GoaltenderSummary> GoaltenderSummary_Visitor { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_GoaltenderSummary_Item> GoaltenderSummary_Visitor { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_Officials")]
-        public List<NhlHtmlReportSummaryModel_Officials> Officials { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_Officials_Item> Officials { get; set; }
 
         [InverseProperty("NhlHtmlReportSummaryModel_Stars")]
-        public List<NhlHtmlReportSummaryModel_Stars> Stars { get; set; }
+        public ICollection<NhlHtmlReportSummaryModel_Stars_Item> Stars { get; set; }
 
     }
+
         /// <summary>
         /// The Scoring Summary section of the html report
         /// </summary>
-        public class NhlHtmlReportSummaryModel_ScoringSummary
+        public class NhlHtmlReportSummaryModel_ScoringSummary_Item
         {
             [Key]
             [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -123,7 +124,7 @@ namespace SportsData.Models
         /// The Penalty Summary section of the html report
         /// </summary>
 
-        public class NhlHtmlReportSummaryModel_PenaltySummary
+        public class NhlHtmlReportSummaryModel_PenaltySummary_Item
         {
             [Key]
             [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -150,7 +151,7 @@ namespace SportsData.Models
         /// <summary>
         /// The per-period summary of the html report
         /// </summary>
-        public class NhlHtmlReportSummaryModel_PeriodSummary
+        public class NhlHtmlReportSummaryModel_PeriodSummary_Item
         {
             [Key]
             [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -172,7 +173,7 @@ namespace SportsData.Models
         /// <summary>
         /// The goaltender summary of the html report
         /// </summary>
-        public class NhlHtmlReportSummaryModel_GoaltenderSummary
+        public class NhlHtmlReportSummaryModel_GoaltenderSummary_Item
         {
             [Key]
             [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -191,7 +192,7 @@ namespace SportsData.Models
             public int ToiInSecondsShortHanded { get; set; }
             public int ToiInSecondsTotal { get; set; }
 
-            public class NhlHtmlReportSummaryModel_GoaltenderPeriodSummary
+            public class NhlHtmlReportSummaryModel_GoaltenderPeriodSummary_Item
             {
                 [Key]
                 [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -206,7 +207,7 @@ namespace SportsData.Models
         /// <summary>
         /// The Officials section of the html report
         /// </summary>
-        public class NhlHtmlReportSummaryModel_Officials
+        public class NhlHtmlReportSummaryModel_Officials_Item
         {
             [Key]
             [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -223,7 +224,7 @@ namespace SportsData.Models
         /// <summary>
         /// The three stars section of the html report
         /// </summary>
-        public class NhlHtmlReportSummaryModel_Stars
+        public class NhlHtmlReportSummaryModel_Stars_Item
         {
             [Key]
             [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]

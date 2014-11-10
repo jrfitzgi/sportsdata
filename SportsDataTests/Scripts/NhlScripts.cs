@@ -37,7 +37,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlHtmlReportSummary()
         {
-            DateTime fromDate = DateTime.Parse("10/30/2015");
+            DateTime fromDate = DateTime.Parse("10/6/2015");
             NhlHtmlReportSummary.UpdateSeason(year: 2015, forceOverwrite: false, fromDate: fromDate);
         }
 
