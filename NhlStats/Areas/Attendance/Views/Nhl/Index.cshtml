@@ -2,7 +2,7 @@
 @using SportsData.Nhl;
 @using SportsData.Models;
 
-@model List<NhlGameSummaryModel>
+@model List<NhlGameStatsSummaryModel>
 
 @{
     ViewBag.Title = "Nhl Attendance";
@@ -23,6 +23,7 @@
 <form id="SelectSeason" method="post" action="~/attendance/nhl">
     @{
         List<HockeySeason> seasons = new List<HockeySeason>();
+        seasons.Add(new HockeySeason("2015", "2014-2015"));
         seasons.Add(new HockeySeason("2014", "2013-2014"));
         seasons.Add(new HockeySeason("2013", "2012-2013"));
         seasons.Add(new HockeySeason("2012", "2011-2012"));
@@ -89,7 +90,7 @@
         </tr>
     }
 
-    @foreach (NhlGameSummaryModel game in Model)
+    @foreach (NhlGameStatsSummaryModel game in Model)
     {    
         <tr>
             <td>@game.NhlSeasonType.ToString()</td>
