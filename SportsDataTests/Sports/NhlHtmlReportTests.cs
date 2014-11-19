@@ -40,7 +40,7 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
+            Nhl_Games_Rtss_Summary model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\EnglishInProgressRoster.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
+            Nhl_Games_Rtss_Summary model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\CapsThrashers_10.05.2007.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportSummaryModel model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
+            Nhl_Games_Rtss_Summary model = NhlHtmlReportSummary.ParseHtmlBlob(-1, html);
         }
         
         [TestMethod]
@@ -73,7 +73,7 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportRosterModel model = NhlHtmlReportRoster.ParseHtmlBlob(-1, html);
+            Nhl_Games_Rtss_Roster model = NhlHtmlReportRoster.ParseHtmlBlob(-1, html);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace SportsDataTests
             string path = @"C:\Users\jordanf\Google Drive\Coding\Sportsdata\TestData\FrenchRegSeasonRoster_formatted.htm";
             string html = File.ReadAllText(path);
 
-            NhlHtmlReportRosterModel model = NhlHtmlReportRoster.ParseHtmlBlob(-1, html);
+            Nhl_Games_Rtss_Roster model = NhlHtmlReportRoster.ParseHtmlBlob(-1, html);
 
             using (SportsDataContext db = new SportsDataContext())
             {
@@ -116,7 +116,7 @@ namespace SportsDataTests
                 db.SaveChanges();
             }
 
-            List<NhlHtmlReportRosterModel> models;
+            List<Nhl_Games_Rtss_Roster> models;
             using (SportsDataContext db = new SportsDataContext())
             {
                 models = (from m in db.NhlHtmlReportRosters

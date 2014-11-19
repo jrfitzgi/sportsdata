@@ -18,7 +18,7 @@ namespace SportsDataTests
         [TestMethod]
         public void HtmlBlob_Test()
         {
-            List<NhlGameStatsRtssReportModel> models;
+            List<Nhl_Games_Rtss> models;
             using (SportsDataContext db = new SportsDataContext())
             {
                 models = (from m in db.NhlGameStatsRtssReports
@@ -32,7 +32,7 @@ namespace SportsDataTests
             models.ForEach(m => items.Add(new Uri(m.RosterLink), m.Id.ToString()));
             HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, items, false);
 
-            foreach (NhlGameStatsRtssReportModel model in models)
+            foreach (Nhl_Games_Rtss model in models)
             {
                 string html = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
             }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    public class NhlHtmlReportBaseModel
+    public class Nhl_HtmlReportBaseModel
     {
         [Key, Column(Order = 0)]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -12,6 +12,6 @@ namespace SportsData.Models
 
         public int NhlRtssReportModelId { get; set; }
         [ForeignKey("NhlRtssReportModelId")]
-        public NhlGameStatsRtssReportModel NhlRtssReportModel { get; set; }
+        public Nhl_Games_Rtss NhlRtssReportModel { get; set; }
     }
 }

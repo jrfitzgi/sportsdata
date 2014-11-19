@@ -18,8 +18,8 @@ namespace SportsData.Nhl
         public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
         {
             // Get the RtssReports for the specified year
-            List<NhlGameStatsRtssReportModel> models = NhlHtmlReportBase.GetRtssReports(year);
-            List<NhlHtmlReportSummaryModel> existingModels = null;
+            List<Nhl_Games_Rtss> models = NhlHtmlReportBase.GetRtssReports(year);
+            List<Nhl_Games_Rtss_Summary> existingModels = null;
             if (forceOverwrite == false)
             {
                 // Only query for existing if we are not going to force overwrite all
@@ -27,8 +27,8 @@ namespace SportsData.Nhl
             }
 
             // For each report, get the html blob from blob storage and parse the blob to a report
-            List<NhlHtmlReportSummaryModel> results = new List<NhlHtmlReportSummaryModel>();
-            foreach (NhlGameStatsRtssReportModel model in models)
+            List<Nhl_Games_Rtss_Summary> results = new List<Nhl_Games_Rtss_Summary>();
+            foreach (Nhl_Games_Rtss model in models)
             {
                 if (forceOverwrite == false && existingModels.Exists(m => m.NhlRtssReportModelId == model.Id))
                 {
@@ -36,7 +36,7 @@ namespace SportsData.Nhl
                     continue;
                 }
 
-                NhlHtmlReportSummaryModel report = null;
+                Nhl_Games_Rtss_Summary report = null;
                 if (!model.GameLink.Equals("#"))
                 {
                     string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.GameLink), true);
@@ -52,18 +52,18 @@ namespace SportsData.Nhl
             // Save the reports to the db
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlHtmlReportSummaries.AddOrUpdate<NhlHtmlReportSummaryModel>(
+                db.NhlHtmlReportSummaries.AddOrUpdate<Nhl_Games_Rtss_Summary>(
                     m => m.NhlRtssReportModelId,
                     results.ToArray());
                 db.SaveChanges();
             }
         }
 
-        public static NhlHtmlReportSummaryModel ParseHtmlBlob(int rtssReportId, string html)
+        public static Nhl_Games_Rtss_Summary ParseHtmlBlob(int rtssReportId, string html)
         {
             if (String.IsNullOrWhiteSpace(html) || html.Equals("404")) { return null; }
 
-            NhlHtmlReportSummaryModel model = new NhlHtmlReportSummaryModel();
+            Nhl_Games_Rtss_Summary model = new Nhl_Games_Rtss_Summary();
             model.NhlRtssReportModelId = rtssReportId;
 
             HtmlDocument htmlDocument = new HtmlDocument();
@@ -209,11 +209,11 @@ namespace SportsData.Nhl
         /// <summary>
         /// Get the NhlHtmlReportSummaryModels for the specified year
         /// </summary>
-        private static List<NhlHtmlReportSummaryModel> GetHtmlSummaryReports([Optional] int year, [Optional] DateTime fromDate)
+        private static List<Nhl_Games_Rtss_Summary> GetHtmlSummaryReports([Optional] int year, [Optional] DateTime fromDate)
         {
             year = NhlModelHelper.SetDefaultYear(year);
 
-            List<NhlHtmlReportSummaryModel> existingModels = new List<NhlHtmlReportSummaryModel>();
+            List<Nhl_Games_Rtss_Summary> existingModels = new List<Nhl_Games_Rtss_Summary>();
             using (SportsDataContext db = new SportsDataContext())
             {
                 existingModels = (from m in db.NhlHtmlReportSummaries
@@ -226,9 +226,9 @@ namespace SportsData.Nhl
             return existingModels;
         }
 
-        private static NhlHtmlReportSummaryModel BruinsRangersSpecialCase(int rtssReportId)
+        private static Nhl_Games_Rtss_Summary BruinsRangersSpecialCase(int rtssReportId)
         {
-            NhlHtmlReportSummaryModel model = new NhlHtmlReportSummaryModel();
+            Nhl_Games_Rtss_Summary model = new Nhl_Games_Rtss_Summary();
             model.NhlRtssReportModelId = rtssReportId;
 
             model.VisitorScore = 2;

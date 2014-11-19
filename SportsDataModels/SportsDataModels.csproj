@@ -51,25 +51,24 @@
     <Compile Include="Demographics\DemographicsModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sports\Nhl\NhlDraftbookModel.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_Games_Rtss_Roster.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_Games_Rtss_Summary.cs" />
+    <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_HtmlReportBaseModel.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBioBaseModel.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBioGoalieModel.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsRtssSkaterModel.cs" />
     <Compile Include="Sports\Nhl\NhlModelHelper.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerBaseModel.cs" />
     <Compile Include="Sports\Nhl\NhlPlayerStatsBioSkaterModel.cs" />
-    <Compile Include="Sports\Nhl\NhlGameStatsBaseModelComparer.cs" />
-    <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportRosterModel.cs" />
-    <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportSummaryModel.cs" />
-    <Compile Include="Sports\Nhl\NhlRtssReportModel.cs" />
-    <Compile Include="Sports\Nhl\NhlGameStatsBaseModel.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
-    <Compile Include="Sports\Nhl\NhlGameStatsSummaryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Social\FacebookModel.cs" />
     <Compile Include="Social\SocialBaseModel.cs" />
     <Compile Include="Social\TwitterModels.cs" />
     <Compile Include="SportsDataContext.cs" />
-    <Compile Include="Sports\Nhl\NhlHtmlReportModels\NhlHtmlReportBaseModel.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Games_BaseModel.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Games_Rtss.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Games_Summary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -8,7 +8,7 @@ namespace SportsData.Models
     /// <summary>
     /// This is the summary that appears at the top of all html reports
     /// </summary>
-    public class NhlHtmlReportSummaryModel : NhlHtmlReportBaseModel
+    public class Nhl_Games_Rtss_Summary : Nhl_HtmlReportBaseModel
     {
         [Required]
         public DateTime Date { get; set; }
@@ -106,7 +106,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         [InverseProperty("ScoringSummary")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_ScoringSummary { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_ScoringSummary { get; set; }
 
         public int GoalNumber { get; set; }
         public int Period { get; set; }
@@ -134,10 +134,10 @@ namespace SportsData.Models
         //[ForeignKey("NhlHtmlReportSummaryModelId")]
         //public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel { get; set; }
         [InverseProperty("PenaltySummary_Home")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_PenaltySummary_Home { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_PenaltySummary_Home { get; set; }
 
         [InverseProperty("PenaltySummary_Visitor")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_PenaltySummary_Visitor { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_PenaltySummary_Visitor { get; set; }
 
         public int PenaltyNumber { get; set; }
         public int Period { get; set; }
@@ -158,10 +158,10 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         [InverseProperty("PeriodSummary_Home")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_PeriodSummary_Home { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_PeriodSummary_Home { get; set; }
 
         [InverseProperty("PeriodSummary_Visitor")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_PeriodSummary_Visitor { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_PeriodSummary_Visitor { get; set; }
 
         public int Period { get; set; }
         public int Goals { get; set; }
@@ -180,10 +180,10 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         [InverseProperty("GoalieSummary_Home")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_GoalieSummary_Home { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_GoalieSummary_Home { get; set; }
 
         [InverseProperty("GoalieSummary_Visitor")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_GoalieSummary_Visitor { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_GoalieSummary_Visitor { get; set; }
 
         public int Number { get; set; }
         public string Name { get; set; }
@@ -220,7 +220,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         [InverseProperty("Officials")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_Officials { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_Officials { get; set; }
 
         public Designation OfficialType { get; set; }
         public int Number { get; set; }
@@ -237,7 +237,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         [InverseProperty("Stars")]
-        public NhlHtmlReportSummaryModel NhlHtmlReportSummaryModel_Stars { get; set; }
+        public Nhl_Games_Rtss_Summary NhlHtmlReportSummaryModel_Stars { get; set; }
 
         public int StarNumber { get; set; }
         public int Team { get; set; }

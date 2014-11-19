@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    [Table("NhlGameStatsRtssReport")]
-    public class NhlGameStatsRtssReportModel : NhlGameStatsBaseModel
+    [Table("Nhl_Games_Rtss")]
+    public class Nhl_Games_Rtss : Nhl_Games_BaseModel
     {
         [Required]
         public int GameNumber { get; set; }

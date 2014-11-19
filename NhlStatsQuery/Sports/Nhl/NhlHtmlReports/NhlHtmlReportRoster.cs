@@ -22,8 +22,8 @@ namespace SportsData.Nhl
         public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
         {
             // Initialize the rtss reports that we are going to read and parse
-            List<NhlGameStatsRtssReportModel> models = NhlHtmlReportBase.GetRtssReports(year, fromDate);
-            List<NhlHtmlReportRosterModel> existingModels = null;
+            List<Nhl_Games_Rtss> models = NhlHtmlReportBase.GetRtssReports(year, fromDate);
+            List<Nhl_Games_Rtss_Roster> existingModels = null;
             if (forceOverwrite == false)
             {
                 // Only query for existing if we are not going to force overwrite all
@@ -31,8 +31,8 @@ namespace SportsData.Nhl
             }
 
             // For each report, get the html blob from blob storage and parse the blob to a report
-            List<NhlHtmlReportRosterModel> results = new List<NhlHtmlReportRosterModel>();
-            foreach (NhlGameStatsRtssReportModel model in models)
+            List<Nhl_Games_Rtss_Roster> results = new List<Nhl_Games_Rtss_Roster>();
+            foreach (Nhl_Games_Rtss model in models)
             {
                 if (forceOverwrite == false && existingModels.Exists(m => m.NhlRtssReportModelId == model.Id))
                 {
@@ -40,7 +40,7 @@ namespace SportsData.Nhl
                     continue;
                 }
 
-                NhlHtmlReportRosterModel report = null;
+                Nhl_Games_Rtss_Roster report = null;
                 if (!model.GameLink.Equals("#"))
                 {
                     string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
@@ -58,7 +58,7 @@ namespace SportsData.Nhl
             {
                 int counter = 0;
                 int counterMax = 100;
-                foreach (NhlHtmlReportRosterModel model in results)
+                foreach (Nhl_Games_Rtss_Roster model in results)
                 {
                     counter++;
 
@@ -83,11 +83,11 @@ namespace SportsData.Nhl
             }
         }
 
-        public static NhlHtmlReportRosterModel ParseHtmlBlob(int rtssReportId, string html)
+        public static Nhl_Games_Rtss_Roster ParseHtmlBlob(int rtssReportId, string html)
         {
             if (String.IsNullOrWhiteSpace(html) || html.Equals("404")) { return null; }
 
-            NhlHtmlReportRosterModel model = new NhlHtmlReportRosterModel();
+            Nhl_Games_Rtss_Roster model = new Nhl_Games_Rtss_Roster();
             model.NhlRtssReportModelId = rtssReportId;
 
             HtmlDocument htmlDocument = new HtmlDocument();
@@ -311,11 +311,11 @@ namespace SportsData.Nhl
         /// <summary>
         /// Get the NhlHtmlReportRosterModel for the specified year
         /// </summary>
-        private static List<NhlHtmlReportRosterModel> GetHtmlRosterReports([Optional] int year, [Optional] DateTime fromDate)
+        private static List<Nhl_Games_Rtss_Roster> GetHtmlRosterReports([Optional] int year, [Optional] DateTime fromDate)
         {
             year = NhlModelHelper.SetDefaultYear(year);
 
-            List<NhlHtmlReportRosterModel> existingModels = new List<NhlHtmlReportRosterModel>();
+            List<Nhl_Games_Rtss_Roster> existingModels = new List<Nhl_Games_Rtss_Roster>();
             using (SportsDataContext db = new SportsDataContext())
             {
                 existingModels = (from m in db.NhlHtmlReportRosters
@@ -328,9 +328,9 @@ namespace SportsData.Nhl
             return existingModels;
         }
 
-        private static NhlHtmlReportRosterModel BruinsRangersSpecialCase(int rtssReportId)
+        private static Nhl_Games_Rtss_Roster BruinsRangersSpecialCase(int rtssReportId)
         {
-            NhlHtmlReportRosterModel model = new NhlHtmlReportRosterModel();
+            Nhl_Games_Rtss_Roster model = new Nhl_Games_Rtss_Roster();
             model.NhlRtssReportModelId = rtssReportId;
 
             model.VisitorRoster = new List<NhlHtmlReportRosterParticipantModel>();

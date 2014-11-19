@@ -19,7 +19,8 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGameStatsSummary()
         {
-            NhlGameStatsSummary.GetFullSeason(year: 2015, saveToDb:true);
+            DateTime fromDate = DateTime.Parse("11/17/2014");
+            NhlGameStatsSummary.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
         /// <summary>
@@ -28,7 +29,8 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGameStatsRtssReport()
         {
-            NhlGameStatsRtssReport.GetFullSeason(year:2015, saveToDb:true);
+            DateTime fromDate = DateTime.Parse("11/17/2014");
+            NhlGameStatsRtssReport.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
         /// <summary>
@@ -37,7 +39,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlHtmlReportSummary()
         {
-            DateTime fromDate = DateTime.Parse("11/13/2015");
+            DateTime fromDate = DateTime.Parse("11/17/2014");
             NhlHtmlReportSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
         }
 
@@ -58,7 +60,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlPlayerStatsBioSkater()
         {
-            for (int y = 2004; y >=1998; y--)
+            for (int y = 2004; y >= 1998; y--)
             {
                 NhlPlayerStatsBioSkater.GetFullSeason(year: y, saveToDb: true);
             }

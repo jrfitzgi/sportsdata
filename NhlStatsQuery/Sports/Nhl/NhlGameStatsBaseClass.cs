@@ -25,10 +25,10 @@ namespace SportsData.Nhl
         /// <summary>
         /// Extract the items that have the special case of the FLA/NSH double header on 9/16/2013
         /// </summary>
-        protected static IEnumerable<NhlGameStatsBaseModel> GetSpecialCaseModels(IEnumerable<NhlGameStatsBaseModel> models)
+        protected static IEnumerable<Nhl_Games_BaseModel> GetSpecialCaseModels(IEnumerable<Nhl_Games_BaseModel> models)
         {
-            Func<NhlGameStatsBaseModel, bool> specialCasePredicate = new Func<NhlGameStatsBaseModel, bool>(m => m.Date == Convert.ToDateTime("9/16/2013") && m.Home.Equals("Florida", StringComparison.InvariantCultureIgnoreCase));
-            IEnumerable<NhlGameStatsBaseModel> specialCaseModels = models.Where(specialCasePredicate);
+            Func<Nhl_Games_BaseModel, bool> specialCasePredicate = new Func<Nhl_Games_BaseModel, bool>(m => m.Date == Convert.ToDateTime("9/16/2013") && m.Home.Equals("Florida", StringComparison.InvariantCultureIgnoreCase));
+            IEnumerable<Nhl_Games_BaseModel> specialCaseModels = models.Where(specialCasePredicate);
 
             return specialCaseModels;
         }

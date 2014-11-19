@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    public class NhlGameStatsBaseModel
+    public class Nhl_Games_BaseModel
     {
         [Key, Column(Order = 0)]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -29,5 +30,21 @@ namespace SportsData.Models
         /// </summary>
         public int Year { get; set; }
 
+    }
+
+    public class NhlGameStatsBaseModelComparer : IEqualityComparer<Nhl_Games_BaseModel>
+    {
+        public bool Equals(Nhl_Games_BaseModel m1, Nhl_Games_BaseModel m2)
+        {
+            return
+                m1.Date == m2.Date &&
+                m1.Visitor == m2.Visitor &&
+                m1.Home == m2.Home;
+        }
+
+        public int GetHashCode(Nhl_Games_BaseModel m)
+        {
+            return base.GetHashCode();
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace SportsData.Nhl
         {
             year = NhlModelHelper.SetDefaultYear(year);
 
-            List<NhlGameStatsRtssReportModel> models;
+            List<Nhl_Games_Rtss> models;
             using (SportsDataContext db = new SportsDataContext())
             {
                 models = (from m in db.NhlGameStatsRtssReports

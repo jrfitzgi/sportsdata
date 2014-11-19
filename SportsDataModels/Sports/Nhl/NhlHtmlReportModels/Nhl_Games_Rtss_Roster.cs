@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    public class NhlHtmlReportRosterModel : NhlHtmlReportBaseModel
+    public class Nhl_Games_Rtss_Roster : Nhl_HtmlReportBaseModel
     {
-        public NhlHtmlReportRosterModel()
+        public Nhl_Games_Rtss_Roster()
         {
             this.VisitorRoster = new Collection<NhlHtmlReportRosterParticipantModel>();
             this.VisitorScratches = new Collection<NhlHtmlReportRosterParticipantModel>();
@@ -80,28 +80,28 @@ namespace SportsData.Models
         public bool StartingLineup { get; set; }
 
         [InverseProperty("VisitorRoster")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_VisitorRoster { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_VisitorRoster { get; set; }
 
         [InverseProperty("VisitorScratches")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_VisitorScratches { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_VisitorScratches { get; set; }
 
         [InverseProperty("VisitorHeadCoach")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_VisitorHeadCoach { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_VisitorHeadCoach { get; set; }
 
         [InverseProperty("HomeRoster")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_HomeRoster { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_HomeRoster { get; set; }
 
         [InverseProperty("HomeScratches")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_HomeScratches { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_HomeScratches { get; set; }
 
         [InverseProperty("HomeHeadCoach")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_HomeHeadCoach { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_HomeHeadCoach { get; set; }
 
         [InverseProperty("Referees")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_Referees { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_Referees { get; set; }
 
         [InverseProperty("Linesman")]
-        public virtual NhlHtmlReportRosterModel NhlHtmlReportRosterModel_Linesman { get; set; }
+        public virtual Nhl_Games_Rtss_Roster NhlHtmlReportRosterModel_Linesman { get; set; }
 
     }
 }

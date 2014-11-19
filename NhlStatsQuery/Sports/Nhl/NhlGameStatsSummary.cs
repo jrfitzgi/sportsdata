@@ -36,7 +36,7 @@ namespace SportsData.Nhl
         /// Get all the results starting from the last date of the data in the db. If a year is specified then only get latest for that year.
         /// </summary>
         /// <param name="year"></param>
-        public static List<NhlGameStatsSummaryModel> GetNewResultsOnly([Optional] int year, [Optional] bool saveToDb)
+        public static List<Nhl_Games_Summary> GetNewResultsOnly([Optional] int year, [Optional] bool saveToDb)
         {
             DateTime latestResultDate;
             using (SportsDataContext db = new SportsDataContext())
@@ -50,15 +50,15 @@ namespace SportsData.Nhl
             return NhlGameStatsSummary.GetFullSeason(year, latestResultDate, saveToDb);
         }
 
-        public static List<NhlGameStatsSummaryModel> GetFullSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool saveToDb)
+        public static List<Nhl_Games_Summary> GetFullSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool saveToDb)
         {
-            List<NhlGameStatsSummaryModel> results = new List<NhlGameStatsSummaryModel>();
+            List<Nhl_Games_Summary> results = new List<Nhl_Games_Summary>();
 
             foreach (NhlSeasonType seasonType in Enum.GetValues(typeof(NhlSeasonType)))
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<NhlGameStatsSummaryModel> partialResults = NhlGameStatsSummary.UpdateSeason(year, seasonType, fromDate, saveToDb);
+                List<Nhl_Games_Summary> partialResults = NhlGameStatsSummary.UpdateSeason(year, seasonType, fromDate, saveToDb);
                 if (null != partialResults)
                 {
                     results.AddRange(partialResults);
@@ -72,17 +72,17 @@ namespace SportsData.Nhl
 
         #region Private Methods
 
-        private static List<NhlGameStatsSummaryModel> UpdateSeason(int year, NhlSeasonType nhlSeasonType, DateTime fromDate, bool saveToDb)
+        private static List<Nhl_Games_Summary> UpdateSeason(int year, NhlSeasonType nhlSeasonType, DateTime fromDate, bool saveToDb)
         {
             // Get HTML rows
             NhlGameStatsSummary nhl = new NhlGameStatsSummary();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType, fromDate);
 
             // Parse into a list
-            List<NhlGameStatsSummaryModel> results = new List<NhlGameStatsSummaryModel>();
+            List<Nhl_Games_Summary> results = new List<Nhl_Games_Summary>();
             foreach (HtmlNode row in rows)
             {
-                NhlGameStatsSummaryModel result = NhlGameStatsSummary.MapHtmlRowToModel(row, nhlSeasonType);
+                Nhl_Games_Summary result = NhlGameStatsSummary.MapHtmlRowToModel(row, nhlSeasonType);
 
                 if (null != result)
                 {
@@ -99,11 +99,11 @@ namespace SportsData.Nhl
             return results;
         }
         
-        private static NhlGameStatsSummaryModel MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType)
+        private static Nhl_Games_Summary MapHtmlRowToModel(HtmlNode row, NhlSeasonType nhlSeasonType)
         {
             HtmlNodeCollection tdNodes = row.SelectNodes(@"./td");
 
-            NhlGameStatsSummaryModel model = new NhlGameStatsSummaryModel();
+            Nhl_Games_Summary model = new Nhl_Games_Summary();
 
             model.NhlSeasonType = nhlSeasonType;
             model.Date = Convert.ToDateTime(tdNodes[0].InnerText.Replace("'", "/"));
@@ -129,19 +129,19 @@ namespace SportsData.Nhl
             return model;
         }
 
-        private static void AddOrUpdateDb(List<NhlGameStatsSummaryModel> models)
+        private static void AddOrUpdateDb(List<Nhl_Games_Summary> models)
         {
             // Note: downcast for models is not necessary but leave this here in anticipation of moving this method to a base class (and it will be necessary)
 
             // Special case the FLA/NSH double header on 9/16/2013
-            IEnumerable<NhlGameStatsBaseModel> specialCaseModels = NhlGameStatsBaseClass.GetSpecialCaseModels(models);
-            IEnumerable<NhlGameStatsSummaryModel> downcastSpecialCaseModels = specialCaseModels.ToList().ConvertAll<NhlGameStatsSummaryModel>(m => (NhlGameStatsSummaryModel)m);
-            IEnumerable<NhlGameStatsSummaryModel> downcastModels = models.Except(specialCaseModels, new NhlGameStatsBaseModelComparer()).ToList().ConvertAll<NhlGameStatsSummaryModel>(m => (NhlGameStatsSummaryModel)m);
+            IEnumerable<Nhl_Games_BaseModel> specialCaseModels = NhlGameStatsBaseClass.GetSpecialCaseModels(models);
+            IEnumerable<Nhl_Games_Summary> downcastSpecialCaseModels = specialCaseModels.ToList().ConvertAll<Nhl_Games_Summary>(m => (Nhl_Games_Summary)m);
+            IEnumerable<Nhl_Games_Summary> downcastModels = models.Except(specialCaseModels, new NhlGameStatsBaseModelComparer()).ToList().ConvertAll<Nhl_Games_Summary>(m => (Nhl_Games_Summary)m);
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlGameStatsSummaries.AddOrUpdate<NhlGameStatsSummaryModel>(g => new { g.Date, g.Visitor, g.Home, g.VisitorScore, g.HomeScore }, downcastSpecialCaseModels.ToArray());
-                db.NhlGameStatsSummaries.AddOrUpdate<NhlGameStatsSummaryModel>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
+                db.NhlGameStatsSummaries.AddOrUpdate<Nhl_Games_Summary>(g => new { g.Date, g.Visitor, g.Home, g.VisitorScore, g.HomeScore }, downcastSpecialCaseModels.ToArray());
+                db.NhlGameStatsSummaries.AddOrUpdate<Nhl_Games_Summary>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
                 db.SaveChanges();
             }
         }

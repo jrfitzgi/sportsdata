@@ -4,6 +4,8 @@ using SportsData.Models;
 
 namespace SportsData.Nhl.Query.Migrations
 {
+    // RenameTable("NhlGameStatsRtssReport", "Nhl_Games_Rtss");
+
     public class Configuration : DbMigrationsConfiguration<SportsDataContext>
     {
         public Configuration()
