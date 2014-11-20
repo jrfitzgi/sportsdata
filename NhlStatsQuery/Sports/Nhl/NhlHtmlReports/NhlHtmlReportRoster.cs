@@ -135,15 +135,15 @@ namespace SportsData.Nhl
             }
 
             // Parse the players out of the lists
-            List<NhlHtmlReportRosterParticipantModel> team1Roster = NhlHtmlReportRoster.ParsePlayers(team1RosterNodes);
-            List<NhlHtmlReportRosterParticipantModel> team2Roster = NhlHtmlReportRoster.ParsePlayers(team2RosterNodes);
-            List<NhlHtmlReportRosterParticipantModel> team1Scratches = NhlHtmlReportRoster.ParsePlayers(team1ScratchesNodes);
-            List<NhlHtmlReportRosterParticipantModel> team2Scratches = NhlHtmlReportRoster.ParsePlayers(team2ScratchesNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team1Roster = NhlHtmlReportRoster.ParsePlayers(team1RosterNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team2Roster = NhlHtmlReportRoster.ParsePlayers(team2RosterNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team1Scratches = NhlHtmlReportRoster.ParsePlayers(team1ScratchesNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team2Scratches = NhlHtmlReportRoster.ParsePlayers(team2ScratchesNodes);
 
             // Find the head coaches
             HtmlNodeCollection coachNodes = documentNode.SelectNodes(@".//tr[@id='HeadCoaches']/td/table/tbody/tr | .//tr[@id='HeadCoaches']/td/table/tr");
-            NhlHtmlReportRosterParticipantModel coach1 = NhlHtmlReportRoster.ParseCoach(coachNodes[0]);
-            NhlHtmlReportRosterParticipantModel coach2 = NhlHtmlReportRoster.ParseCoach(coachNodes[1]);
+            Nhl_Games_Rtss_RosterParticipantItem coach1 = NhlHtmlReportRoster.ParseCoach(coachNodes[0]);
+            Nhl_Games_Rtss_RosterParticipantItem coach2 = NhlHtmlReportRoster.ParseCoach(coachNodes[1]);
 
             // Find the officials
             HtmlNode officialsTableNode = documentNode.SelectSingleNode(@".//table[tbody/tr/td[contains(text(),'Referee')] or tr/td[contains(text(),'Referee')]]");
@@ -151,16 +151,16 @@ namespace SportsData.Nhl
             HtmlNodeCollection refereesNodes = officialsSubTableNodes[0].SelectNodes(@".//tr");
             HtmlNodeCollection linesmenNodes = officialsSubTableNodes[1].SelectNodes(@".//tr");
 
-            NhlHtmlReportRosterParticipantModel referee1 = null;
+            Nhl_Games_Rtss_RosterParticipantItem referee1 = null;
             if (refereesNodes != null && refereesNodes.Count >= 1) { referee1 = NhlHtmlReportRoster.ParseReferee(refereesNodes[0]); }
 
-            NhlHtmlReportRosterParticipantModel referee2 = null;
+            Nhl_Games_Rtss_RosterParticipantItem referee2 = null;
             if (refereesNodes != null && refereesNodes.Count >= 2) { referee2 = NhlHtmlReportRoster.ParseReferee(refereesNodes[1]); }
 
-            NhlHtmlReportRosterParticipantModel linesman1 = null;
+            Nhl_Games_Rtss_RosterParticipantItem linesman1 = null;
             if (linesmenNodes != null && linesmenNodes.Count >= 1) { linesman1 = NhlHtmlReportRoster.ParseLinesman(linesmenNodes[0]); }
 
-            NhlHtmlReportRosterParticipantModel linesman2 = null;
+            Nhl_Games_Rtss_RosterParticipantItem linesman2 = null;
             if (linesmenNodes != null && linesmenNodes.Count >= 2) { linesman2 = NhlHtmlReportRoster.ParseLinesman(linesmenNodes[1]); }
 
             // Check for standby officials
@@ -173,29 +173,29 @@ namespace SportsData.Nhl
 
 
             // Fill out the model
-            model.VisitorHeadCoach = new List<NhlHtmlReportRosterParticipantModel> { coach1 };
-            model.HomeHeadCoach = new List<NhlHtmlReportRosterParticipantModel> { coach2 };
+            model.VisitorHeadCoach = new List<Nhl_Games_Rtss_RosterParticipantItem> { coach1 };
+            model.HomeHeadCoach = new List<Nhl_Games_Rtss_RosterParticipantItem> { coach2 };
             model.VisitorRoster = team1Roster;
             model.HomeRoster = team2Roster;
             model.VisitorScratches = team1Scratches;
             model.HomeScratches = team2Scratches;
-            model.Linesman = new List<NhlHtmlReportRosterParticipantModel> { linesman1, linesman2 };
-            model.Referees = new List<NhlHtmlReportRosterParticipantModel> { referee1, referee2 };
+            model.Linesman = new List<Nhl_Games_Rtss_RosterParticipantItem> { linesman1, linesman2 };
+            model.Referees = new List<Nhl_Games_Rtss_RosterParticipantItem> { referee1, referee2 };
 
             return model;
         }
 
         #region Players
 
-        private static List<NhlHtmlReportRosterParticipantModel> ParsePlayers(HtmlNodeCollection rows)
+        private static List<Nhl_Games_Rtss_RosterParticipantItem> ParsePlayers(HtmlNodeCollection rows)
         {
             if (null == rows) { return null; }
 
-            List<NhlHtmlReportRosterParticipantModel> players = new List<NhlHtmlReportRosterParticipantModel>();
+            List<Nhl_Games_Rtss_RosterParticipantItem> players = new List<Nhl_Games_Rtss_RosterParticipantItem>();
 
             foreach (HtmlNode row in rows)
             {
-                NhlHtmlReportRosterParticipantModel player = NhlHtmlReportRoster.ParsePlayer(row);
+                Nhl_Games_Rtss_RosterParticipantItem player = NhlHtmlReportRoster.ParsePlayer(row);
                 if (null != player)
                 {
                     players.Add(player);
@@ -205,9 +205,9 @@ namespace SportsData.Nhl
             return players;
         }
 
-        private static NhlHtmlReportRosterParticipantModel ParsePlayer(HtmlNode row)
+        private static Nhl_Games_Rtss_RosterParticipantItem ParsePlayer(HtmlNode row)
         {
-            NhlHtmlReportRosterParticipantModel player = new NhlHtmlReportRosterParticipantModel();
+            Nhl_Games_Rtss_RosterParticipantItem player = new Nhl_Games_Rtss_RosterParticipantItem();
 
             // Assume it is a Player
             player.ParticipantType = ParticipantType.Player;
@@ -250,11 +250,11 @@ namespace SportsData.Nhl
 
         #region Coaches
 
-        private static NhlHtmlReportRosterParticipantModel ParseCoach(HtmlNode row)
+        private static Nhl_Games_Rtss_RosterParticipantItem ParseCoach(HtmlNode row)
         {
             HtmlNode columnNode = row.SelectSingleNode(@"./td");
 
-            NhlHtmlReportRosterParticipantModel coach = new NhlHtmlReportRosterParticipantModel();
+            Nhl_Games_Rtss_RosterParticipantItem coach = new Nhl_Games_Rtss_RosterParticipantItem();
             coach.ParticipantType = ParticipantType.Coach;
             coach.Designation = Designation.HeadCoach;
             coach.Name = columnNode.InnerText.Trim();
@@ -265,25 +265,25 @@ namespace SportsData.Nhl
 
         #region Officials
 
-        private static NhlHtmlReportRosterParticipantModel ParseReferee(HtmlNode row)
+        private static Nhl_Games_Rtss_RosterParticipantItem ParseReferee(HtmlNode row)
         {
-            NhlHtmlReportRosterParticipantModel official = NhlHtmlReportRoster.ParseOfficial(row);
+            Nhl_Games_Rtss_RosterParticipantItem official = NhlHtmlReportRoster.ParseOfficial(row);
             official.Designation = Designation.Referee;
             return official;
         }
 
-        private static NhlHtmlReportRosterParticipantModel ParseLinesman(HtmlNode row)
+        private static Nhl_Games_Rtss_RosterParticipantItem ParseLinesman(HtmlNode row)
         {
-            NhlHtmlReportRosterParticipantModel official = NhlHtmlReportRoster.ParseOfficial(row);
+            Nhl_Games_Rtss_RosterParticipantItem official = NhlHtmlReportRoster.ParseOfficial(row);
             official.Designation = Designation.Linesman;
             return official;
         }
 
-        private static NhlHtmlReportRosterParticipantModel ParseOfficial(HtmlNode row)
+        private static Nhl_Games_Rtss_RosterParticipantItem ParseOfficial(HtmlNode row)
         {
             HtmlNode columnNode = row.SelectSingleNode(@"./td");
 
-            NhlHtmlReportRosterParticipantModel official = new NhlHtmlReportRosterParticipantModel();
+            Nhl_Games_Rtss_RosterParticipantItem official = new Nhl_Games_Rtss_RosterParticipantItem();
             official.ParticipantType = ParticipantType.Official;
 
             string nameText = columnNode.InnerText.Trim();
@@ -333,69 +333,69 @@ namespace SportsData.Nhl
             Nhl_Games_Rtss_Roster model = new Nhl_Games_Rtss_Roster();
             model.NhlRtssReportModelId = rtssReportId;
 
-            model.VisitorRoster = new List<NhlHtmlReportRosterParticipantModel>();
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 12, Position = "R", Name = "CHUCK KOBASEW", Designation = Designation.AssistantCaptain });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 16, Position = "L", Name = "MARCO STRUM", Designation = Designation.AssistantCaptain });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 17, Position = "L", Name = "MILAN LUCIC" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 26, Position = "R", Name = "BLAKE WHEELER" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 33, Position = "D", Name = "ZDENO CHARA", Designation = Designation.Captain });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 42, Position = "C", Name = "TRENT WHITFIELD" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 48, Position = "D", Name = "MATT HUNWICK" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 52, Position = "C", Name = "ZACH HAMILL" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 54, Position = "D", Name = "ADAM MCQUAID" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 55, Position = "D", Name = "JOHNNY BOYCHUK" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 60, Position = "C", Name = "VLADIMIR SOBOTKA" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 61, Position = "R", Name = "BYRON BITZ" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 62, Position = "D", Name = "JEFFREY PENNER" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 63, Position = "C", Name = "BRAD MARCHAND" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 65, Position = "D", Name = "ANDREW BODNARCHUK" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 68, Position = "R", Name = "MIKKO LEHTONEN" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 72, Position = "C", Name = "JAMIE ARNIEL" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 74, Position = "C", Name = "MAX SAUVE" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 32, Position = "G", Name = "DANY SABOURIN" });
-            model.VisitorRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 40, Position = "G", Name = "TUUKKA RASK" });
+            model.VisitorRoster = new List<Nhl_Games_Rtss_RosterParticipantItem>();
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 12, Position = "R", Name = "CHUCK KOBASEW", Designation = Designation.AssistantCaptain });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 16, Position = "L", Name = "MARCO STRUM", Designation = Designation.AssistantCaptain });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 17, Position = "L", Name = "MILAN LUCIC" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 26, Position = "R", Name = "BLAKE WHEELER" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 33, Position = "D", Name = "ZDENO CHARA", Designation = Designation.Captain });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 42, Position = "C", Name = "TRENT WHITFIELD" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 48, Position = "D", Name = "MATT HUNWICK" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 52, Position = "C", Name = "ZACH HAMILL" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 54, Position = "D", Name = "ADAM MCQUAID" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 55, Position = "D", Name = "JOHNNY BOYCHUK" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 60, Position = "C", Name = "VLADIMIR SOBOTKA" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 61, Position = "R", Name = "BYRON BITZ" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 62, Position = "D", Name = "JEFFREY PENNER" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 63, Position = "C", Name = "BRAD MARCHAND" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 65, Position = "D", Name = "ANDREW BODNARCHUK" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 68, Position = "R", Name = "MIKKO LEHTONEN" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 72, Position = "C", Name = "JAMIE ARNIEL" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 74, Position = "C", Name = "MAX SAUVE" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 32, Position = "G", Name = "DANY SABOURIN" });
+            model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 40, Position = "G", Name = "TUUKKA RASK" });
             model.VisitorRoster.ToList().ForEach(m => m.ParticipantType = ParticipantType.Player);
 
-            model.HomeRoster = new List<NhlHtmlReportRosterParticipantModel>();
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 5, Position = "D", Name = "DAN GIRARDI" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 12, Position = "R", Name = "ALES KOTALIK" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 18, Position = "D", Name = "MARC STAAL" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 21, Position = "L", Name = "CHRISTOPHER HIGGINS" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 22, Position = "C", Name = "BRIAN BOYLE" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 23, Position = "C", Name = "CHRIS DRURY", Designation = Designation.Captain });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 24, Position = "R", Name = "RYAN CALLAHAN" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 25, Position = "D", Name = "ALEXEI SEMENOV" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 32, Position = "D", Name = "MICHAEL SAUER" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 36, Position = "L", Name = "DANE BYERS" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 38, Position = "R", Name = "PIERRE PARENTEAU" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 42, Position = "C", Name = "ARTEM ANISIMOV" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 43, Position = "D", Name = "MICHAEL DEL ZOTTO" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 59, Position = "C", Name = "EVGENY GRACHEV" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 81, Position = "R", Name = "ENVER LISIN" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 85, Position = "L", Name = "MATT MACCARONE" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 87, Position = "L", Name = "DONALD BRASHEAR" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 97, Position = "D", Name = "MATT GILROY" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 31, Position = "G", Name = "MATT ZABA" });
-            model.HomeRoster.Add(new NhlHtmlReportRosterParticipantModel { Number = 40, Position = "G", Name = "STEPHEN VALIQUETTE" });
+            model.HomeRoster = new List<Nhl_Games_Rtss_RosterParticipantItem>();
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 5, Position = "D", Name = "DAN GIRARDI" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 12, Position = "R", Name = "ALES KOTALIK" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 18, Position = "D", Name = "MARC STAAL" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 21, Position = "L", Name = "CHRISTOPHER HIGGINS" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 22, Position = "C", Name = "BRIAN BOYLE" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 23, Position = "C", Name = "CHRIS DRURY", Designation = Designation.Captain });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 24, Position = "R", Name = "RYAN CALLAHAN" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 25, Position = "D", Name = "ALEXEI SEMENOV" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 32, Position = "D", Name = "MICHAEL SAUER" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 36, Position = "L", Name = "DANE BYERS" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 38, Position = "R", Name = "PIERRE PARENTEAU" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 42, Position = "C", Name = "ARTEM ANISIMOV" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 43, Position = "D", Name = "MICHAEL DEL ZOTTO" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 59, Position = "C", Name = "EVGENY GRACHEV" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 81, Position = "R", Name = "ENVER LISIN" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 85, Position = "L", Name = "MATT MACCARONE" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 87, Position = "L", Name = "DONALD BRASHEAR" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 97, Position = "D", Name = "MATT GILROY" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 31, Position = "G", Name = "MATT ZABA" });
+            model.HomeRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 40, Position = "G", Name = "STEPHEN VALIQUETTE" });
             model.HomeRoster.ToList().ForEach(m => m.ParticipantType = ParticipantType.Player);
 
             // Since this is a preseason game, don't bother filling in the scratches. The data is available here http://www.nhl.com/scores/htmlreports/20092010/RO010002.HTM
-            model.VisitorScratches = new List<NhlHtmlReportRosterParticipantModel>();
-            model.HomeScratches = new List<NhlHtmlReportRosterParticipantModel>();
+            model.VisitorScratches = new List<Nhl_Games_Rtss_RosterParticipantItem>();
+            model.HomeScratches = new List<Nhl_Games_Rtss_RosterParticipantItem>();
 
-            model.VisitorHeadCoach = new List<NhlHtmlReportRosterParticipantModel>();
-            model.VisitorHeadCoach.Add(new NhlHtmlReportRosterParticipantModel { Name = "CLAUDE JULIEN", Designation = Designation.HeadCoach, ParticipantType = ParticipantType.Coach });
+            model.VisitorHeadCoach = new List<Nhl_Games_Rtss_RosterParticipantItem>();
+            model.VisitorHeadCoach.Add(new Nhl_Games_Rtss_RosterParticipantItem { Name = "CLAUDE JULIEN", Designation = Designation.HeadCoach, ParticipantType = ParticipantType.Coach });
 
-            model.HomeHeadCoach = new List<NhlHtmlReportRosterParticipantModel>();
-            model.HomeHeadCoach.Add(new NhlHtmlReportRosterParticipantModel { Name = "JOHN TORTORELLA", Designation = Designation.HeadCoach, ParticipantType = ParticipantType.Coach });
+            model.HomeHeadCoach = new List<Nhl_Games_Rtss_RosterParticipantItem>();
+            model.HomeHeadCoach.Add(new Nhl_Games_Rtss_RosterParticipantItem { Name = "JOHN TORTORELLA", Designation = Designation.HeadCoach, ParticipantType = ParticipantType.Coach });
 
-            model.Referees = new List<NhlHtmlReportRosterParticipantModel>();
-            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 8, Name = "Dave Jackson", Designation = Designation.Referee, ParticipantType = ParticipantType.Official });
-            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 41, Name = "Chris Ciamaga", Designation = Designation.Referee, ParticipantType = ParticipantType.Official });
+            model.Referees = new List<Nhl_Games_Rtss_RosterParticipantItem>();
+            model.Referees.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 8, Name = "Dave Jackson", Designation = Designation.Referee, ParticipantType = ParticipantType.Official });
+            model.Referees.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 41, Name = "Chris Ciamaga", Designation = Designation.Referee, ParticipantType = ParticipantType.Official });
 
-            model.Linesman = new List<NhlHtmlReportRosterParticipantModel>();
-            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 84, Name = "Tony Sericolo", Designation = Designation.Linesman, ParticipantType = ParticipantType.Official });
-            model.Referees.Add(new NhlHtmlReportRosterParticipantModel { Number = 77, Name = "Tim Nowak", Designation = Designation.Linesman, ParticipantType = ParticipantType.Official });
+            model.Linesman = new List<Nhl_Games_Rtss_RosterParticipantItem>();
+            model.Referees.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 84, Name = "Tony Sericolo", Designation = Designation.Linesman, ParticipantType = ParticipantType.Official });
+            model.Referees.Add(new Nhl_Games_Rtss_RosterParticipantItem { Number = 77, Name = "Tim Nowak", Designation = Designation.Linesman, ParticipantType = ParticipantType.Official });
 
             return model;
         }

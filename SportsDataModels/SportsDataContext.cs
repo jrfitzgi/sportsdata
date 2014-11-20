@@ -17,9 +17,9 @@ namespace SportsData.Models
         public DbSet<MlbGameSummaryModel> MlbGameSummaries { get; set; }
 
         // Nhl
-        public DbSet<NhlPlayerStatsBioSkaterModel> NhlPlayerStatsBioSkaters { get; set; }
-        public DbSet<NhlPlayerStatsBioGoalieModel> NhlPlayerStatsBioGoalies { get; set; }
-        public DbSet<NhlPlayerStatsRtssSkaterModel> NhlPlayerStatsRtssSkaters { get; set; }
+        public DbSet<Nhl_Players_Bio_Skater> NhlPlayerStatsBioSkaters { get; set; }
+        public DbSet<Nhl_Players_Bio_Goalie> NhlPlayerStatsBioGoalies { get; set; }
+        public DbSet<Nhl_Players_Rtss_Skater> NhlPlayerStatsRtssSkaters { get; set; }
         
         public DbSet<Nhl_Games_Summary> NhlGameStatsSummaries { get; set; }
         public DbSet<Nhl_Games_Rtss> NhlGameStatsRtssReports { get; set; }
@@ -29,7 +29,7 @@ namespace SportsData.Models
         public DbSet<Nhl_Games_Rtss_Summary> NhlHtmlReportSummaries { get; set; }
         //public DbSet<NhlHtmlReportSummaryModel.PenaltySummary> NhlHtmlReportSummaryModel_PenaltySummary { get; set; }
 
-        public DbSet<NhlDraftbookModel> NhlDraftbookModels { get; set; }
+        public DbSet<Nhl_Draftbook> NhlDraftbookModels { get; set; }
 
         // Twitter
         public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }

@@ -49,30 +49,102 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Demographics\DemographicsModel.cs" />
+    <Compile Include="Migrations\201411200503278_nhl1.cs" />
+    <Compile Include="Migrations\201411200503278_nhl1.Designer.cs">
+      <DependentUpon>201411200503278_nhl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200518277_nhl2.cs" />
+    <Compile Include="Migrations\201411200518277_nhl2.Designer.cs">
+      <DependentUpon>201411200518277_nhl2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200528493_nhl3.cs" />
+    <Compile Include="Migrations\201411200528493_nhl3.Designer.cs">
+      <DependentUpon>201411200528493_nhl3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200556302_nhl4.cs" />
+    <Compile Include="Migrations\201411200556302_nhl4.Designer.cs">
+      <DependentUpon>201411200556302_nhl4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200602310_nhl5.cs" />
+    <Compile Include="Migrations\201411200602310_nhl5.Designer.cs">
+      <DependentUpon>201411200602310_nhl5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200640496_nhl6.cs" />
+    <Compile Include="Migrations\201411200640496_nhl6.Designer.cs">
+      <DependentUpon>201411200640496_nhl6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200645035_nhl7.cs" />
+    <Compile Include="Migrations\201411200645035_nhl7.Designer.cs">
+      <DependentUpon>201411200645035_nhl7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200652597_nhl8.cs" />
+    <Compile Include="Migrations\201411200652597_nhl8.Designer.cs">
+      <DependentUpon>201411200652597_nhl8.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200656057_nhl9.cs" />
+    <Compile Include="Migrations\201411200656057_nhl9.Designer.cs">
+      <DependentUpon>201411200656057_nhl9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411200657377_nhl10.cs" />
+    <Compile Include="Migrations\201411200657377_nhl10.Designer.cs">
+      <DependentUpon>201411200657377_nhl10.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Sports\Nhl\NhlDraftbookModel.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_Games_Rtss_Roster.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_Games_Rtss_Summary.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_HtmlReportBaseModel.cs" />
-    <Compile Include="Sports\Nhl\NhlPlayerStatsBioBaseModel.cs" />
-    <Compile Include="Sports\Nhl\NhlPlayerStatsBioGoalieModel.cs" />
-    <Compile Include="Sports\Nhl\NhlPlayerStatsRtssSkaterModel.cs" />
     <Compile Include="Sports\Nhl\NhlModelHelper.cs" />
-    <Compile Include="Sports\Nhl\NhlPlayerBaseModel.cs" />
-    <Compile Include="Sports\Nhl\NhlPlayerStatsBioSkaterModel.cs" />
     <Compile Include="Sports\Mlb\MlbModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Social\FacebookModel.cs" />
     <Compile Include="Social\SocialBaseModel.cs" />
     <Compile Include="Social\TwitterModels.cs" />
     <Compile Include="SportsDataContext.cs" />
+    <Compile Include="Sports\Nhl\Nhl_DraftbookModel.cs" />
     <Compile Include="Sports\Nhl\Nhl_Games_BaseModel.cs" />
     <Compile Include="Sports\Nhl\Nhl_Games_Rtss.cs" />
     <Compile Include="Sports\Nhl\Nhl_Games_Summary.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Players_BaseModel.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Players_BioBaseModel.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Players_Bio_Goalie.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Players_Bio_Skater.cs" />
+    <Compile Include="Sports\Nhl\Nhl_Players_Rtss_Skater.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201411200503278_nhl1.resx">
+      <DependentUpon>201411200503278_nhl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200518277_nhl2.resx">
+      <DependentUpon>201411200518277_nhl2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200528493_nhl3.resx">
+      <DependentUpon>201411200528493_nhl3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200556302_nhl4.resx">
+      <DependentUpon>201411200556302_nhl4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200602310_nhl5.resx">
+      <DependentUpon>201411200602310_nhl5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200640496_nhl6.resx">
+      <DependentUpon>201411200640496_nhl6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200645035_nhl7.resx">
+      <DependentUpon>201411200645035_nhl7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200652597_nhl8.resx">
+      <DependentUpon>201411200652597_nhl8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200656057_nhl9.resx">
+      <DependentUpon>201411200656057_nhl9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411200657377_nhl10.resx">
+      <DependentUpon>201411200657377_nhl10.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

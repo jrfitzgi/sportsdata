@@ -17,7 +17,7 @@ namespace SportsDataTests
         public void NhlDraftBook_Update()
         {
             string fileName = @"C:\Users\Jordanf\Google Drive\Domi\Draft\NHL Draftbook 2013-1963 (V2.0).csv";
-            List<NhlDraftbookModel> results = NhlDraftbook.UpdateDraftbook(fileName, false);
+            List<Nhl_Draftbook> results = NhlDraftbook.UpdateDraftbook(fileName, false);
             Assert.AreEqual(10296, results.Count);
         }
     }

@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    [Table("NhlPlayerStatsBioSkaterModel")]
-    public class NhlPlayerStatsBioSkaterModel : NhlPlayerStatsBioBaseModel
+    [Table("Nhl_Players_Bio_Skater")]
+    public class Nhl_Players_Bio_Skater : Nhl_Players_BioBaseModel
     {
         public string Shoots { get; set; }
 

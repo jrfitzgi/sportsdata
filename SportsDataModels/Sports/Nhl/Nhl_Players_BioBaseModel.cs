@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsData.Models
 {
-    public class NhlPlayerStatsBioBaseModel : NhlPlayerStatsBaseModel
+    public class Nhl_Players_BioBaseModel : Nhl_Players_BaseModel
     {
         public DateTime DateOfBirth { get; set; }
 

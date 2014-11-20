@@ -17,7 +17,7 @@ namespace SportsData.Nhl
 {
     public class NhlDraftbook
     {
-        public static List<NhlDraftbookModel> UpdateDraftbook(string fileName, [Optional] bool saveToDb)
+        public static List<Nhl_Draftbook> UpdateDraftbook(string fileName, [Optional] bool saveToDb)
         {
             if (!File.Exists(fileName))
             {
@@ -25,12 +25,12 @@ namespace SportsData.Nhl
                 return null;
             }
 
-            List<NhlDraftbookModel> results = new List<NhlDraftbookModel>();
+            List<Nhl_Draftbook> results = new List<Nhl_Draftbook>();
 
             string[] lines = File.ReadAllLines(fileName);
             for (int i = 1; i < lines.Length; i++) // start at 1 and skip the first line of headers
             {
-                NhlDraftbookModel result = NhlDraftbook.ParseLine(lines[i]);
+                Nhl_Draftbook result = NhlDraftbook.ParseLine(lines[i]);
                 if (null != result)
                 {
                     results.Add(result);
@@ -45,7 +45,7 @@ namespace SportsData.Nhl
             return results;
         }
 
-        private static void AddOrUpdateDb(List<NhlDraftbookModel> models)
+        private static void AddOrUpdateDb(List<Nhl_Draftbook> models)
         {
             using (SportsDataContext db = new SportsDataContext())
             {
@@ -59,7 +59,7 @@ namespace SportsData.Nhl
         /// <summary>
         /// Parse a csv line and return it as a NhlDraftBookModel
         /// </summary>
-        private static NhlDraftbookModel ParseLine(string line)
+        private static Nhl_Draftbook ParseLine(string line)
         {
             string[] fields = line.Split(',');
 
@@ -70,7 +70,7 @@ namespace SportsData.Nhl
                 return null;
             }
 
-            NhlDraftbookModel model = new NhlDraftbookModel();
+            Nhl_Draftbook model = new Nhl_Draftbook();
             
             model.Year = NhlBaseClass.ConvertStringToInt(fields[0]);
             model.Round = NhlBaseClass.ConvertStringToInt(fields[1]);
