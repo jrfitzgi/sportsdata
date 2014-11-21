@@ -21,7 +21,7 @@ namespace SportsDataTests
             List<Nhl_Games_Rtss> models;
             using (SportsDataContext db = new SportsDataContext())
             {
-                models = (from m in db.NhlGameStatsRtssReports
+                models = (from m in db.Nhl_Games_Rtss_DbSet
                           where
                             (m.Home == "VANCOUVER" || m.Visitor == "VANCOUVER") &&
                             m.Date >= new DateTime(2014,1,29)

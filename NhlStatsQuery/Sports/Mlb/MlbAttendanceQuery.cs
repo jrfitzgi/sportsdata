@@ -335,7 +335,7 @@ namespace SportsData.Mlb
             MlbTeam mlbTeam = null;
             using (SportsDataContext db = new SportsDataContext())
             {
-                mlbTeam = (from t in db.MlbTeams.ToList()   // We need to use ToList() so we don't get 'ObjectContext instance has been disposed' error.
+                mlbTeam = (from t in db.MlbTeam_DbSet.ToList()   // We need to use ToList() so we don't get 'ObjectContext instance has been disposed' error.
                            where t.EspnOpponentName.Equals(espnOpponentName, StringComparison.InvariantCulture)
                            select t).FirstOrDefault();
             }

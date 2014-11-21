@@ -19,7 +19,7 @@ namespace SportsData.Social
             List<FacebookAccount> accounts = new List<FacebookAccount>();
             using (SportsDataContext db = new SportsDataContext())
             {
-                accounts = db.FacebookAccountsToFollow.ToList();
+                accounts = db.FacebookAccount_DbSet.ToList();
             }
 
             return FacebookData.UpdateSnapshotsInDb(accounts);
@@ -33,20 +33,20 @@ namespace SportsData.Social
             // Remove existing results from DB from today and save new ones
             using (SportsDataContext db = new SportsDataContext())
             {
-                IEnumerable<FacebookSnapshot> snapshotsToRemove = from s in db.FacebookSnapshots
+                IEnumerable<FacebookSnapshot> snapshotsToRemove = from s in db.FacebookSnapshot_DbSet
                                                                   where DbFunctions.TruncateTime(s.DateOfSnapshot) == DbFunctions.TruncateTime(DateTime.UtcNow)
                                                                         select s;
 
                 foreach (FacebookSnapshot snapshotToRemove in snapshotsToRemove)
                 {
-                    db.FacebookSnapshots.Remove(snapshotToRemove);
+                    db.FacebookSnapshot_DbSet.Remove(snapshotToRemove);
                 }
 
                 //db.SaveChanges();
 
                 foreach (FacebookSnapshot snapshotToAdd in snapshots)
                 {
-                    db.FacebookSnapshots.Add(snapshotToAdd);
+                    db.FacebookSnapshot_DbSet.Add(snapshotToAdd);
                 }
 
                 db.SaveChanges();

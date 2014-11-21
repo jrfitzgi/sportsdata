@@ -52,7 +52,7 @@ namespace SportsData.Nhl
             // Save the reports to the db
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlHtmlReportSummaries.AddOrUpdate<Nhl_Games_Rtss_Summary>(
+                db.Nhl_Games_Rtss_Summary_DbSet.AddOrUpdate<Nhl_Games_Rtss_Summary>(
                     m => m.NhlRtssReportModelId,
                     results.ToArray());
                 db.SaveChanges();
@@ -216,7 +216,7 @@ namespace SportsData.Nhl
             List<Nhl_Games_Rtss_Summary> existingModels = new List<Nhl_Games_Rtss_Summary>();
             using (SportsDataContext db = new SportsDataContext())
             {
-                existingModels = (from m in db.NhlHtmlReportSummaries
+                existingModels = (from m in db.Nhl_Games_Rtss_Summary_DbSet
                                   where
                                       m.NhlRtssReportModel.Year == year &&
                                       m.NhlRtssReportModel.Date >= fromDate

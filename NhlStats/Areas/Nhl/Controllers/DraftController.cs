@@ -22,7 +22,7 @@ namespace SportsData.Areas.Nhl.Controllers
             using (SportsDataContext db = new SportsDataContext())
             {
                 IEnumerable<NhlPlayerStatsBioSkaterViewModel> queryResult =
-                        from player in db.NhlPlayerStatsBioSkaters
+                        from player in db.Nhl_Players_Bio_Skater_DbSet
                         where player.NhlSeasonType == NhlSeasonType.RegularSeason
                         group player by new { player.Name, player.DraftYear } into playerGroup
                         select new NhlPlayerStatsBioSkaterViewModel

@@ -13,40 +13,37 @@ namespace SportsData.Models
         }
 
         // Mlb
-        public DbSet<MlbTeam> MlbTeams { get; set; }
-        public DbSet<MlbGameSummaryModel> MlbGameSummaries { get; set; }
+        public DbSet<MlbTeam> MlbTeam_DbSet { get; set; }
+        public DbSet<MlbGameSummaryModel> MlbGameSummaryModel_DbSet { get; set; }
 
         // Nhl
-        public DbSet<Nhl_Players_Bio_Skater> NhlPlayerStatsBioSkaters { get; set; }
-        public DbSet<Nhl_Players_Bio_Goalie> NhlPlayerStatsBioGoalies { get; set; }
-        public DbSet<Nhl_Players_Rtss_Skater> NhlPlayerStatsRtssSkaters { get; set; }
+        public DbSet<Nhl_Players_Bio_Skater> Nhl_Players_Bio_Skater_DbSet { get; set; }
+        public DbSet<Nhl_Players_Bio_Goalie> Nhl_Players_Bio_Goalie_DbSet { get; set; }
+        public DbSet<Nhl_Players_Rtss_Skater> Nhl_Players_Rtss_Skater_DbSet { get; set; }
         
-        public DbSet<Nhl_Games_Summary> NhlGameStatsSummaries { get; set; }
-        public DbSet<Nhl_Games_Rtss> NhlGameStatsRtssReports { get; set; }
+        public DbSet<Nhl_Games_Summary> Nhl_Games_Summary_DbSet { get; set; }
+        public DbSet<Nhl_Games_Rtss> Nhl_Games_Rtss_DbSet { get; set; }
+        public DbSet<Nhl_Games_Rtss_Summary> Nhl_Games_Rtss_Summary_DbSet { get; set; }
+        public DbSet<Nhl_Games_Rtss_Roster> Nhl_Games_Rtss_Roster_DbSet { get; set; }
 
-        public DbSet<Nhl_Games_Rtss_Roster> NhlHtmlReportRosters { get; set; }
-
-        public DbSet<Nhl_Games_Rtss_Summary> NhlHtmlReportSummaries { get; set; }
-        //public DbSet<NhlHtmlReportSummaryModel.PenaltySummary> NhlHtmlReportSummaryModel_PenaltySummary { get; set; }
-
-        public DbSet<Nhl_Draftbook> NhlDraftbookModels { get; set; }
+        public DbSet<Nhl_Draftbook> Nhl_Draftbook_DbSet { get; set; }
 
         // Twitter
-        public DbSet<TwitterAccount> TwitterAccountsToFollow { get; set; }
-        public DbSet<TwitterSnapshot> TwitterSnapshots { get; set; }
+        public DbSet<TwitterAccount> TwitterAccount_DbSet { get; set; }
+        public DbSet<TwitterSnapshot> TwitterSnapshot_DbSet { get; set; }
 
         // Facebook
-        public DbSet<FacebookAccount> FacebookAccountsToFollow { get; set; }
-        public DbSet<FacebookSnapshot> FacebookSnapshots { get; set; }
+        public DbSet<FacebookAccount> FacebookAccount_DbSet { get; set; }
+        public DbSet<FacebookSnapshot> FacebookSnapshot_DbSet { get; set; }
 
         // Demographics
-        public DbSet<DemographicsModel> Demographics { get; set; }
+        public DbSet<DemographicsModel> Demographic_DbSet { get; set; }
 
         public static void Seed(SportsDataContext context)
         {
             #region Mlb
 
-            context.MlbTeams.AddOrUpdate(
+            context.MlbTeam_DbSet.AddOrUpdate(
                 t => t.ShortNameId,
                 new MlbTeam { ShortNameId = MlbTeamShortName.ARI, City = "Arizona", Name = "Diamondbacks" },
                 new MlbTeam { ShortNameId = MlbTeamShortName.ATL, City = "Atlanta", Name = "Braves" },
@@ -82,7 +79,7 @@ namespace SportsData.Models
 
             context.SaveChanges();
 
-            foreach (MlbTeam mlbTeam in context.MlbTeams)
+            foreach (MlbTeam mlbTeam in context.MlbTeam_DbSet)
             {
                 mlbTeam.ShortName = mlbTeam.ShortNameId.ToString("g");
 
@@ -98,7 +95,7 @@ namespace SportsData.Models
 
             #region Twitter
 
-            context.TwitterAccountsToFollow.AddOrUpdate(
+            context.TwitterAccount_DbSet.AddOrUpdate(
                 t => t.Id,
                 new TwitterAccount { Id = "anaheimducks", FriendlyName = "Anaheim Ducks" },
                 new TwitterAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" },
@@ -142,7 +139,7 @@ namespace SportsData.Models
 
             #region Facebook
 
-            context.FacebookAccountsToFollow.AddOrUpdate(
+            context.FacebookAccount_DbSet.AddOrUpdate(
                 account => account.Id,
                 new FacebookAccount { Id = "anaheimducks", FriendlyName = "Anaheim Ducks" },
                 new FacebookAccount { Id = "NHLBruins", FriendlyName = "Boston Bruins" },

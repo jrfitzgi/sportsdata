@@ -19,7 +19,7 @@ namespace SportsData.Social
             List<TwitterAccount> accounts = new List<TwitterAccount>();
             using (SportsDataContext db = new SportsDataContext())
             {
-                accounts = db.TwitterAccountsToFollow.ToList();
+                accounts = db.TwitterAccount_DbSet.ToList();
             }
 
             return TwitterData.UpdateSnapshotsInDb(accounts);
@@ -33,20 +33,20 @@ namespace SportsData.Social
             // Remove existing results from DB from today and save new ones
             using (SportsDataContext db = new SportsDataContext())
             {
-                IEnumerable<TwitterSnapshot> snapshotsToRemove = from s in db.TwitterSnapshots
+                IEnumerable<TwitterSnapshot> snapshotsToRemove = from s in db.TwitterSnapshot_DbSet
                                                                  where DbFunctions.TruncateTime(s.DateOfSnapshot) == DbFunctions.TruncateTime(DateTime.UtcNow)
                                                             select s;
 
                 foreach (TwitterSnapshot snapshotToRemove in snapshotsToRemove)
                 {
-                    db.TwitterSnapshots.Remove(snapshotToRemove);
+                    db.TwitterSnapshot_DbSet.Remove(snapshotToRemove);
                 }
 
                 //db.SaveChanges();
 
                 foreach (TwitterSnapshot snapshotToAdd in snapshots)
                 {
-                    db.TwitterSnapshots.Add(snapshotToAdd);
+                    db.TwitterSnapshot_DbSet.Add(snapshotToAdd);
                 }
 
                 db.SaveChanges();

@@ -25,7 +25,7 @@ namespace SportsData.Areas.Attendance.Controllers
             {
                 using (SportsDataContext db = new SportsDataContext())
                 {
-                    IEnumerable<MlbGameSummaryModel> results = from g in db.MlbGameSummaries
+                    IEnumerable<MlbGameSummaryModel> results = from g in db.MlbGameSummaryModel_DbSet
                                                           where g.Year == seasonYear
                                                           orderby g.Date
                                                           select g;

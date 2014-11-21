@@ -19,7 +19,7 @@ namespace SportsDataTests
         {
             using (SportsDataContext db = new SportsDataContext())
             {
-                Assert.IsTrue(db.TwitterAccountsToFollow.Count() > 0, "There more than 0 twitter accounts seeded");
+                Assert.IsTrue(db.TwitterAccount_DbSet.Count() > 0, "There more than 0 twitter accounts seeded");
             }
         }
 
@@ -71,7 +71,7 @@ namespace SportsDataTests
             // Make sure we have the right items in the db
             using (SportsDataContext db = new SportsDataContext())
             {
-                List<TwitterSnapshot> snapshotsFromToday = (from s in db.TwitterSnapshots.Include(x => x.TwitterAccount)
+                List<TwitterSnapshot> snapshotsFromToday = (from s in db.TwitterSnapshot_DbSet.Include(x => x.TwitterAccount)
                                                             where DbFunctions.TruncateTime(s.DateOfSnapshot) == DbFunctions.TruncateTime(DateTime.UtcNow)
                                                                   orderby s.TwitterAccount.Id
                                                                   select s).ToList();

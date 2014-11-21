@@ -138,7 +138,7 @@ namespace SportsData.Nhl
         {
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlPlayerStatsBioSkaters.AddOrUpdate<Nhl_Players_Bio_Skater>(p => new { p.NhlSeasonType, p.Name, p.Year, p.Team }, models.ToArray());
+                db.Nhl_Players_Bio_Skater_DbSet.AddOrUpdate<Nhl_Players_Bio_Skater>(p => new { p.NhlSeasonType, p.Name, p.Year, p.Team }, models.ToArray());
                 db.SaveChanges();
             }
         }

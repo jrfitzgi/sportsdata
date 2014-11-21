@@ -61,7 +61,7 @@ namespace Gilmour
             List<int> missingZipCodes = new List<int>(); //allZipCodes.GetRange(592, 1);
             using (SportsDataContext db = new SportsDataContext())
             {
-                missingZipCodes = allZipCodes.Except(db.Demographics.Select(z => z.Zip).ToList()).ToList();
+                missingZipCodes = allZipCodes.Except(db.Demographic_DbSet.Select(z => z.Zip).ToList()).ToList();
             }
 
             if (missingZipCodes.Count == 0)

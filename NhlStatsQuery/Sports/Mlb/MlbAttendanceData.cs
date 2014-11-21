@@ -21,18 +21,18 @@ namespace SportsData.Mlb
             // Remove existing results from DB and save new ones
             using (SportsDataContext db = new SportsDataContext())
             {
-                IEnumerable<MlbGameSummaryModel> gamesToRemove = from g in db.MlbGameSummaries
+                IEnumerable<MlbGameSummaryModel> gamesToRemove = from g in db.MlbGameSummaryModel_DbSet
                                                             where g.MlbSeasonType == mlbSeasonType && g.Year == seasonYear
                                                             select g;
 
                 foreach (MlbGameSummaryModel gameToRemove in gamesToRemove)
                 {
-                    db.MlbGameSummaries.Remove(gameToRemove);
+                    db.MlbGameSummaryModel_DbSet.Remove(gameToRemove);
                 }
 
                 foreach (MlbGameSummaryModel gameToAdd in gamesToAdd)
                 {
-                    db.MlbGameSummaries.Add(gameToAdd);
+                    db.MlbGameSummaryModel_DbSet.Add(gameToAdd);
                 }
 
                 db.SaveChanges();
@@ -50,7 +50,7 @@ namespace SportsData.Mlb
             using (SportsDataContext db = new SportsDataContext())
             {
                 string mlbTeamString = mlbTeam.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
-                var gamesToRemove = from g in db.MlbGameSummaries
+                var gamesToRemove = from g in db.MlbGameSummaryModel_DbSet
                                     where g.MlbSeasonType == mlbSeasonType &&
                                           g.Year == seasonYear &&
                                           g.Home.Equals(mlbTeamString, StringComparison.InvariantCultureIgnoreCase)
@@ -58,14 +58,14 @@ namespace SportsData.Mlb
 
                 foreach (MlbGameSummaryModel gameToRemove in gamesToRemove)
                 {
-                    db.MlbGameSummaries.Remove(gameToRemove);
+                    db.MlbGameSummaryModel_DbSet.Remove(gameToRemove);
                 }
 
                 if (null != gamesToAdd)
                 {
                     foreach (MlbGameSummaryModel gameToAdd in gamesToAdd)
                     {
-                        db.MlbGameSummaries.Add(gameToAdd);
+                        db.MlbGameSummaryModel_DbSet.Add(gameToAdd);
                     }
                 }
 

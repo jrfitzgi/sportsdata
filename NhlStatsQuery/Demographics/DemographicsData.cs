@@ -20,7 +20,7 @@ namespace SportsData.Demographics
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.Demographics.AddOrUpdate(x => x.Zip, data.ToArray());
+                db.Demographic_DbSet.AddOrUpdate(x => x.Zip, data.ToArray());
 
                 db.SaveChanges();
             }

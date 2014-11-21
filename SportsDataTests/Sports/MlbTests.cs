@@ -43,7 +43,7 @@ namespace SportsDataTests
             using (SportsDataContext db = new SportsDataContext())
             {
                 string teamNameString = teamName.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
-                Assert.AreEqual(15, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
+                Assert.AreEqual(15, db.MlbGameSummaryModel_DbSet.Where(g => g.MlbSeasonType == seasonType &&
                                                                    g.Home.Equals(teamNameString, StringComparison.InvariantCultureIgnoreCase) &&
                                                                    g.Year == seasonYear).Count(),
                                 "Verify that there are 15 games in the db");
@@ -100,7 +100,7 @@ namespace SportsDataTests
             using (SportsDataContext db = new SportsDataContext())
             {
                 string teamNameString = teamName.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
-                Assert.AreEqual(81, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
+                Assert.AreEqual(81, db.MlbGameSummaryModel_DbSet.Where(g => g.MlbSeasonType == seasonType &&
                                                                    g.Home.Equals(teamNameString, StringComparison.InvariantCultureIgnoreCase) &&
                                                                    g.Year == seasonYear).Count(),
                                 "Verify that there are 81 games in the db");
@@ -171,7 +171,7 @@ namespace SportsDataTests
             using (SportsDataContext db = new SportsDataContext())
             {
                 string teamNameString = teamName.ToString(); // http://stackoverflow.com/questions/5899683/linq-to-entities-does-not-recognize-the-method-system-string-tostring-method
-                Assert.AreEqual(0, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
+                Assert.AreEqual(0, db.MlbGameSummaryModel_DbSet.Where(g => g.MlbSeasonType == seasonType &&
                                                                    g.Home.Equals(teamNameString, StringComparison.InvariantCultureIgnoreCase) &&
                                                                    g.Year == seasonYear).Count(),
                                 "Verify that there are 0 games in the db");
@@ -203,7 +203,7 @@ namespace SportsDataTests
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                Assert.AreEqual(33, db.MlbGameSummaries.Where(g => g.MlbSeasonType == seasonType &&
+                Assert.AreEqual(33, db.MlbGameSummaryModel_DbSet.Where(g => g.MlbSeasonType == seasonType &&
                                                                    g.Year == seasonYear).Count(),
                                 "Verify that there are 33 games in the db");
             }

@@ -86,12 +86,12 @@ namespace SportsDataTests
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlHtmlReportRosters.AddOrUpdate(
+                db.Nhl_Games_Rtss_Roster_DbSet.AddOrUpdate(
                     m => m.Id,
                     model);
                 db.SaveChanges();
                 
-                model = db.NhlHtmlReportRosters.FirstOrDefault(m => m.Id == model.Id);
+                model = db.Nhl_Games_Rtss_Roster_DbSet.FirstOrDefault(m => m.Id == model.Id);
                 model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Name = "visitor player 1" });
                 model.VisitorRoster.Add(new Nhl_Games_Rtss_RosterParticipantItem { Name = "visitor player 2" });
                 model.VisitorScratches.Add(new Nhl_Games_Rtss_RosterParticipantItem { Name = "visitor scratch 1" });
@@ -109,7 +109,7 @@ namespace SportsDataTests
                 model.Linesman.Add(new Nhl_Games_Rtss_RosterParticipantItem { Name = "linesman 1" });
                 model.Linesman.Add(new Nhl_Games_Rtss_RosterParticipantItem { Name = "linesman 2" });
 
-                db.NhlHtmlReportRosters.AddOrUpdate(
+                db.Nhl_Games_Rtss_Roster_DbSet.AddOrUpdate(
                     m => m.Id,
                     model);
 
@@ -119,7 +119,7 @@ namespace SportsDataTests
             List<Nhl_Games_Rtss_Roster> models;
             using (SportsDataContext db = new SportsDataContext())
             {
-                models = (from m in db.NhlHtmlReportRosters
+                models = (from m in db.Nhl_Games_Rtss_Roster_DbSet
                               .Include(x => x.VisitorRoster)
                               .Include(x => x.VisitorScratches)
                               .Include(x => x.VisitorHeadCoach)

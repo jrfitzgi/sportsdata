@@ -50,7 +50,7 @@ namespace SportsData.Nhl
             using (SportsDataContext db = new SportsDataContext())
             {
                 db.Database.ExecuteSqlCommand("DELETE FROM NhlDraftbookModels");
-                db.NhlDraftbookModels.AddRange(models);
+                db.Nhl_Draftbook_DbSet.AddRange(models);
                 db.SaveChanges();
             }
         }

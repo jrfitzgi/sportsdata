@@ -25,7 +25,7 @@ namespace SportsData.Nhl
             List<Nhl_Games_Rtss> models;
             using (SportsDataContext db = new SportsDataContext())
             {
-                models = (from m in db.NhlGameStatsRtssReports
+                models = (from m in db.Nhl_Games_Rtss_DbSet
                           where
                              m.Year == year &&
                              m.Date >= fromDate

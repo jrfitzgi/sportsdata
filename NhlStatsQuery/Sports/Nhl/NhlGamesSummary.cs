@@ -38,7 +38,7 @@ namespace SportsData.Nhl
             DateTime latestResultDate;
             using (SportsDataContext db = new SportsDataContext())
             {
-                latestResultDate = (from m in db.NhlGameStatsSummaries
+                latestResultDate = (from m in db.Nhl_Games_Summary_DbSet
                                     orderby m.Date descending
                                     select m.Date).FirstOrDefault();
 
@@ -137,8 +137,8 @@ namespace SportsData.Nhl
 
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.NhlGameStatsSummaries.AddOrUpdate<Nhl_Games_Summary>(g => new { g.Date, g.Visitor, g.Home, g.VisitorScore, g.HomeScore }, downcastSpecialCaseModels.ToArray());
-                db.NhlGameStatsSummaries.AddOrUpdate<Nhl_Games_Summary>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
+                db.Nhl_Games_Summary_DbSet.AddOrUpdate<Nhl_Games_Summary>(g => new { g.Date, g.Visitor, g.Home, g.VisitorScore, g.HomeScore }, downcastSpecialCaseModels.ToArray());
+                db.Nhl_Games_Summary_DbSet.AddOrUpdate<Nhl_Games_Summary>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
                 db.SaveChanges();
             }
         }

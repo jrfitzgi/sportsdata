@@ -64,7 +64,7 @@ namespace SportsData.Nhl
 
                     if (model.Id != 0)
                     {
-                        db.NhlHtmlReportRosters.Attach(model);
+                        db.Nhl_Games_Rtss_Roster_DbSet.Attach(model);
                         db.Entry(model).State = EntityState.Modified;
                     }
                     else
@@ -318,7 +318,7 @@ namespace SportsData.Nhl
             List<Nhl_Games_Rtss_Roster> existingModels = new List<Nhl_Games_Rtss_Roster>();
             using (SportsDataContext db = new SportsDataContext())
             {
-                existingModels = (from m in db.NhlHtmlReportRosters
+                existingModels = (from m in db.Nhl_Games_Rtss_Roster_DbSet
                                   where
                                       m.NhlRtssReportModel.Year == year &&
                                       m.NhlRtssReportModel.Date >= fromDate
