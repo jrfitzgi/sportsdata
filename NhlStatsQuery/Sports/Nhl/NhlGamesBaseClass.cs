@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 
 namespace SportsData.Nhl
 {
-    public abstract class NhlGameStatsBaseClass : NhlBaseClass
+    public abstract class NhlGamesBaseClass : NhlBaseClass
     {
         protected override DateTime ParseDateFromHtmlRow(HtmlNode row)
         {

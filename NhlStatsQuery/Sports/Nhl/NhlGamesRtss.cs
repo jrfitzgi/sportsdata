@@ -9,7 +9,7 @@ using SportsData.Models;
 
 namespace SportsData.Nhl
 {
-    public partial class NhlGameStatsRtssReport : NhlGameStatsBaseClass
+    public class NhlGamesRtss : NhlGamesBaseClass
     {
 
         #region Abstract Overrides
@@ -41,7 +41,7 @@ namespace SportsData.Nhl
 
             }
 
-            return NhlGameStatsRtssReport.GetFullSeason(year, latestResultDate, saveToDb);
+            return NhlGamesRtss.GetFullSeason(year, latestResultDate, saveToDb);
         }
 
         public static List<Nhl_Games_Rtss> GetFullSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool saveToDb)
@@ -52,7 +52,7 @@ namespace SportsData.Nhl
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<Nhl_Games_Rtss> partialResults = NhlGameStatsRtssReport.UpdateSeason(year, seasonType, fromDate, saveToDb);
+                List<Nhl_Games_Rtss> partialResults = NhlGamesRtss.UpdateSeason(year, seasonType, fromDate, saveToDb);
                 if (null != partialResults)
                 {
                     results.AddRange(partialResults);
@@ -69,14 +69,14 @@ namespace SportsData.Nhl
         private static List<Nhl_Games_Rtss> UpdateSeason(int year, NhlSeasonType nhlSeasonType, DateTime fromDate, bool saveToDb)
         {
             // Get HTML rows
-            NhlGameStatsRtssReport nhl = new NhlGameStatsRtssReport();
+            NhlGamesRtss nhl = new NhlGamesRtss();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType, fromDate);
 
             // Parse into a list
             List<Nhl_Games_Rtss> results = new List<Nhl_Games_Rtss>();
             foreach (HtmlNode row in rows)
             {
-                Nhl_Games_Rtss result = NhlGameStatsRtssReport.MapHtmlRowToModel(row, nhlSeasonType);
+                Nhl_Games_Rtss result = NhlGamesRtss.MapHtmlRowToModel(row, nhlSeasonType);
 
                 if (null != result)
                 {
@@ -87,7 +87,7 @@ namespace SportsData.Nhl
             // Update DB
             if (saveToDb)
             {
-                NhlGameStatsRtssReport.AddOrUpdateDb(results);
+                NhlGamesRtss.AddOrUpdateDb(results);
             }
 
             return results;
@@ -107,15 +107,15 @@ namespace SportsData.Nhl
             model.Visitor = tdNodes[2].InnerText;
             model.Home = tdNodes[3].InnerText;
 
-            model.RosterLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[4]);
-            model.GameLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[5]);
-            model.EventsLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[6]);
-            model.FaceOffsLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[7]);
-            model.PlayByPlayLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[8]);
-            model.ShotsLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[9]);
-            model.HomeToiLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[10]);
-            model.VistorToiLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[11]);
-            model.ShootoutLink = NhlGameStatsRtssReport.ParseLinkFromTd(tdNodes[12]);
+            model.RosterLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[4]);
+            model.GameLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[5]);
+            model.EventsLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[6]);
+            model.FaceOffsLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[7]);
+            model.PlayByPlayLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[8]);
+            model.ShotsLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[9]);
+            model.HomeToiLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[10]);
+            model.VistorToiLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[11]);
+            model.ShootoutLink = NhlGamesRtss.ParseLinkFromTd(tdNodes[12]);
 
             return model;
         }
@@ -125,7 +125,7 @@ namespace SportsData.Nhl
             // Note: downcast for models is not necessary but leave this here in anticipation of moving this method to a base class (and it will be necessary)
 
             // Special case the FLA/NSH double header on 9/16/2013
-            IEnumerable<Nhl_Games_BaseModel> specialCaseModels = NhlGameStatsBaseClass.GetSpecialCaseModels(models);
+            IEnumerable<Nhl_Games_BaseModel> specialCaseModels = NhlGamesBaseClass.GetSpecialCaseModels(models);
             IEnumerable<Nhl_Games_Rtss> downcastSpecialCaseModels = specialCaseModels.ToList().ConvertAll<Nhl_Games_Rtss>(m => (Nhl_Games_Rtss)m);
             IEnumerable<Nhl_Games_Rtss> downcastModels = models.Except(specialCaseModels, new NhlGameStatsBaseModelComparer()).ToList().ConvertAll<Nhl_Games_Rtss>(m => (Nhl_Games_Rtss)m);
 

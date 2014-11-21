@@ -17,52 +17,52 @@ namespace SportsDataTests
         /// Get the game summaries for a season. No pre-reqs in the DB.
         /// </summary>
         [TestMethod]
-        public void Script_NhlGameStatsSummary()
+        public void Script_NhlGamesSummary()
         {
             DateTime fromDate = DateTime.Parse("11/17/2014");
-            NhlGameStatsSummary.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
+            NhlGamesSummary.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
         /// <summary>
         /// Get the RTSS Reports for a season. No pre-reqs in the DB.
         /// </summary>
         [TestMethod]
-        public void Script_NhlGameStatsRtssReport()
+        public void Script_NhlGamesRtss()
         {
             DateTime fromDate = DateTime.Parse("11/17/2014");
-            NhlGameStatsRtssReport.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
+            NhlGamesRtss.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
         /// <summary>
         /// Get the game summaries for a season from the existing HTML blobs in blob storage.
         /// </summary>
         [TestMethod]
-        public void Script_NhlHtmlReportSummary()
+        public void Script_NhlGamesRtssSummary()
         {
             DateTime fromDate = DateTime.Parse("11/17/2014");
-            NhlHtmlReportSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
+            NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
         }
 
         /// <summary>
         /// Get the rosters for a season from the existing HTML blobs in blob storage.
         /// </summary>
         [TestMethod]
-        public void Script_NhlHtmlReportRoster()
+        public void Script_NhlGamesRtssRoster()
         {
             //NhlHtmlReportRoster.UpdateSeason(year: 2008, forceOverwrite: true);
             DateTime fromDate = DateTime.Now.AddDays(-2);
-            NhlHtmlReportRoster.UpdateSeason(year: 2015, fromDate: fromDate, forceOverwrite: false);
+            NhlGamesRtssRoster.UpdateSeason(year: 2015, fromDate: fromDate, forceOverwrite: false);
         }
 
         /// <summary>
         /// Get the Player Stats Bios Skaters for a season
         /// </summary>
         [TestMethod]
-        public void Script_NhlPlayerStatsBioSkater()
+        public void Script_NhlPlayersBioSkater()
         {
             for (int y = 2004; y >= 1998; y--)
             {
-                NhlPlayerStatsBioSkater.GetFullSeason(year: y, saveToDb: true);
+                NhlPlayersBioSkater.GetFullSeason(year: y, saveToDb: true);
             }
         }
 
@@ -70,11 +70,11 @@ namespace SportsDataTests
         /// Get the Player Stats Bio Goalies for a season
         /// </summary>
         [TestMethod]
-        public void Script_NhlPlayerStatsBioGoalies()
+        public void Script_NhlPlayersBioGoalie()
         {
             for (int y = 2003; y >= 1998; y--)
             {
-                NhlPlayerStatsBioGoalie.GetFullSeason(year: y, saveToDb: true);
+                NhlPlayersBioGoalie.GetFullSeason(year: y, saveToDb: true);
             }
         }
 
@@ -83,11 +83,11 @@ namespace SportsDataTests
         /// Get the Player Stats Real-time Stats Skaters for a season
         /// </summary>
         [TestMethod]
-        public void Script_NhlPlayerStatsRtssSkater()
+        public void Script_NhlPlayersRtssSkater()
         {
             for (int y = 2004; y >= 1998; y--)
             {
-                NhlPlayerStatsRtssSkater.GetFullSeason(year: y, saveToDb: true);
+                NhlPlayersRtssSkater.GetFullSeason(year: y, saveToDb: true);
             }
         }
 

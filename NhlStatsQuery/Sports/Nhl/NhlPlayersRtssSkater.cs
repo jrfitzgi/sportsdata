@@ -15,7 +15,7 @@ using SportsData.Models;
 
 namespace SportsData.Nhl
 {
-    public partial class NhlPlayerStatsRtssSkater : NhlPlayerStatsBaseClass
+    public partial class NhlPlayersRtssSkater : NhlPlayersBaseClass
     {
  
         #region Abstract Overrides
@@ -38,7 +38,7 @@ namespace SportsData.Nhl
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<Nhl_Players_Rtss_Skater> partialResults = NhlPlayerStatsRtssSkater.UpdateSeason(year, seasonType, saveToDb);
+                List<Nhl_Players_Rtss_Skater> partialResults = NhlPlayersRtssSkater.UpdateSeason(year, seasonType, saveToDb);
                 if (null != partialResults)
                 {
                    results.AddRange(partialResults);
@@ -55,14 +55,14 @@ namespace SportsData.Nhl
         private static List<Nhl_Players_Rtss_Skater> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
         {
             // Get HTML rows
-            NhlPlayerStatsRtssSkater nhl = new NhlPlayerStatsRtssSkater();
+            NhlPlayersRtssSkater nhl = new NhlPlayersRtssSkater();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType);
 
             // Parse into a list
             List<Nhl_Players_Rtss_Skater> results = new List<Nhl_Players_Rtss_Skater>();
             foreach (HtmlNode row in rows)
             {
-                Nhl_Players_Rtss_Skater result = NhlPlayerStatsRtssSkater.MapHtmlRowToModel(row, nhlSeasonType, year);
+                Nhl_Players_Rtss_Skater result = NhlPlayersRtssSkater.MapHtmlRowToModel(row, nhlSeasonType, year);
 
                 if (null != result)
                 {
@@ -73,7 +73,7 @@ namespace SportsData.Nhl
             // Update DB
             if (saveToDb)
             {
-                NhlPlayerStatsRtssSkater.AddOrUpdateDb(results);
+                NhlPlayersRtssSkater.AddOrUpdateDb(results);
             }
 
             return results;

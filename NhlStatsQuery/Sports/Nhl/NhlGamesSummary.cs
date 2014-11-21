@@ -15,10 +15,7 @@ using SportsData.Models;
 
 namespace SportsData.Nhl
 {
-    /// <summary>
-    /// Represents a query that will be used to retrieve stats from a url
-    /// </summary>
-    public partial class NhlGameStatsSummary : NhlGameStatsBaseClass
+    public partial class NhlGamesSummary : NhlGamesBaseClass
     {
  
         #region Abstract Overrides
@@ -47,7 +44,7 @@ namespace SportsData.Nhl
 
             }
 
-            return NhlGameStatsSummary.GetFullSeason(year, latestResultDate, saveToDb);
+            return NhlGamesSummary.GetFullSeason(year, latestResultDate, saveToDb);
         }
 
         public static List<Nhl_Games_Summary> GetFullSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool saveToDb)
@@ -58,7 +55,7 @@ namespace SportsData.Nhl
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<Nhl_Games_Summary> partialResults = NhlGameStatsSummary.UpdateSeason(year, seasonType, fromDate, saveToDb);
+                List<Nhl_Games_Summary> partialResults = NhlGamesSummary.UpdateSeason(year, seasonType, fromDate, saveToDb);
                 if (null != partialResults)
                 {
                     results.AddRange(partialResults);
@@ -75,14 +72,14 @@ namespace SportsData.Nhl
         private static List<Nhl_Games_Summary> UpdateSeason(int year, NhlSeasonType nhlSeasonType, DateTime fromDate, bool saveToDb)
         {
             // Get HTML rows
-            NhlGameStatsSummary nhl = new NhlGameStatsSummary();
+            NhlGamesSummary nhl = new NhlGamesSummary();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType, fromDate);
 
             // Parse into a list
             List<Nhl_Games_Summary> results = new List<Nhl_Games_Summary>();
             foreach (HtmlNode row in rows)
             {
-                Nhl_Games_Summary result = NhlGameStatsSummary.MapHtmlRowToModel(row, nhlSeasonType);
+                Nhl_Games_Summary result = NhlGamesSummary.MapHtmlRowToModel(row, nhlSeasonType);
 
                 if (null != result)
                 {
@@ -93,7 +90,7 @@ namespace SportsData.Nhl
             // Update DB
             if (saveToDb)
             {
-                NhlGameStatsSummary.AddOrUpdateDb(results);
+                NhlGamesSummary.AddOrUpdateDb(results);
             }
 
             return results;
@@ -134,7 +131,7 @@ namespace SportsData.Nhl
             // Note: downcast for models is not necessary but leave this here in anticipation of moving this method to a base class (and it will be necessary)
 
             // Special case the FLA/NSH double header on 9/16/2013
-            IEnumerable<Nhl_Games_BaseModel> specialCaseModels = NhlGameStatsBaseClass.GetSpecialCaseModels(models);
+            IEnumerable<Nhl_Games_BaseModel> specialCaseModels = NhlGamesBaseClass.GetSpecialCaseModels(models);
             IEnumerable<Nhl_Games_Summary> downcastSpecialCaseModels = specialCaseModels.ToList().ConvertAll<Nhl_Games_Summary>(m => (Nhl_Games_Summary)m);
             IEnumerable<Nhl_Games_Summary> downcastModels = models.Except(specialCaseModels, new NhlGameStatsBaseModelComparer()).ToList().ConvertAll<Nhl_Games_Summary>(m => (Nhl_Games_Summary)m);
 

@@ -9,10 +9,24 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
+using SportsData.Models;
 
 
 namespace SportsData.Nhl
 {
+    public enum HtmlBlobType
+    {
+        None = 0,
+        NhlRoster,
+        NhlGame,
+        NhlEvents,
+        NhlFaceOffs,
+        NhlShots,
+        NhlHomeToi,
+        NhlVisitorToi,
+        NhlShootout
+    }
+
     public partial class HtmlBlob
     {
         // Start using other prefixes if/when we start storing blobs from other sources
@@ -81,6 +95,24 @@ namespace SportsData.Nhl
         }
 
         #endregion
+
+        public static void UpdateSeason([Optional] int year, [Optional] bool forceOverwrite)
+        {
+            year = NhlModelHelper.SetDefaultYear(year);
+
+            List<Nhl_Games_Rtss> models;
+            using (SportsDataContext db = new SportsDataContext())
+            {
+                models = (from m in db.NhlGameStatsRtssReports
+                          where
+                            m.Year == year
+                          select m).ToList();
+            }
+
+            Dictionary<Uri, string> items = new Dictionary<Uri, string>();
+            models.ForEach(m => items.Add(new Uri(m.RosterLink), m.Id.ToString()));
+            HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, items, forceOverwrite);
+        }
 
         public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, Dictionary<Uri, string> items, [Optional] bool forceOverwrite)
         {

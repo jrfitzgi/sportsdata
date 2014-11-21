@@ -18,7 +18,7 @@ namespace SportsData.Nhl
     /// <summary>
     /// Represents a query that will be used to retrieve stats from a url
     /// </summary>
-    public partial class NhlPlayerStatsBioGoalie : NhlPlayerStatsBaseClass
+    public partial class NhlPlayersBioGoalie : NhlPlayersBaseClass
     {
  
         #region Abstract Overrides
@@ -41,7 +41,7 @@ namespace SportsData.Nhl
             {
                 if (seasonType == NhlSeasonType.None) { continue; }
 
-                List<Nhl_Players_Bio_Goalie> partialResults = NhlPlayerStatsBioGoalie.UpdateSeason(year, seasonType, saveToDb);
+                List<Nhl_Players_Bio_Goalie> partialResults = NhlPlayersBioGoalie.UpdateSeason(year, seasonType, saveToDb);
                 if (null != partialResults)
                 {
                    results.AddRange(partialResults);
@@ -58,14 +58,14 @@ namespace SportsData.Nhl
         private static List<Nhl_Players_Bio_Goalie> UpdateSeason(int year, NhlSeasonType nhlSeasonType, bool saveToDb)
         {
             // Get HTML rows
-            NhlPlayerStatsBioGoalie nhl = new NhlPlayerStatsBioGoalie();
+            NhlPlayersBioGoalie nhl = new NhlPlayersBioGoalie();
             List<HtmlNode> rows = nhl.GetResultsForSeasonType(year, nhlSeasonType);
 
             // Parse into a list
             List<Nhl_Players_Bio_Goalie> results = new List<Nhl_Players_Bio_Goalie>();
             foreach (HtmlNode row in rows)
             {
-                Nhl_Players_Bio_Goalie result = NhlPlayerStatsBioGoalie.MapHtmlRowToModel(row, nhlSeasonType, year);
+                Nhl_Players_Bio_Goalie result = NhlPlayersBioGoalie.MapHtmlRowToModel(row, nhlSeasonType, year);
 
                 if (null != result)
                 {
@@ -76,7 +76,7 @@ namespace SportsData.Nhl
             // Update DB
             if (saveToDb)
             {
-                NhlPlayerStatsBioGoalie.AddOrUpdateDb(results);
+                NhlPlayersBioGoalie.AddOrUpdateDb(results);
             }
 
             return results;

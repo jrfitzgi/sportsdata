@@ -17,7 +17,7 @@ namespace SportsDataTests
         public void NhlPlayerStatsBioGoalie_GetFullSeason()
         {
             int year = 2013;
-            List<Nhl_Players_Bio_Goalie> results = NhlPlayerStatsBioGoalie.GetFullSeason(year, false);
+            List<Nhl_Players_Bio_Goalie> results = NhlPlayersBioGoalie.GetFullSeason(year, false);
             Assert.AreEqual(105, results.Count);
         }
     }

@@ -16,7 +16,7 @@ using SportsData.Models;
 
 namespace SportsData.Nhl
 {
-    public class NhlHtmlReportRoster : NhlHtmlReportBase
+    public class NhlGamesRtssRoster : NhlHtmlReportBase
     {
 
         public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
@@ -27,7 +27,7 @@ namespace SportsData.Nhl
             if (forceOverwrite == false)
             {
                 // Only query for existing if we are not going to force overwrite all
-                existingModels = NhlHtmlReportRoster.GetHtmlRosterReports(year, fromDate);
+                existingModels = NhlGamesRtssRoster.GetHtmlRosterReports(year, fromDate);
             }
 
             // For each report, get the html blob from blob storage and parse the blob to a report
@@ -44,7 +44,7 @@ namespace SportsData.Nhl
                 if (!model.GameLink.Equals("#"))
                 {
                     string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.RosterLink), true);
-                    report = NhlHtmlReportRoster.ParseHtmlBlob(model.Id, htmlBlob);
+                    report = NhlGamesRtssRoster.ParseHtmlBlob(model.Id, htmlBlob);
                 }
 
                 if (null != report)
@@ -98,7 +98,7 @@ namespace SportsData.Nhl
             // The html for this game doesn't follow the same format as the other games 
             if (null != documentNode.SelectSingleNode(@"./html/head/link[@href='RO010002_files/editdata.mso']"))
             {
-                return NhlHtmlReportRoster.BruinsRangersSpecialCase(rtssReportId);
+                return NhlGamesRtssRoster.BruinsRangersSpecialCase(rtssReportId);
             }
 
             // Get the teams
@@ -135,15 +135,15 @@ namespace SportsData.Nhl
             }
 
             // Parse the players out of the lists
-            List<Nhl_Games_Rtss_RosterParticipantItem> team1Roster = NhlHtmlReportRoster.ParsePlayers(team1RosterNodes);
-            List<Nhl_Games_Rtss_RosterParticipantItem> team2Roster = NhlHtmlReportRoster.ParsePlayers(team2RosterNodes);
-            List<Nhl_Games_Rtss_RosterParticipantItem> team1Scratches = NhlHtmlReportRoster.ParsePlayers(team1ScratchesNodes);
-            List<Nhl_Games_Rtss_RosterParticipantItem> team2Scratches = NhlHtmlReportRoster.ParsePlayers(team2ScratchesNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team1Roster = NhlGamesRtssRoster.ParsePlayers(team1RosterNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team2Roster = NhlGamesRtssRoster.ParsePlayers(team2RosterNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team1Scratches = NhlGamesRtssRoster.ParsePlayers(team1ScratchesNodes);
+            List<Nhl_Games_Rtss_RosterParticipantItem> team2Scratches = NhlGamesRtssRoster.ParsePlayers(team2ScratchesNodes);
 
             // Find the head coaches
             HtmlNodeCollection coachNodes = documentNode.SelectNodes(@".//tr[@id='HeadCoaches']/td/table/tbody/tr | .//tr[@id='HeadCoaches']/td/table/tr");
-            Nhl_Games_Rtss_RosterParticipantItem coach1 = NhlHtmlReportRoster.ParseCoach(coachNodes[0]);
-            Nhl_Games_Rtss_RosterParticipantItem coach2 = NhlHtmlReportRoster.ParseCoach(coachNodes[1]);
+            Nhl_Games_Rtss_RosterParticipantItem coach1 = NhlGamesRtssRoster.ParseCoach(coachNodes[0]);
+            Nhl_Games_Rtss_RosterParticipantItem coach2 = NhlGamesRtssRoster.ParseCoach(coachNodes[1]);
 
             // Find the officials
             HtmlNode officialsTableNode = documentNode.SelectSingleNode(@".//table[tbody/tr/td[contains(text(),'Referee')] or tr/td[contains(text(),'Referee')]]");
@@ -152,16 +152,16 @@ namespace SportsData.Nhl
             HtmlNodeCollection linesmenNodes = officialsSubTableNodes[1].SelectNodes(@".//tr");
 
             Nhl_Games_Rtss_RosterParticipantItem referee1 = null;
-            if (refereesNodes != null && refereesNodes.Count >= 1) { referee1 = NhlHtmlReportRoster.ParseReferee(refereesNodes[0]); }
+            if (refereesNodes != null && refereesNodes.Count >= 1) { referee1 = NhlGamesRtssRoster.ParseReferee(refereesNodes[0]); }
 
             Nhl_Games_Rtss_RosterParticipantItem referee2 = null;
-            if (refereesNodes != null && refereesNodes.Count >= 2) { referee2 = NhlHtmlReportRoster.ParseReferee(refereesNodes[1]); }
+            if (refereesNodes != null && refereesNodes.Count >= 2) { referee2 = NhlGamesRtssRoster.ParseReferee(refereesNodes[1]); }
 
             Nhl_Games_Rtss_RosterParticipantItem linesman1 = null;
-            if (linesmenNodes != null && linesmenNodes.Count >= 1) { linesman1 = NhlHtmlReportRoster.ParseLinesman(linesmenNodes[0]); }
+            if (linesmenNodes != null && linesmenNodes.Count >= 1) { linesman1 = NhlGamesRtssRoster.ParseLinesman(linesmenNodes[0]); }
 
             Nhl_Games_Rtss_RosterParticipantItem linesman2 = null;
-            if (linesmenNodes != null && linesmenNodes.Count >= 2) { linesman2 = NhlHtmlReportRoster.ParseLinesman(linesmenNodes[1]); }
+            if (linesmenNodes != null && linesmenNodes.Count >= 2) { linesman2 = NhlGamesRtssRoster.ParseLinesman(linesmenNodes[1]); }
 
             // Check for standby officials
             HtmlNodeCollection standbyOfficialsNodes1 = officialsSubTableNodes[2].SelectNodes(@".//tr");
@@ -195,7 +195,7 @@ namespace SportsData.Nhl
 
             foreach (HtmlNode row in rows)
             {
-                Nhl_Games_Rtss_RosterParticipantItem player = NhlHtmlReportRoster.ParsePlayer(row);
+                Nhl_Games_Rtss_RosterParticipantItem player = NhlGamesRtssRoster.ParsePlayer(row);
                 if (null != player)
                 {
                     players.Add(player);
@@ -267,14 +267,14 @@ namespace SportsData.Nhl
 
         private static Nhl_Games_Rtss_RosterParticipantItem ParseReferee(HtmlNode row)
         {
-            Nhl_Games_Rtss_RosterParticipantItem official = NhlHtmlReportRoster.ParseOfficial(row);
+            Nhl_Games_Rtss_RosterParticipantItem official = NhlGamesRtssRoster.ParseOfficial(row);
             official.Designation = Designation.Referee;
             return official;
         }
 
         private static Nhl_Games_Rtss_RosterParticipantItem ParseLinesman(HtmlNode row)
         {
-            Nhl_Games_Rtss_RosterParticipantItem official = NhlHtmlReportRoster.ParseOfficial(row);
+            Nhl_Games_Rtss_RosterParticipantItem official = NhlGamesRtssRoster.ParseOfficial(row);
             official.Designation = Designation.Linesman;
             return official;
         }

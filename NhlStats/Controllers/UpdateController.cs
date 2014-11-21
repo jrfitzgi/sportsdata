@@ -27,11 +27,11 @@ namespace SportsData.Controllers
                 //results.Add("FacebookData", this.Update(delegate() { FacebookData.UpdateAllSnapshotsInDb(); }));
                 //results.Add("TwitterData", this.Update(delegate() { TwitterData.UpdateAllSnapshotsInDb(); }));
 
-                results.Add("NhlGameSummary", this.Update(delegate() { NhlGameStatsSummary.GetNewResultsOnly(saveToDb:true); }));
-                results.Add("NhlRtssReport", this.Update(delegate() { NhlGameStatsRtssReport.GetNewResultsOnly(saveToDb:true); }));
+                results.Add("NhlGameSummary", this.Update(delegate() { NhlGamesSummary.GetNewResultsOnly(saveToDb:true); }));
+                results.Add("NhlRtssReport", this.Update(delegate() { NhlGamesRtss.GetNewResultsOnly(saveToDb:true); }));
                 results.Add("HtmlBlobs", this.Update(delegate() { HtmlBlob.UpdateSeason(); }));
-                results.Add("NhlHtmlReportSummary", this.Update(delegate() { NhlHtmlReportSummary.UpdateSeason(); }));
-                results.Add("NhlHtmlReportRoster", this.Update(delegate() { NhlHtmlReportRoster.UpdateSeason(); }));
+                results.Add("NhlHtmlReportSummary", this.Update(delegate() { NhlGamesRtssSummary.UpdateSeason(); }));
+                results.Add("NhlHtmlReportRoster", this.Update(delegate() { NhlGamesRtssRoster.UpdateSeason(); }));
 
                 // Mlb data doesn't incrementally update so don't do it every time this controller action is called
                 //results.Add("MlbAttendanceData", this.Update(delegate()

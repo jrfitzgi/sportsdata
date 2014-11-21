@@ -13,7 +13,7 @@ using SportsData.Models;
 
 namespace SportsData.Nhl
 {
-    public class NhlHtmlReportSummary : NhlHtmlReportBase
+    public class NhlGamesRtssSummary : NhlHtmlReportBase
     {
         public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
         {
@@ -23,7 +23,7 @@ namespace SportsData.Nhl
             if (forceOverwrite == false)
             {
                 // Only query for existing if we are not going to force overwrite all
-                existingModels = NhlHtmlReportSummary.GetHtmlSummaryReports(year, fromDate);
+                existingModels = NhlGamesRtssSummary.GetHtmlSummaryReports(year, fromDate);
             }
 
             // For each report, get the html blob from blob storage and parse the blob to a report
@@ -40,7 +40,7 @@ namespace SportsData.Nhl
                 if (!model.GameLink.Equals("#"))
                 {
                     string htmlBlob = HtmlBlob.RetrieveBlob(HtmlBlobType.NhlRoster, model.Id.ToString(), new Uri(model.GameLink), true);
-                    report = NhlHtmlReportSummary.ParseHtmlBlob(model.Id, htmlBlob);
+                    report = NhlGamesRtssSummary.ParseHtmlBlob(model.Id, htmlBlob);
                 }
 
                 if (null != report)
@@ -74,7 +74,7 @@ namespace SportsData.Nhl
             // The html for this game doesn't follow the same format as the other games 
             if (null != documentNode.SelectSingleNode(@"./html/head/link[@href='RO010002_files/editdata.mso']"))
             {
-                return NhlHtmlReportSummary.BruinsRangersSpecialCase(rtssReportId);
+                return NhlGamesRtssSummary.BruinsRangersSpecialCase(rtssReportId);
             }
 
             HtmlNode tableNode = documentNode.SelectSingleNode(@".//table[.//table[@id='GameInfo']]");
