@@ -41,19 +41,19 @@ namespace SportsData.Models
         public string GameStatus { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_ScoringSummary")]
-        public ICollection<Nhl_Games_Rtss_Summary_ScoringSummary_Item> ScoringSummary { get; set; }
+        public List<Nhl_Games_Rtss_Summary_ScoringSummary_Item> ScoringSummary { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_PenaltySummary_Home")]
-        public ICollection<Nhl_Games_Rtss_Summary_PenaltySummary_Item> PenaltySummary_Home { get; set; }
+        public List<Nhl_Games_Rtss_Summary_PenaltySummary_Item> PenaltySummary_Home { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_PenaltySummary_Visitor")]
-        public ICollection<Nhl_Games_Rtss_Summary_PenaltySummary_Item> PenaltySummary_Visitor { get; set; }
+        public List<Nhl_Games_Rtss_Summary_PenaltySummary_Item> PenaltySummary_Visitor { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_PeriodSummary_Home")]
-        public ICollection<Nhl_Games_Rtss_Summary_PeriodSummary_Item> PeriodSummary_Home { get; set; }
+        public List<Nhl_Games_Rtss_Summary_PeriodSummary_Item> PeriodSummary_Home { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_PeriodSummary_Visitor")]
-        public ICollection<Nhl_Games_Rtss_Summary_PeriodSummary_Item> PeriodSummary_Visitor { get; set; }
+        public List<Nhl_Games_Rtss_Summary_PeriodSummary_Item> PeriodSummary_Visitor { get; set; }
 
         public int PowerPlay5v4Goals { get; set; }
         public int PowerPlay5v4Occurrences { get; set; }
@@ -80,16 +80,16 @@ namespace SportsData.Models
         public int EvenStrength3v3ToiSeconds { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_GoalieSummary_Home")]
-        public ICollection<Nhl_Games_Rtss_Summary_GoalieSummary_Item> GoalieSummary_Home { get; set; }
+        public List<Nhl_Games_Rtss_Summary_GoalieSummary_Item> GoalieSummary_Home { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_GoalieSummary_Visitor")]
-        public ICollection<Nhl_Games_Rtss_Summary_GoalieSummary_Item> GoalieSummary_Visitor { get; set; }
+        public List<Nhl_Games_Rtss_Summary_GoalieSummary_Item> GoalieSummary_Visitor { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_Officials")]
-        public ICollection<Nhl_Games_Rtss_Summary_Officials_Item> Officials { get; set; }
+        public List<Nhl_Games_Rtss_Summary_Officials_Item> Officials { get; set; }
 
         [InverseProperty("Nhl_Games_Rtss_Summary_Stars")]
-        public ICollection<Nhl_Games_Rtss_Summary_Stars_Item> Stars { get; set; }
+        public List<Nhl_Games_Rtss_Summary_Stars_Item> Stars { get; set; }
 
     }
 

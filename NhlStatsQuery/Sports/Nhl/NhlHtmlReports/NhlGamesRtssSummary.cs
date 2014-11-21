@@ -77,14 +77,15 @@ namespace SportsData.Nhl
                 return NhlGamesRtssSummary.BruinsRangersSpecialCase(rtssReportId);
             }
 
-            HtmlNode tableNode = documentNode.SelectSingleNode(@".//table[.//table[@id='GameInfo']]");
+            HtmlNode mainTableNode = documentNode.SelectSingleNode(@".//table[@id='MainTable']");
+            HtmlNode gameSummaryTableNode = documentNode.SelectSingleNode(@".//table[.//table[@id='GameInfo']]");
 
-            if (null == tableNode) { return null; }
+            if (null == gameSummaryTableNode) { return null; }
 
             #region Get team names, score, game numbers
 
-            HtmlNode visitorTableNode = tableNode.SelectSingleNode(@".//table[@id='Visitor']");
-            HtmlNode homeTableNode = tableNode.SelectSingleNode(@".//table[@id='Home']");
+            HtmlNode visitorTableNode = gameSummaryTableNode.SelectSingleNode(@".//table[@id='Visitor']");
+            HtmlNode homeTableNode = gameSummaryTableNode.SelectSingleNode(@".//table[@id='Home']");
 
             HtmlNode visitorScoreNode = visitorTableNode.SelectNodes(@".//tr").ElementAt(1).SelectNodes(@".//tr/td").ElementAt(1);
             HtmlNode homeScoreNode = homeTableNode.SelectNodes(@".//tr").ElementAt(1).SelectNodes(@".//tr/td").ElementAt(1);
@@ -128,7 +129,7 @@ namespace SportsData.Nhl
 
             #region Date, time, attendance, league game number
 
-            HtmlNode gameInfoTableNode = tableNode.SelectSingleNode(@".//table[@id='GameInfo']");
+            HtmlNode gameInfoTableNode = gameSummaryTableNode.SelectSingleNode(@".//table[@id='GameInfo']");
             HtmlNodeCollection gameInfoRowNodes = gameInfoTableNode.SelectNodes(@".//tr");
 
             // Special Case
@@ -172,21 +173,6 @@ namespace SportsData.Nhl
                 model.ArenaName = attendanceAndArenaText;
             }
 
-            //string attendanceAndArenaText = gameInfoRowNodes[4].InnerText.RemoveSpecialWhitespaceCharacters();
-            //string[] attendanceAndArena = attendanceAndArenaText.Split(new string[] {"&nbsp;"}, StringSplitOptions.RemoveEmptyEntries) ;
-
-            //if (attendanceAndArena.Count() == 3)
-            //{
-            //    Match attendanceMatch = Regex.Match(attendanceAndArena[0].Replace(",", String.Empty), @"\d+");
-            //    string attendanceAsString = String.IsNullOrWhiteSpace(attendanceMatch.Value) ? "0" : attendanceMatch.Value;
-            //    model.Attendance = Convert.ToInt32(attendanceAsString);
-            //    model.ArenaName = attendanceAndArena[2];
-            //}
-            //else
-            //{
-            //    model.ArenaName = attendanceAndArena[0];
-            //}
-
             model.ArenaName = model.ArenaName.Replace("&amp;", "&").Trim();
 
             model.GameStatus = gameInfoRowNodes[7].InnerText.RemoveSpecialWhitespaceCharacters();
@@ -200,6 +186,17 @@ namespace SportsData.Nhl
 
             Match leagueGameNumberMatch = Regex.Match(gameInfoRowNodes[6].InnerText, @"\d+");
             model.LeagueGameNumber = Convert.ToInt32(leagueGameNumberMatch.Value);
+
+            #endregion
+
+            #region Scoring Summary
+
+            HtmlNode scoringSummaryTableNode = mainTableNode.SelectSingleNode(@".//table[.//td[text()[contains(.,'SCORING SUMMARY')]]]/../..").NextSibling.NextSibling.SelectSingleNode(@".//table");
+            //HtmlNodeCollection gameInfoRowNodes = gameInfoTableNode.SelectNodes(@".//tr");
+
+
+            model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
+            
 
             #endregion
 

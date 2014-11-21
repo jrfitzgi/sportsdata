@@ -19,7 +19,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesSummary()
         {
-            DateTime fromDate = DateTime.Parse("11/17/2014");
+            DateTime fromDate = DateTime.Now.AddDays(-2);
             NhlGamesSummary.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
@@ -29,7 +29,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtss()
         {
-            DateTime fromDate = DateTime.Parse("11/17/2014");
+            DateTime fromDate = DateTime.Now.AddDays(-2);
             NhlGamesRtss.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
@@ -39,7 +39,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtssSummary()
         {
-            DateTime fromDate = DateTime.Parse("11/17/2014");
+            DateTime fromDate = DateTime.Now.AddDays(-2);
             NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
         }
 
