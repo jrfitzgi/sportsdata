@@ -11,10 +11,10 @@ using SportsData.Models;
 namespace SportsDataTests
 {
     [TestClass]
-    public class NhlGameStatsRtssReportTests : SportsDataTestsBaseClass
+    public class NhlGamesRtssTests : SportsDataTestsBaseClass
     {
         [TestMethod]
-        public void NhlGameStatsRtssReport_GetFullSeason()
+        public void NhlGamesRtssReport_GetFullSeason()
         {
             int year = 2013;
             List<Nhl_Games_Rtss> results = NhlGamesRtss.GetFullSeason(year);

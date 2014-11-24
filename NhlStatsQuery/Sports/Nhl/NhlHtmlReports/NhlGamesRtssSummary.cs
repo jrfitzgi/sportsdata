@@ -192,7 +192,28 @@ namespace SportsData.Nhl
             #region Scoring Summary
 
             HtmlNode scoringSummaryTableNode = mainTableNode.SelectSingleNode(@".//table[.//td[text()[contains(.,'SCORING SUMMARY')]]]/../..").NextSibling.NextSibling.SelectSingleNode(@".//table");
-            //HtmlNodeCollection gameInfoRowNodes = gameInfoTableNode.SelectNodes(@".//tr");
+            HtmlNodeCollection scoringSummaryTableRows = scoringSummaryTableNode.SelectNodes(@".//tr");
+
+            if (scoringSummaryTableRows != null && scoringSummaryTableRows.Count > 0)
+            {
+                HtmlNode scoringSummaryTableTeam1Node = scoringSummaryTableRows[0].SelectNodes(@".//td")[8];
+                HtmlNode scoringSummaryTableTeam2Node = scoringSummaryTableRows[0].SelectNodes(@".//td")[9];
+
+                string scoringSummaryOnIceTeam1 = scoringSummaryTableTeam1Node.InnerText;
+                string scoringSummaryOnIceTeam2 = scoringSummaryTableTeam2Node.InnerText;
+
+                for (int i = 1; i < scoringSummaryTableRows.Count; i++ )
+                {
+                    HtmlNodeCollection scoringSummaryRowFields = scoringSummaryTableRows[i].SelectNodes(@".//td");
+                    Nhl_Games_Rtss_Summary_ScoringSummary_Item scoringSummaryItem = new Nhl_Games_Rtss_Summary_ScoringSummary_Item();
+                    scoringSummaryItem.GoalNumber = Convert.ToInt32(scoringSummaryRowFields[0].InnerText);
+                    scoringSummaryItem.Period = Convert.ToInt32(scoringSummaryRowFields[1].InnerText);
+                    scoringSummaryItem.TimeInSeconds = 0; // need to convert min:sec to seconds
+
+
+                }
+
+            }
 
 
             model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
