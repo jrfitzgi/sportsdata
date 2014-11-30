@@ -220,6 +220,44 @@ namespace SportsData.Nhl
             }
         }
 
+        /// <summary>
+        /// Convert minutes in mm:ss format to seconds
+        /// </summary>
+        public static int ConvertMinutesToSeconds(string text)
+        {
+            string[] parts = text.Split(':');
+            
+            if (null == parts || parts.Length == 0)
+            {
+                return 0;
+            }
+            else if (parts.Length == 1)
+            {
+                return NhlBaseClass.ConvertStringToInt(parts[0]);
+            }
+            else if (parts.Length == 2)
+            {
+                int minutes = NhlBaseClass.ConvertStringToInt(parts[0]);
+                int seconds = NhlBaseClass.ConvertStringToInt(parts[1]);
+                return (minutes * 60) + seconds;
+            }
+            else
+            {
+                throw new ArgumentException(String.Format("The string {0} could not be converted to seconds", text));
+            }
+            
+        }
+
+        public static string RemoveAllWhitespace(string text)
+        {
+            string result = text;
+            result = result.Replace(" ", String.Empty);
+            result = result.Replace("\n", String.Empty);
+            result = result.Replace("\t", String.Empty);
+
+            return result;
+        }
+
         #endregion
 
         #region Unused Code

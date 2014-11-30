@@ -199,8 +199,8 @@ namespace SportsData.Nhl
                 HtmlNode scoringSummaryTableTeam1Node = scoringSummaryTableRows[0].SelectNodes(@".//td")[8];
                 HtmlNode scoringSummaryTableTeam2Node = scoringSummaryTableRows[0].SelectNodes(@".//td")[9];
 
-                string scoringSummaryOnIceTeam1 = scoringSummaryTableTeam1Node.InnerText;
-                string scoringSummaryOnIceTeam2 = scoringSummaryTableTeam2Node.InnerText;
+                string scoringSummaryOnIceTeam1 = scoringSummaryTableTeam1Node.InnerText.Substring(0, scoringSummaryTableTeam1Node.InnerText.IndexOf(' '));
+                string scoringSummaryOnIceTeam2 = scoringSummaryTableTeam2Node.InnerText.Substring(0, scoringSummaryTableTeam2Node.InnerText.IndexOf(' '));
 
                 for (int i = 1; i < scoringSummaryTableRows.Count; i++ )
                 {
@@ -208,8 +208,63 @@ namespace SportsData.Nhl
                     Nhl_Games_Rtss_Summary_ScoringSummary_Item scoringSummaryItem = new Nhl_Games_Rtss_Summary_ScoringSummary_Item();
                     scoringSummaryItem.GoalNumber = Convert.ToInt32(scoringSummaryRowFields[0].InnerText);
                     scoringSummaryItem.Period = Convert.ToInt32(scoringSummaryRowFields[1].InnerText);
-                    scoringSummaryItem.TimeInSeconds = 0; // need to convert min:sec to seconds
+                    scoringSummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(scoringSummaryRowFields[2].InnerText);
+                    scoringSummaryItem.Strength = scoringSummaryRowFields[3].InnerText;
+                    scoringSummaryItem.Team = scoringSummaryRowFields[4].InnerText;
 
+                    string goalScorerText = scoringSummaryRowFields[5].InnerText;
+                    int index1 = goalScorerText.IndexOf(' ');
+                    int index2 = goalScorerText.IndexOf('(');
+                    int index3 = goalScorerText.IndexOf(')');
+                    if (index1 >= 0)
+                    {
+                        scoringSummaryItem.GoalScorerPlayerNumber = NhlBaseClass.ConvertStringToInt(goalScorerText.Substring(0, index1));
+                    }
+                    if (index2 >= index1 + 1)
+                    {
+                        scoringSummaryItem.GoalScorer = goalScorerText.Substring(index1 + 1, index2 - index1 - 1);
+                    }
+                    if (index3 >= index2 + 1)
+                    {
+                        scoringSummaryItem.GoalScorerGoalNumber = NhlBaseClass.ConvertStringToInt(goalScorerText.Substring(index2 + 1, index3 - index2 - 1));
+                    }
+
+                    string assist1Text = scoringSummaryRowFields[6].InnerText;
+                    index1 = assist1Text.IndexOf(' ');
+                    index2 = assist1Text.IndexOf('(');
+                    index3 = assist1Text.IndexOf(')');
+                    if (index1 >= 0)
+                    {
+                        scoringSummaryItem.Assist1PlayerNumber = NhlBaseClass.ConvertStringToInt(assist1Text.Substring(0, index1));
+                    }
+                    if (index2 >= index1 + 1)
+                    {
+                        scoringSummaryItem.Assist1 = assist1Text.Substring(index1 + 1, index2 - index1 - 1);
+                    }
+                    if (index3 >= index2 + 1)
+                    {
+                        scoringSummaryItem.Assist1AssistNumber = NhlBaseClass.ConvertStringToInt(assist1Text.Substring(index2 + 1, index3 - index2 - 1));
+                    }
+
+                    string assist2Text = scoringSummaryRowFields[7].InnerText;
+                    index1 = assist2Text.IndexOf(' ');
+                    index2 = assist2Text.IndexOf('(');
+                    index3 = assist2Text.IndexOf(')');
+                    if (index1 >= 0)
+                    {
+                        scoringSummaryItem.Assist2PlayerNumber = NhlBaseClass.ConvertStringToInt(assist2Text.Substring(0, index1));
+                    }
+                    if (index2 >= index1 + 1)
+                    {
+                        scoringSummaryItem.Assist2 = assist2Text.Substring(index1 + 1, index2 - index1 - 1);
+                    }
+                    if (index3 >= index2 + 1)
+                    {
+                        scoringSummaryItem.Assist2AssistNumber = NhlBaseClass.ConvertStringToInt(assist2Text.Substring(index2 + 1, index3 - index2 - 1));
+                    }
+
+                    scoringSummaryItem.VisitorOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[8].InnerText);
+                    scoringSummaryItem.HomeOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[9].InnerText);
 
                 }
 

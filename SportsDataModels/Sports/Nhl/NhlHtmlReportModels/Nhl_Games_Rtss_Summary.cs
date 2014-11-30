@@ -108,8 +108,14 @@ namespace SportsData.Models
         public string Strength { get; set; }
         public string Team { get; set; }
         public string GoalScorer { get; set; }
+        public int GoalScorerPlayerNumber { get; set; }
+        public int GoalScorerGoalNumber { get; set; }
         public string Assist1 { get; set; }
+        public int Assist1PlayerNumber { get; set; }
+        public int Assist1AssistNumber { get; set; }
         public string Assist2 { get; set; }
+        public int Assist2PlayerNumber { get; set; }
+        public int Assist2AssistNumber { get; set; }
         public string VisitorOnIce { get; set; }
         public string HomeOnIce { get; set; }
     }
