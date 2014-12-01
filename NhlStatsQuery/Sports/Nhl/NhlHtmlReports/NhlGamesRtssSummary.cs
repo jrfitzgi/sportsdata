@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -202,6 +203,8 @@ namespace SportsData.Nhl
                 string scoringSummaryOnIceTeam1 = scoringSummaryTableTeam1Node.InnerText.Substring(0, scoringSummaryTableTeam1Node.InnerText.IndexOf(' '));
                 string scoringSummaryOnIceTeam2 = scoringSummaryTableTeam2Node.InnerText.Substring(0, scoringSummaryTableTeam2Node.InnerText.IndexOf(' '));
 
+                model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
+
                 for (int i = 1; i < scoringSummaryTableRows.Count; i++ )
                 {
                     HtmlNodeCollection scoringSummaryRowFields = scoringSummaryTableRows[i].SelectNodes(@".//td");
@@ -266,13 +269,70 @@ namespace SportsData.Nhl
                     scoringSummaryItem.VisitorOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[8].InnerText);
                     scoringSummaryItem.HomeOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[9].InnerText);
 
+                    model.ScoringSummary.Add(scoringSummaryItem);
+
                 }
+            }
+
+            #endregion
+
+            #region Penalty Summary
+
+            model.PenaltySummary_Visitor = new List<Nhl_Games_Rtss_Summary_PenaltySummary_Item>();
+            model.PenaltySummary_Home = new List<Nhl_Games_Rtss_Summary_PenaltySummary_Item>();
+
+            // Get the 4 child tables that have width=50%
+            HtmlNodeCollection penaltySummaryTableNodes = mainTableNode.SelectNodes(@".//table[@id='PenaltySummary']//table//table//td[@width='50%']/table");
+
+            HtmlNodeCollection visitorPenaltySummaryNodes = penaltySummaryTableNodes[0].SelectNodes(@"./tbody/tr");
+            HtmlNodeCollection homePenaltySummaryNodes = penaltySummaryTableNodes[1].SelectNodes(@"./tbody/tr");
+
+            for (int i = 1; i < visitorPenaltySummaryNodes.Count; i++)
+            {
+                Nhl_Games_Rtss_Summary_PenaltySummary_Item penaltySummaryItem = new Nhl_Games_Rtss_Summary_PenaltySummary_Item();
+                
+                HtmlNodeCollection penaltySummaryRowFields = visitorPenaltySummaryNodes[i].SelectNodes(@"./td");
+
+                penaltySummaryItem.PenaltyNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[0].InnerText);
+                penaltySummaryItem.Period = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[1].InnerText);
+                penaltySummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(penaltySummaryRowFields[2].InnerText);
+
+                HtmlNodeCollection penaltySummaryPlayerTableRows = penaltySummaryRowFields[3].SelectNodes(@".//td");
+                penaltySummaryItem.PlayerNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryPlayerTableRows[0].InnerText);
+                penaltySummaryItem.Name = penaltySummaryPlayerTableRows[3].InnerText;
+                Debug.Assert(!String.IsNullOrWhiteSpace(penaltySummaryItem.Name));
+
+                penaltySummaryItem.PIM = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[4].InnerText);
+                penaltySummaryItem.Penalty = penaltySummaryRowFields[5].InnerText;
+
+                model.PenaltySummary_Visitor.Add(penaltySummaryItem);
 
             }
 
+            for (int i = 1; i < homePenaltySummaryNodes.Count; i++)
+            {
+                Nhl_Games_Rtss_Summary_PenaltySummary_Item penaltySummaryItem = new Nhl_Games_Rtss_Summary_PenaltySummary_Item();
 
-            model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
-            
+                HtmlNodeCollection penaltySummaryRowFields = homePenaltySummaryNodes[i].SelectNodes(@"./td");
+
+                penaltySummaryItem.PenaltyNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[0].InnerText);
+                penaltySummaryItem.Period = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[1].InnerText);
+                penaltySummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(penaltySummaryRowFields[2].InnerText);
+
+                HtmlNodeCollection penaltySummaryPlayerTableRows = penaltySummaryRowFields[3].SelectNodes(@".//td");
+                penaltySummaryItem.PlayerNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryPlayerTableRows[0].InnerText);
+                penaltySummaryItem.Name = penaltySummaryPlayerTableRows[3].InnerText;
+                Debug.Assert(!String.IsNullOrWhiteSpace(penaltySummaryItem.Name));
+
+                penaltySummaryItem.PIM = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[4].InnerText);
+                penaltySummaryItem.Penalty = penaltySummaryRowFields[5].InnerText;
+
+                model.PenaltySummary_Home.Add(penaltySummaryItem);
+
+            }
+
+            HtmlNodeCollection visitorPenaltySummaryTotalsNodes = penaltySummaryTableNodes[2].SelectNodes(@"./tbody/tr");
+            HtmlNodeCollection homePenaltySummaryTotalsNodes = penaltySummaryTableNodes[3].SelectNodes(@"./tbody/tr"); 
 
             #endregion
 
