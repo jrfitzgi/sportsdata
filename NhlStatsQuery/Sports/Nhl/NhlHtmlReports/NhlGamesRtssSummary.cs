@@ -192,6 +192,8 @@ namespace SportsData.Nhl
 
             #region Scoring Summary
 
+            model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
+
             HtmlNode scoringSummaryTableNode = mainTableNode.SelectSingleNode(@".//table[.//td[text()[contains(.,'SCORING SUMMARY')]]]/../..").NextSibling.NextSibling.SelectSingleNode(@".//table");
             HtmlNodeCollection scoringSummaryTableRows = scoringSummaryTableNode.SelectNodes(@".//tr");
 
@@ -202,8 +204,6 @@ namespace SportsData.Nhl
 
                 string scoringSummaryOnIceTeam1 = scoringSummaryTableTeam1Node.InnerText.Substring(0, scoringSummaryTableTeam1Node.InnerText.IndexOf(' '));
                 string scoringSummaryOnIceTeam2 = scoringSummaryTableTeam2Node.InnerText.Substring(0, scoringSummaryTableTeam2Node.InnerText.IndexOf(' '));
-
-                model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
 
                 for (int i = 1; i < scoringSummaryTableRows.Count; i++ )
                 {
@@ -331,8 +331,19 @@ namespace SportsData.Nhl
 
             }
 
-            HtmlNodeCollection visitorPenaltySummaryTotalsNodes = penaltySummaryTableNodes[2].SelectNodes(@"./tbody/tr");
-            HtmlNodeCollection homePenaltySummaryTotalsNodes = penaltySummaryTableNodes[3].SelectNodes(@"./tbody/tr"); 
+            // Ignore these sections. They can be calculated by Penalty Summary and Power Play sections.
+            //HtmlNodeCollection visitorPenaltySummaryTotalsNodes = penaltySummaryTableNodes[2].SelectNodes(@"./tbody/tr");
+            //HtmlNodeCollection homePenaltySummaryTotalsNodes = penaltySummaryTableNodes[3].SelectNodes(@"./tbody/tr"); 
+
+            #endregion
+
+
+            #region By Period Summary
+
+            model.PeriodSummary_Visitor = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
+            model.PeriodSummary_Home = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
+
+            HtmlNodeCollection ByPeriodTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'BY PERIOD')]]/../..//td[@width='50%']/table");
 
             #endregion
 
