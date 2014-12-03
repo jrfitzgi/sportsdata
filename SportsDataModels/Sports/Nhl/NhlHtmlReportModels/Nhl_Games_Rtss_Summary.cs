@@ -55,29 +55,11 @@ namespace SportsData.Models
         [InverseProperty("Nhl_Games_Rtss_Summary_PeriodSummary_Visitor")]
         public List<Nhl_Games_Rtss_Summary_PeriodSummary_Item> PeriodSummary_Visitor { get; set; }
 
-        public int PowerPlay5v4Goals { get; set; }
-        public int PowerPlay5v4Occurrences { get; set; }
-        public int PowerPlay5v4ToiSeconds { get; set; }
+        [InverseProperty("Nhl_Games_Rtss_Summary_PowerPlaySummary_Home")]
+        public Nhl_Games_Rtss_Summary_PowerPlaySummary_Item PowerPlaySummary_Home { get; set; }
 
-        public int PowerPlay5v3Goals { get; set; }
-        public int PowerPlay5v3Occurrences { get; set; }
-        public int PowerPlay5v3ToiSeconds { get; set; }
-
-        public int PowerPlay4v3Goals { get; set; }
-        public int PowerPlay4v3Occurrences { get; set; }
-        public int PowerPlay4v3ToiSeconds { get; set; }
-
-        public int EvenStrength5v5Goals { get; set; }
-        public int EvenStrength5v5Occurrences { get; set; }
-        public int EvenStrength5v5ToiSeconds { get; set; }
-
-        public int EvenStrength4v4Goals { get; set; }
-        public int EvenStrength4v4Occurrences { get; set; }
-        public int EvenStrength4v4ToiSeconds { get; set; }
-
-        public int EvenStrength3v3Goals { get; set; }
-        public int EvenStrength3v3Occurrences { get; set; }
-        public int EvenStrength3v3ToiSeconds { get; set; }
+        [InverseProperty("Nhl_Games_Rtss_Summary_PowerPlaySummary_Visitor")]
+        public Nhl_Games_Rtss_Summary_PowerPlaySummary_Item PowerPlaySummary_Visitor { get; set; } 
 
         [InverseProperty("Nhl_Games_Rtss_Summary_GoalieSummary_Home")]
         public List<Nhl_Games_Rtss_Summary_GoalieSummary_Item> GoalieSummary_Home { get; set; }
@@ -156,8 +138,45 @@ namespace SportsData.Models
         public int Period { get; set; }
         public int Goals { get; set; }
         public int Shots { get; set; }
-        public int PN { get; set; }
+        public int Penalties { get; set; }
         public int PIM { get; set; }
+    }
+
+    public class Nhl_Games_Rtss_Summary_PowerPlaySummary_Item
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [InverseProperty("PowerPlaySummary_Home")]
+        public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PowerPlaySummary_Home { get; set; }
+
+        [InverseProperty("PowerPlaySummary_Visitor")]
+        public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PowerPlaySummary_Visitor { get; set; }
+
+        public int PowerPlay5v4Goals { get; set; }
+        public int PowerPlay5v4Occurrences { get; set; }
+        public int PowerPlay5v4ToiSeconds { get; set; }
+
+        public int PowerPlay5v3Goals { get; set; }
+        public int PowerPlay5v3Occurrences { get; set; }
+        public int PowerPlay5v3ToiSeconds { get; set; }
+
+        public int PowerPlay4v3Goals { get; set; }
+        public int PowerPlay4v3Occurrences { get; set; }
+        public int PowerPlay4v3ToiSeconds { get; set; }
+
+        public int EvenStrength5v5Goals { get; set; }
+        public int EvenStrength5v5Occurrences { get; set; }
+        public int EvenStrength5v5ToiSeconds { get; set; }
+
+        public int EvenStrength4v4Goals { get; set; }
+        public int EvenStrength4v4Occurrences { get; set; }
+        public int EvenStrength4v4ToiSeconds { get; set; }
+
+        public int EvenStrength3v3Goals { get; set; }
+        public int EvenStrength3v3Occurrences { get; set; }
+        public int EvenStrength3v3ToiSeconds { get; set; }
     }
 
     public class Nhl_Games_Rtss_Summary_GoalieSummary_Item

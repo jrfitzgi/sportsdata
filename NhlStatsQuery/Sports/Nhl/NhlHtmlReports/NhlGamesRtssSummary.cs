@@ -337,15 +337,75 @@ namespace SportsData.Nhl
 
             #endregion
 
-
             #region By Period Summary
 
             model.PeriodSummary_Visitor = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
             model.PeriodSummary_Home = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
 
-            HtmlNodeCollection ByPeriodTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'BY PERIOD')]]/../..//td[@width='50%']/table");
+            HtmlNodeCollection periodSummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'BY PERIOD')]]/../..//td[@width='50%']/table");
+
+            HtmlNodeCollection periodSummaryVisitorRows = periodSummaryTableNodes[0].SelectNodes(@".//tr");
+            for (int i = 1; i < periodSummaryVisitorRows.Count - 1; i++)
+            {
+                HtmlNodeCollection periodSummaryVisitorRowFields = periodSummaryVisitorRows[i].SelectNodes(@".//td");
+                Nhl_Games_Rtss_Summary_PeriodSummary_Item periodSummaryItem = new Nhl_Games_Rtss_Summary_PeriodSummary_Item();
+                periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[0].InnerText);
+                periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[1].InnerText);
+                periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[2].InnerText);
+                periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[3].InnerText);
+                periodSummaryItem.PIM = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[4].InnerText);
+                model.PeriodSummary_Visitor.Add(periodSummaryItem);
+            }
+
+            HtmlNodeCollection periodSummaryHomeRows = periodSummaryTableNodes[1].SelectNodes(@".//tr");
+            for (int i = 1; i < periodSummaryHomeRows.Count - 1; i++)
+            {
+                HtmlNodeCollection periodSummaryHomeRowFields = periodSummaryHomeRows[i].SelectNodes(@".//td");
+                Nhl_Games_Rtss_Summary_PeriodSummary_Item periodSummaryItem = new Nhl_Games_Rtss_Summary_PeriodSummary_Item();
+                periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[0].InnerText);
+                periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[1].InnerText);
+                periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[2].InnerText);
+                periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[3].InnerText);
+                periodSummaryItem.PIM = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[4].InnerText);
+                model.PeriodSummary_Home.Add(periodSummaryItem);
+            }    
 
             #endregion
+
+            //#region Power Play Summary
+
+            //model. = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
+            //model.PeriodSummary_Home = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
+
+            //HtmlNodeCollection periodSummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'BY PERIOD')]]/../..//td[@width='50%']/table");
+
+            //HtmlNodeCollection periodSummaryVisitorRows = periodSummaryTableNodes[0].SelectNodes(@".//tr");
+            //for (int i = 1; i < periodSummaryVisitorRows.Count - 1; i++)
+            //{
+            //    HtmlNodeCollection periodSummaryVisitorRowFields = periodSummaryVisitorRows[i].SelectNodes(@".//td");
+            //    Nhl_Games_Rtss_Summary_PeriodSummary_Item periodSummaryItem = new Nhl_Games_Rtss_Summary_PeriodSummary_Item();
+            //    periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[0].InnerText);
+            //    periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[1].InnerText);
+            //    periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[2].InnerText);
+            //    periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[3].InnerText);
+            //    periodSummaryItem.PIM = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[4].InnerText);
+            //    model.PeriodSummary_Visitor.Add(periodSummaryItem);
+            //}
+
+            //HtmlNodeCollection periodSummaryHomeRows = periodSummaryTableNodes[1].SelectNodes(@".//tr");
+            //for (int i = 1; i < periodSummaryHomeRows.Count - 1; i++)
+            //{
+            //    HtmlNodeCollection periodSummaryHomeRowFields = periodSummaryHomeRows[i].SelectNodes(@".//td");
+            //    Nhl_Games_Rtss_Summary_PeriodSummary_Item periodSummaryItem = new Nhl_Games_Rtss_Summary_PeriodSummary_Item();
+            //    periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[0].InnerText);
+            //    periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[1].InnerText);
+            //    periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[2].InnerText);
+            //    periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[3].InnerText);
+            //    periodSummaryItem.PIM = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[4].InnerText);
+            //    model.PeriodSummary_Home.Add(periodSummaryItem);
+            //}
+
+            //#endregion
 
             return model;
         }
