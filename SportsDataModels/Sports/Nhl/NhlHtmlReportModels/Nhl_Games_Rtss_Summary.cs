@@ -55,10 +55,10 @@ namespace SportsData.Models
         [InverseProperty("Nhl_Games_Rtss_Summary_PeriodSummary_Visitor")]
         public List<Nhl_Games_Rtss_Summary_PeriodSummary_Item> PeriodSummary_Visitor { get; set; }
 
-        [InverseProperty("Nhl_Games_Rtss_Summary_PowerPlaySummary_Home")]
+        //[InverseProperty("Nhl_Games_Rtss_Summary_PowerPlaySummary_Home")]
         public Nhl_Games_Rtss_Summary_PowerPlaySummary_Item PowerPlaySummary_Home { get; set; }
 
-        [InverseProperty("Nhl_Games_Rtss_Summary_PowerPlaySummary_Visitor")]
+        //[InverseProperty("Nhl_Games_Rtss_Summary_PowerPlaySummary_Visitor")]
         public Nhl_Games_Rtss_Summary_PowerPlaySummary_Item PowerPlaySummary_Visitor { get; set; } 
 
         [InverseProperty("Nhl_Games_Rtss_Summary_GoalieSummary_Home")]
@@ -148,11 +148,11 @@ namespace SportsData.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [InverseProperty("PowerPlaySummary_Home")]
-        public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PowerPlaySummary_Home { get; set; }
+        //[InverseProperty("PowerPlaySummary_Home")]
+        //public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PowerPlaySummary_Home { get; set; }
 
-        [InverseProperty("PowerPlaySummary_Visitor")]
-        public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PowerPlaySummary_Visitor { get; set; }
+        //[InverseProperty("PowerPlaySummary_Visitor")]
+        //public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PowerPlaySummary_Visitor { get; set; }
 
         public int PowerPlay5v4Goals { get; set; }
         public int PowerPlay5v4Occurrences { get; set; }

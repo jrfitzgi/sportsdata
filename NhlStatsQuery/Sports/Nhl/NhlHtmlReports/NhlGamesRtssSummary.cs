@@ -372,14 +372,14 @@ namespace SportsData.Nhl
 
             #endregion
 
-            //#region Power Play Summary
+            #region Power Play Summary
 
-            //model. = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
-            //model.PeriodSummary_Home = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
+            model.PowerPlaySummary_Visitor = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
+            model.PowerPlaySummary_Home = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
 
-            //HtmlNodeCollection periodSummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'BY PERIOD')]]/../..//td[@width='50%']/table");
+            HtmlNodeCollection powerPlaySummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'POWER PLAY')]]/../..//td[@width='50%']/table");
 
-            //HtmlNodeCollection periodSummaryVisitorRows = periodSummaryTableNodes[0].SelectNodes(@".//tr");
+            HtmlNodeCollection powerPlaySummaryVisitorRows = powerPlaySummaryTableNodes[0].SelectNodes(@".//tr");
             //for (int i = 1; i < periodSummaryVisitorRows.Count - 1; i++)
             //{
             //    HtmlNodeCollection periodSummaryVisitorRowFields = periodSummaryVisitorRows[i].SelectNodes(@".//td");
@@ -405,7 +405,7 @@ namespace SportsData.Nhl
             //    model.PeriodSummary_Home.Add(periodSummaryItem);
             //}
 
-            //#endregion
+            #endregion
 
             return model;
         }
