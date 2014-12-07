@@ -527,6 +527,23 @@ namespace SportsData.Nhl
 
             #endregion
 
+            #region Goaltender Summary
+
+
+            model.GoalieSummary_Visitor = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
+            model.GoalieSummary_Home = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
+
+            //HtmlNodeCollection powerPlaySummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'POWER PLAY')]]/../..//td[@width='50%']/table");
+
+            //HtmlNodeCollection powerPlaySummaryVisitorRows = powerPlaySummaryTableNodes[0].SelectNodes(@".//tr");
+            //HtmlNodeCollection powerPlaySummaryHomeRows = powerPlaySummaryTableNodes[1].SelectNodes(@".//tr");
+
+            //HtmlNodeCollection powerPlaySummaryVisitorRowFields = powerPlaySummaryVisitorRows[1].SelectNodes(@".//td");
+            //HtmlNodeCollection powerPlaySummaryHomeRowFields = powerPlaySummaryHomeRows[1].SelectNodes(@".//td");
+
+
+            #endregion
+
             return model;
         }
 
