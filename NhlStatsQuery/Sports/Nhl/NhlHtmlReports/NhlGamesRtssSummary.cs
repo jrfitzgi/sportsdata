@@ -535,7 +535,6 @@ namespace SportsData.Nhl
 
             HtmlNodeCollection goaltenderSummaryTableNodes = mainTableNode.SelectSingleNode(@".//td[text()[contains(.,'GOALTENDER SUMMARY')]]/..").NextSibling.NextSibling.SelectNodes(@".//table//tr");
 
-            //int j=2;
             for (int j = 2; j < goaltenderSummaryTableNodes.Count - 1; j++)
             {
                 HtmlNodeCollection goaltenderSummaryRowFields = goaltenderSummaryTableNodes[j].SelectNodes(@".//td");
@@ -543,7 +542,6 @@ namespace SportsData.Nhl
                 if (goaltenderSummaryRowFields[0].InnerText.IndexOf("team totals", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     // Switch and start populating the Home Goalie Summary
-
                     activeGoalieSummary = model.GoalieSummary_Home;
                     j = j + 3;
                     continue;
@@ -607,18 +605,117 @@ namespace SportsData.Nhl
 
                 activeGoalieSummary.Add(goalieItem);
             }
+            
+            #endregion
 
+            HtmlNodeCollection officialsAndStarsTableNodes = mainTableNode.SelectSingleNode(@".//td[text()[contains(.,'OFFICIALS')]]/..").NextSibling.NextSibling.SelectNodes(@"./td/table");
 
-            //HtmlNodeCollection powerPlaySummaryVisitorRows = powerPlaySummaryTableNodes[0].SelectNodes(@".//tr");
-            //HtmlNodeCollection powerPlaySummaryHomeRows = powerPlaySummaryTableNodes[1].SelectNodes(@".//tr");
+            #region Officials
 
-            //HtmlNodeCollection powerPlaySummaryVisitorRowFields = powerPlaySummaryVisitorRows[1].SelectNodes(@".//td");
-            //HtmlNodeCollection powerPlaySummaryHomeRowFields = powerPlaySummaryHomeRows[1].SelectNodes(@".//td");
+            model.Officials = new List<Nhl_Games_Rtss_Summary_Officials_Item>();
+            Nhl_Games_Rtss_Summary_Officials_Item officialsItem;
 
+            HtmlNodeCollection officialsTableRows = officialsAndStarsTableNodes[0].SelectNodes(@"./tbody/tr");
+            HtmlNodeCollection refereesRows = officialsTableRows[1].SelectNodes(@"./td")[0].SelectNodes(@"./table/tbody/tr");
+            HtmlNodeCollection linesmenRows = officialsTableRows[1].SelectNodes(@"./td")[1].SelectNodes(@"./table/tbody/tr");
+
+            for (int i = 0; i < refereesRows.Count; i++)
+            {
+                officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(refereesRows[i].InnerText);
+                officialsItem.OfficialType = Designation.Referee;
+                model.Officials.Add(officialsItem);
+
+            }
+
+            for (int i = 0; i < linesmenRows.Count; i++)
+            {
+                officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(linesmenRows[i].InnerText);
+                officialsItem.OfficialType = Designation.Linesman;
+                model.Officials.Add(officialsItem);
+            }
+
+            if (officialsTableRows.Count >= 4)
+            {
+                HtmlNodeCollection standbyRefereesRows = officialsTableRows[3].SelectNodes(@"./td")[0].SelectNodes(@"./table/tbody/tr");
+                HtmlNodeCollection standbyLinesmenRows = officialsTableRows[3].SelectNodes(@"./td")[1].SelectNodes(@"./table/tbody/tr");
+
+                if (null != standbyRefereesRows)
+                {
+                    for (int i = 0; i < standbyRefereesRows.Count; i++)
+                    {
+                        officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(standbyRefereesRows[i].InnerText);
+                        officialsItem.OfficialType = Designation.StandbyReferee;
+                        model.Officials.Add(officialsItem);
+                    }
+                }
+
+                if (null != standbyLinesmenRows)
+                {
+                    for (int i = 0; i < standbyLinesmenRows.Count; i++)
+                    {
+                        officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(standbyLinesmenRows[i].InnerText);
+                        officialsItem.OfficialType = Designation.StandbyLinesman;
+                        model.Officials.Add(officialsItem);
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Officials
+
+            model.Stars = new List<Nhl_Games_Rtss_Summary_Stars_Item>();
+            Nhl_Games_Rtss_Summary_Stars_Item starsItem;
+
+            HtmlNodeCollection starsRows = officialsAndStarsTableNodes[1].SelectNodes(@".//table//tr");
+
+            if (null != starsRows)
+            {
+                for (int i = 0; i < starsRows.Count; i++)
+                {
+                    starsItem = new Nhl_Games_Rtss_Summary_Stars_Item();
+
+                    HtmlNodeCollection starsRowFields = starsRows[i].SelectNodes(@"./td");
+                    starsItem = new Nhl_Games_Rtss_Summary_Stars_Item();
+                    starsItem.StarNumber = i + 1;
+                    starsItem.Team = starsRowFields[1].InnerText;
+                    starsItem.Position = starsRowFields[2].InnerText;
+
+                    int playerNumber = 0;
+                    string playerName = String.Empty;
+
+                    NhlBaseClass.ParseNameText(starsRowFields[3].InnerText, out playerNumber, out playerName);
+
+                    starsItem.PlayerNumber = playerNumber;
+                    starsItem.Name = playerName;
+                    
+                    model.Stars.Add(starsItem);
+                }
+            }
 
             #endregion
 
             return model;
+        }
+
+        /// <summary>
+        /// The nameText should be the officials number and name. Eg. #40 Steve Kozari
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private static Nhl_Games_Rtss_Summary_Officials_Item ParseOfficialsItem(string nameText)
+        {
+            Nhl_Games_Rtss_Summary_Officials_Item officialsItem = new Nhl_Games_Rtss_Summary_Officials_Item();
+            officialsItem.OfficialType = Designation.None;
+
+            int officialsNumber = 0;
+            string officialsName = String.Empty;
+
+            NhlBaseClass.ParseNameText(nameText, out officialsNumber, out officialsName);
+            officialsItem.Number = officialsNumber;
+            officialsItem.Name = officialsName;
+
+            return officialsItem;
         }
 
         /// <summary>

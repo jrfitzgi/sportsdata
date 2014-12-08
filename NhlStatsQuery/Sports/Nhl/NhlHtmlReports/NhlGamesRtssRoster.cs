@@ -282,26 +282,17 @@ namespace SportsData.Nhl
         private static Nhl_Games_Rtss_RosterParticipantItem ParseOfficial(HtmlNode row)
         {
             HtmlNode columnNode = row.SelectSingleNode(@"./td");
+            string nameText = columnNode.InnerText.Trim();
 
             Nhl_Games_Rtss_RosterParticipantItem official = new Nhl_Games_Rtss_RosterParticipantItem();
             official.ParticipantType = ParticipantType.Official;
 
-            string nameText = columnNode.InnerText.Trim();
-            Regex regex = new Regex(@"(?<number>\d+)(?<name>.*)");
+            int officialsNumber = 0;
+            string officialsName = String.Empty;
+            NhlBaseClass.ParseNameText(nameText, out officialsNumber, out officialsName);
 
-            string number = regex.Match(nameText).Groups["number"].Value;
-            if (String.IsNullOrWhiteSpace(number))
-            {
-                official.Number = 0;
-                official.Name = nameText.Trim();
-            }
-            else
-            {
-                official.Number = Convert.ToInt32(number);
-                official.Name = regex.Match(nameText).Groups["name"].Value.Trim();
-            }
-
-
+            official.Number = officialsNumber;
+            official.Name = officialsName;
 
             return official;
         }

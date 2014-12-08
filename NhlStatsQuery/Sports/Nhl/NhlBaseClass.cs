@@ -248,16 +248,49 @@ namespace SportsData.Nhl
             
         }
 
+        public static void ParseNameText(string nameText, out int number, out string name)
+        {
+            nameText = NhlBaseClass.RemoveWhitespaceCharacters(nameText);
+            nameText = nameText.Trim();
+
+            Regex regex = new Regex(@"(?<number>\d+)(?<name>.*)");
+
+            string numberString = regex.Match(nameText).Groups["number"].Value;
+            if (String.IsNullOrWhiteSpace(numberString))
+            {
+                number = 0;
+                name = nameText.Trim();
+            }
+            else
+            {
+                number = Convert.ToInt32(numberString);
+                name = regex.Match(nameText).Groups["name"].Value.Trim();
+            }
+        }
+
         public static string RemoveAllWhitespace(string text)
         {
             string result = text;
             result = result.Replace(" ", String.Empty);
-            result = result.Replace("\n", String.Empty);
-            result = result.Replace("\t", String.Empty);
+            result = NhlBaseClass.RemoveWhitespaceCharacters(text);
 
             return result;
         }
 
+        /// <summary>
+        /// Removes \n, \t, \r but not spaces
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string RemoveWhitespaceCharacters(string text)
+        {
+            string result = text;
+            result = result.Replace("\n", String.Empty);
+            result = result.Replace("\t", String.Empty);
+            result = result.Replace("\r", String.Empty);
+
+            return result;
+        }
         #endregion
 
         #region Unused Code

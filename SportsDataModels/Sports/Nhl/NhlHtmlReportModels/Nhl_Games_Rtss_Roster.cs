@@ -59,7 +59,9 @@ namespace SportsData.Models
         AssistantCoach,
         Referee,
         Linesman,
-        Standby
+        Standby,
+        StandbyReferee,
+        StandbyLinesman
     }
 
     public class Nhl_Games_Rtss_RosterParticipantItem

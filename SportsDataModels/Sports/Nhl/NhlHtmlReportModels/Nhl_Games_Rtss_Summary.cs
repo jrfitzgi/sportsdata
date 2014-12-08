@@ -241,7 +241,7 @@ namespace SportsData.Models
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_Stars { get; set; }
 
         public int StarNumber { get; set; }
-        public int Team { get; set; }
+        public string Team { get; set; }
         public string Position { get; set; }
         public int PlayerNumber { get; set; }
         public string Name { get; set; }
