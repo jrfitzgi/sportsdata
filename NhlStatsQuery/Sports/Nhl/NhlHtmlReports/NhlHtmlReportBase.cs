@@ -15,6 +15,8 @@ namespace SportsData.Nhl
 {
     public class NhlHtmlReportBase
     {
+        public static string TBODY = "";
+
         /// <summary>
         /// Get the RtssReports for the specified year
         /// </summary>

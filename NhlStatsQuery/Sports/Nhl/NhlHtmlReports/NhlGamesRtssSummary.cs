@@ -95,13 +95,13 @@ namespace SportsData.Nhl
             model.HomeScore = Convert.ToInt32(homeScoreNode.InnerText);
 
             HtmlNode visitorNameNode;
-            if (visitorTableNode.SelectSingleNode(@"./tbody") != null)
+            if (visitorTableNode.SelectSingleNode(String.Format(@".{0}", TBODY)) != null)
             {
-                visitorNameNode = visitorTableNode.SelectNodes(@"./tbody/tr").ElementAt(2).SelectSingleNode(@"./td");
+                visitorNameNode = visitorTableNode.SelectNodes(String.Format(@".{0}/tr", TBODY)).ElementAt(2).SelectSingleNode(@"./td");
             }
             else
             {
-                visitorNameNode = visitorTableNode.SelectNodes(@"./tr").ElementAt(2).SelectSingleNode(@"./td");
+                visitorNameNode = visitorTableNode.SelectNodes(String.Format(@".{0}/tr", TBODY)).ElementAt(2).SelectSingleNode(@"./td");
             }
 
             HtmlNode homeNameNode;
