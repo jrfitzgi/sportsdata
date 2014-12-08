@@ -529,12 +529,89 @@ namespace SportsData.Nhl
 
             #region Goaltender Summary
 
-
             model.GoalieSummary_Visitor = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
             model.GoalieSummary_Home = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
+            List<Nhl_Games_Rtss_Summary_GoalieSummary_Item> activeGoalieSummary = model.GoalieSummary_Visitor;
 
-            //HtmlNodeCollection powerPlaySummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'POWER PLAY')]]/../..//td[@width='50%']/table");
+            HtmlNodeCollection goaltenderSummaryTableNodes = mainTableNode.SelectSingleNode(@".//td[text()[contains(.,'GOALTENDER SUMMARY')]]/..") .NextSibling.NextSibling.SelectNodes(@".//table//tr");
 
+            //int j=2;
+            for (int j = 2;  j < goaltenderSummaryTableNodes.Count-1; j++)
+            {
+                HtmlNodeCollection goaltenderSummaryRowFields = goaltenderSummaryTableNodes[j].SelectNodes(@".//td");
+                
+                if (goaltenderSummaryRowFields[0].InnerText.IndexOf("team totals", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    // Switch and start populating the Home Goalie Summary
+
+                    activeGoalieSummary = model.GoalieSummary_Home;
+                    j = j + 3;
+                    continue;
+                }
+                
+                Nhl_Games_Rtss_Summary_GoalieSummary_Item goalieItem = new Nhl_Games_Rtss_Summary_GoalieSummary_Item();
+
+                // If there was an empty net, there is one fewer columns so need to change the base index
+                int offset = 0;
+                if (goaltenderSummaryRowFields[1].InnerText.IndexOf("empty net", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    offset = -1;
+                }
+                else
+                {
+                    goalieItem.Number = NhlBaseClass.ConvertStringToInt(goaltenderSummaryRowFields[0].InnerText);
+
+                }
+
+                string goalieName = goaltenderSummaryRowFields[2 + offset].InnerHtml;
+                
+                if (goalieName.IndexOf("(W)", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    goalieItem.WinOrLoss = "W";
+                    goalieName = goalieName.Replace("(W)", String.Empty);
+                    goalieName = goalieName.Replace("(w)", String.Empty);
+                    goalieName = goalieName.Trim();
+                }
+
+                if (goalieName.IndexOf("(L)", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    goalieItem.WinOrLoss = "L";
+                    goalieName = goalieName.Replace("(L)", String.Empty);
+                    goalieName = goalieName.Replace("(l)", String.Empty);
+                    goalieName = goalieName.Trim();
+                }
+
+                goalieItem.Name = goalieName;
+
+                goalieItem.ToiInSecondsEvenStrength = NhlBaseClass.ConvertMinutesToSeconds(goaltenderSummaryRowFields[3 + offset].InnerText);
+                goalieItem.ToiInSecondsPowerPlay = NhlBaseClass.ConvertMinutesToSeconds(goaltenderSummaryRowFields[4 + offset].InnerText);
+                goalieItem.ToiInSecondsShortHanded = NhlBaseClass.ConvertMinutesToSeconds(goaltenderSummaryRowFields[5 + offset].InnerText);
+                goalieItem.ToiInSecondsTotal = NhlBaseClass.ConvertMinutesToSeconds(goaltenderSummaryRowFields[6 + offset].InnerText);
+
+                goalieItem.GoaliePeriodSummary = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item.Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item>();
+
+                int period = 1;
+                for (int i = 7; i < goaltenderSummaryRowFields.Count - 1; i++)
+                {
+                    Nhl_Games_Rtss_Summary_GoalieSummary_Item.Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item goaliePeriodItem = new Nhl_Games_Rtss_Summary_GoalieSummary_Item.Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item();
+                    goaliePeriodItem.Period = period;
+                    period++;
+
+                    string goaliePeriodItemText = goaltenderSummaryRowFields[i + offset].InnerText;
+                    if (goaliePeriodItemText.IndexOf('-') >= 0)
+                    {
+                        goaliePeriodItem.GoalsAgainst = NhlBaseClass.ConvertStringToInt(goaliePeriodItemText.Split('-')[0]);
+                        goaliePeriodItem.ShotsAgainst = NhlBaseClass.ConvertStringToInt(goaliePeriodItemText.Split('-')[1]);
+                    }
+
+                    goalieItem.GoaliePeriodSummary.Add(goaliePeriodItem);
+
+                }
+
+                activeGoalieSummary.Add(goalieItem);
+            }
+
+            
             //HtmlNodeCollection powerPlaySummaryVisitorRows = powerPlaySummaryTableNodes[0].SelectNodes(@".//tr");
             //HtmlNodeCollection powerPlaySummaryHomeRows = powerPlaySummaryTableNodes[1].SelectNodes(@".//tr");
 

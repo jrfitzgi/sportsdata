@@ -193,6 +193,7 @@ namespace SportsData.Models
 
         public int Number { get; set; }
         public string Name { get; set; }
+        public string WinOrLoss { get; set; }
         public int ToiInSecondsEvenStrength { get; set; }
         public int ToiInSecondsPowerPlay { get; set; }
         public int ToiInSecondsShortHanded { get; set; }
