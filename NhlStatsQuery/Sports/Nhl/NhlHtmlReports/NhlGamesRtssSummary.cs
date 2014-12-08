@@ -150,11 +150,11 @@ namespace SportsData.Nhl
             Match attendanceMatch = Regex.Match(attendanceAndArenaText, @"\d+");
             string attendanceAsString = String.IsNullOrWhiteSpace(attendanceMatch.Value) ? "0" : attendanceMatch.Value;
             model.Attendance = Convert.ToInt32(attendanceAsString);
-            
+
             // Find 'at' and assume the arena name follows
             string token = " at ";
             int tokenIndex = attendanceAndArenaText.IndexOf(token, StringComparison.InvariantCultureIgnoreCase);
-            
+
             // If 'at' can't be found, try '@'
             if (tokenIndex < 0)
             {
@@ -205,7 +205,7 @@ namespace SportsData.Nhl
                 string scoringSummaryOnIceTeam1 = scoringSummaryTableTeam1Node.InnerText.Substring(0, scoringSummaryTableTeam1Node.InnerText.IndexOf(' '));
                 string scoringSummaryOnIceTeam2 = scoringSummaryTableTeam2Node.InnerText.Substring(0, scoringSummaryTableTeam2Node.InnerText.IndexOf(' '));
 
-                for (int i = 1; i < scoringSummaryTableRows.Count; i++ )
+                for (int i = 1; i < scoringSummaryTableRows.Count; i++)
                 {
                     HtmlNodeCollection scoringSummaryRowFields = scoringSummaryTableRows[i].SelectNodes(@".//td");
                     Nhl_Games_Rtss_Summary_ScoringSummary_Item scoringSummaryItem = new Nhl_Games_Rtss_Summary_ScoringSummary_Item();
@@ -290,7 +290,7 @@ namespace SportsData.Nhl
             for (int i = 1; i < visitorPenaltySummaryNodes.Count; i++)
             {
                 Nhl_Games_Rtss_Summary_PenaltySummary_Item penaltySummaryItem = new Nhl_Games_Rtss_Summary_PenaltySummary_Item();
-                
+
                 HtmlNodeCollection penaltySummaryRowFields = visitorPenaltySummaryNodes[i].SelectNodes(@"./td");
 
                 penaltySummaryItem.PenaltyNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[0].InnerText);
@@ -368,7 +368,7 @@ namespace SportsData.Nhl
                 periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[3].InnerText);
                 periodSummaryItem.PIM = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[4].InnerText);
                 model.PeriodSummary_Home.Add(periodSummaryItem);
-            }    
+            }
 
             #endregion
 
@@ -397,7 +397,7 @@ namespace SportsData.Nhl
                 int dash = powerPlayText.IndexOf('-');
                 int slash = powerPlayText.IndexOf('/');
                 model.PowerPlaySummary_Visitor.PowerPlay5v4Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
-                model.PowerPlaySummary_Visitor.PowerPlay5v4Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash+1, slash-dash-1));
+                model.PowerPlaySummary_Visitor.PowerPlay5v4Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
                 model.PowerPlaySummary_Visitor.PowerPlay5v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
             }
             powerPlayText = powerPlaySummaryVisitorRowFields[1].InnerText;
@@ -522,7 +522,7 @@ namespace SportsData.Nhl
                 model.PowerPlaySummary_Home.EvenStrength3v3Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
                 model.PowerPlaySummary_Home.EvenStrength3v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
             }
-            
+
 
 
             #endregion
@@ -533,13 +533,13 @@ namespace SportsData.Nhl
             model.GoalieSummary_Home = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
             List<Nhl_Games_Rtss_Summary_GoalieSummary_Item> activeGoalieSummary = model.GoalieSummary_Visitor;
 
-            HtmlNodeCollection goaltenderSummaryTableNodes = mainTableNode.SelectSingleNode(@".//td[text()[contains(.,'GOALTENDER SUMMARY')]]/..") .NextSibling.NextSibling.SelectNodes(@".//table//tr");
+            HtmlNodeCollection goaltenderSummaryTableNodes = mainTableNode.SelectSingleNode(@".//td[text()[contains(.,'GOALTENDER SUMMARY')]]/..").NextSibling.NextSibling.SelectNodes(@".//table//tr");
 
             //int j=2;
-            for (int j = 2;  j < goaltenderSummaryTableNodes.Count-1; j++)
+            for (int j = 2; j < goaltenderSummaryTableNodes.Count - 1; j++)
             {
                 HtmlNodeCollection goaltenderSummaryRowFields = goaltenderSummaryTableNodes[j].SelectNodes(@".//td");
-                
+
                 if (goaltenderSummaryRowFields[0].InnerText.IndexOf("team totals", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     // Switch and start populating the Home Goalie Summary
@@ -548,7 +548,7 @@ namespace SportsData.Nhl
                     j = j + 3;
                     continue;
                 }
-                
+
                 Nhl_Games_Rtss_Summary_GoalieSummary_Item goalieItem = new Nhl_Games_Rtss_Summary_GoalieSummary_Item();
 
                 // If there was an empty net, there is one fewer columns so need to change the base index
@@ -564,21 +564,18 @@ namespace SportsData.Nhl
                 }
 
                 string goalieName = goaltenderSummaryRowFields[2 + offset].InnerHtml;
-                
-                if (goalieName.IndexOf("(W)", StringComparison.InvariantCultureIgnoreCase) >= 0)
-                {
-                    goalieItem.WinOrLoss = "W";
-                    goalieName = goalieName.Replace("(W)", String.Empty);
-                    goalieName = goalieName.Replace("(w)", String.Empty);
-                    goalieName = goalieName.Trim();
-                }
 
-                if (goalieName.IndexOf("(L)", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                string[] goalieOutcomes = { "W", "L", "OT" };
+
+                foreach (string goalieOutcome in goalieOutcomes)
                 {
-                    goalieItem.WinOrLoss = "L";
-                    goalieName = goalieName.Replace("(L)", String.Empty);
-                    goalieName = goalieName.Replace("(l)", String.Empty);
-                    goalieName = goalieName.Trim();
+                    if (goalieName.IndexOf("(" + goalieOutcome + ")", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        goalieItem.WinOrLoss = goalieOutcome;
+                        goalieName = goalieName.Replace("(" + goalieOutcome.ToUpper() + ")", String.Empty);
+                        goalieName = goalieName.Replace("(" + goalieOutcome.ToLower() + ")", String.Empty);
+                        goalieName = goalieName.Trim();
+                    }
                 }
 
                 goalieItem.Name = goalieName;
@@ -611,7 +608,7 @@ namespace SportsData.Nhl
                 activeGoalieSummary.Add(goalieItem);
             }
 
-            
+
             //HtmlNodeCollection powerPlaySummaryVisitorRows = powerPlaySummaryTableNodes[0].SelectNodes(@".//tr");
             //HtmlNodeCollection powerPlaySummaryHomeRows = powerPlaySummaryTableNodes[1].SelectNodes(@".//tr");
 
