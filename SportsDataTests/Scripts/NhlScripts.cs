@@ -19,7 +19,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesSummary()
         {
-            DateTime fromDate = DateTime.Now.AddDays(-14);
+            DateTime fromDate = DateTime.Now.AddDays(-2);
             NhlGamesSummary.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 

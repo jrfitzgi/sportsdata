@@ -124,7 +124,7 @@ namespace SportsData.Nhl
 
         public static void GetAndStoreHtmlBlob(HtmlBlobType htmlBlobType, string htmlBlobId, Uri uri, [Optional] bool forceOverwrite)
         {
-            if (HtmlBlob.BlobExists(htmlBlobType, htmlBlobId, uri) && forceOverwrite == false)
+            if (forceOverwrite == false && HtmlBlob.BlobExists(htmlBlobType, htmlBlobId, uri))
             {
                 // Blob exists and we don't want to force an overwrite so do nothing
                 return;
@@ -146,6 +146,8 @@ namespace SportsData.Nhl
             try
             {
                 HttpClient httpClient = new HttpClient();
+                //httpClient.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+                //httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36");
                 Task<string> response = httpClient.GetStringAsync(uri);
                 responseString = response.Result;
             }
