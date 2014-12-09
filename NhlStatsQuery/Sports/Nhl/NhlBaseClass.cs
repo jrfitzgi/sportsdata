@@ -205,28 +205,13 @@ namespace SportsData.Nhl
             }
         }
 
-        public static int ConvertStringToInt(string s)
-        {
-            int result;
-            bool success = Int32.TryParse(s, out result);
-
-            if (!success)
-            {
-                return 0;
-            }
-            else
-            {
-                return result;
-            }
-        }
-
         /// <summary>
         /// Convert minutes in mm:ss format to seconds
         /// </summary>
         public static int ConvertMinutesToSeconds(string text)
         {
             string[] parts = text.Split(':');
-            
+
             if (null == parts || parts.Length == 0)
             {
                 return 0;
@@ -245,7 +230,35 @@ namespace SportsData.Nhl
             {
                 throw new ArgumentException(String.Format("The string {0} could not be converted to seconds", text));
             }
-            
+
+        }
+
+        public static int ConvertStringToPeriod(string s)
+        {
+            s = NhlBaseClass.RemoveAllWhitespace(s);
+            if (s.Equals("OT", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return 4;
+            }
+            else
+            {
+                return NhlBaseClass.ConvertStringToInt(s);
+            }
+        }
+
+        public static int ConvertStringToInt(string s)
+        {
+            int result;
+            bool success = Int32.TryParse(s, out result);
+
+            if (!success)
+            {
+                return 0;
+            }
+            else
+            {
+                return result;
+            }
         }
 
         public static void ParseNameText(string nameText, out int number, out string name)

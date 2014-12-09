@@ -15,6 +15,9 @@ namespace SportsData.Nhl
 {
     public class NhlHtmlReportBase
     {
+        /// <summary>
+        /// Set this to "/tbody" if testing a downloaded file that contains the <tbody> tag
+        /// </summary>
         public static string TBODY = "";
 
         /// <summary>

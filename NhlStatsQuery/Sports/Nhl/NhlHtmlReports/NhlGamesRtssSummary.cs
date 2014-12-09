@@ -94,25 +94,8 @@ namespace SportsData.Nhl
             model.VisitorScore = Convert.ToInt32(visitorScoreNode.InnerText);
             model.HomeScore = Convert.ToInt32(homeScoreNode.InnerText);
 
-            HtmlNode visitorNameNode;
-            if (visitorTableNode.SelectSingleNode(String.Format(@".{0}", TBODY)) != null)
-            {
-                visitorNameNode = visitorTableNode.SelectNodes(String.Format(@".{0}/tr", TBODY)).ElementAt(2).SelectSingleNode(@"./td");
-            }
-            else
-            {
-                visitorNameNode = visitorTableNode.SelectNodes(String.Format(@".{0}/tr", TBODY)).ElementAt(2).SelectSingleNode(@"./td");
-            }
-
-            HtmlNode homeNameNode;
-            if (homeTableNode.SelectSingleNode(@"./tbody") != null)
-            {
-                homeNameNode = homeTableNode.SelectNodes(@"./tbody/tr").ElementAt(2).SelectSingleNode(@"./td");
-            }
-            else
-            {
-                homeNameNode = homeTableNode.SelectNodes(@"./tr").ElementAt(2).SelectSingleNode(@"./td");
-            }
+            HtmlNode visitorNameNode = visitorTableNode.SelectNodes(String.Format(@".{0}/tr", TBODY)).ElementAt(2).SelectSingleNode(@"./td");
+            HtmlNode homeNameNode = homeTableNode.SelectNodes(String.Format(@".{0}/tr", TBODY)).ElementAt(2).SelectSingleNode(@"./td");
 
             string[] visitorInfo = visitorNameNode.InnerHtml.RemoveSpecialWhitespaceCharacters().Split(new string[] { "<br>" }, StringSplitOptions.None);
             model.Visitor = visitorInfo.ElementAt(0);
@@ -209,8 +192,8 @@ namespace SportsData.Nhl
                 {
                     HtmlNodeCollection scoringSummaryRowFields = scoringSummaryTableRows[i].SelectNodes(@".//td");
                     Nhl_Games_Rtss_Summary_ScoringSummary_Item scoringSummaryItem = new Nhl_Games_Rtss_Summary_ScoringSummary_Item();
-                    scoringSummaryItem.GoalNumber = Convert.ToInt32(scoringSummaryRowFields[0].InnerText);
-                    scoringSummaryItem.Period = Convert.ToInt32(scoringSummaryRowFields[1].InnerText);
+                    scoringSummaryItem.GoalNumber = NhlBaseClass.ConvertStringToInt(scoringSummaryRowFields[0].InnerText);
+                    scoringSummaryItem.Period = NhlBaseClass.ConvertStringToPeriod(scoringSummaryRowFields[1].InnerText);
                     scoringSummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(scoringSummaryRowFields[2].InnerText);
                     scoringSummaryItem.Strength = scoringSummaryRowFields[3].InnerText;
                     scoringSummaryItem.Team = scoringSummaryRowFields[4].InnerText;
@@ -223,16 +206,32 @@ namespace SportsData.Nhl
                     {
                         scoringSummaryItem.GoalScorerPlayerNumber = NhlBaseClass.ConvertStringToInt(goalScorerText.Substring(0, index1));
                     }
+
                     if (index2 >= index1 + 1)
                     {
                         scoringSummaryItem.GoalScorer = goalScorerText.Substring(index1 + 1, index2 - index1 - 1);
                     }
+                    else
+                    {
+                        scoringSummaryItem.GoalScorer = goalScorerText;
+                    }
+
                     if (index3 >= index2 + 1)
                     {
                         scoringSummaryItem.GoalScorerGoalNumber = NhlBaseClass.ConvertStringToInt(goalScorerText.Substring(index2 + 1, index3 - index2 - 1));
                     }
 
+
+                    // If this was a penalty shot, there is one less column after Assist1
+                    int penaltyShotOffset = 0;
+
                     string assist1Text = scoringSummaryRowFields[6].InnerText;
+
+                    if (assist1Text.IndexOf("Penalty Shot", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        penaltyShotOffset = -1;
+                    }
+                    
                     index1 = assist1Text.IndexOf(' ');
                     index2 = assist1Text.IndexOf('(');
                     index3 = assist1Text.IndexOf(')');
@@ -244,12 +243,17 @@ namespace SportsData.Nhl
                     {
                         scoringSummaryItem.Assist1 = assist1Text.Substring(index1 + 1, index2 - index1 - 1);
                     }
+                    else
+                    {
+                        scoringSummaryItem.Assist1 = assist1Text;
+                    }
+
                     if (index3 >= index2 + 1)
                     {
                         scoringSummaryItem.Assist1AssistNumber = NhlBaseClass.ConvertStringToInt(assist1Text.Substring(index2 + 1, index3 - index2 - 1));
                     }
 
-                    string assist2Text = scoringSummaryRowFields[7].InnerText;
+                    string assist2Text = scoringSummaryRowFields[7 + penaltyShotOffset].InnerText;
                     index1 = assist2Text.IndexOf(' ');
                     index2 = assist2Text.IndexOf('(');
                     index3 = assist2Text.IndexOf(')');
@@ -257,17 +261,23 @@ namespace SportsData.Nhl
                     {
                         scoringSummaryItem.Assist2PlayerNumber = NhlBaseClass.ConvertStringToInt(assist2Text.Substring(0, index1));
                     }
+
                     if (index2 >= index1 + 1)
                     {
                         scoringSummaryItem.Assist2 = assist2Text.Substring(index1 + 1, index2 - index1 - 1);
                     }
+                    else
+                    {
+                        scoringSummaryItem.Assist2 = assist2Text;
+                    }
+
                     if (index3 >= index2 + 1)
                     {
                         scoringSummaryItem.Assist2AssistNumber = NhlBaseClass.ConvertStringToInt(assist2Text.Substring(index2 + 1, index3 - index2 - 1));
                     }
 
-                    scoringSummaryItem.VisitorOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[8].InnerText);
-                    scoringSummaryItem.HomeOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[9].InnerText);
+                    scoringSummaryItem.VisitorOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[8 + penaltyShotOffset].InnerText);
+                    scoringSummaryItem.HomeOnIce = NhlBaseClass.RemoveAllWhitespace(scoringSummaryRowFields[9 + penaltyShotOffset].InnerText);
 
                     model.ScoringSummary.Add(scoringSummaryItem);
 
@@ -284,8 +294,8 @@ namespace SportsData.Nhl
             // Get the 4 child tables that have width=50%
             HtmlNodeCollection penaltySummaryTableNodes = mainTableNode.SelectNodes(@".//table[@id='PenaltySummary']//table//table//td[@width='50%']/table");
 
-            HtmlNodeCollection visitorPenaltySummaryNodes = penaltySummaryTableNodes[0].SelectNodes(@"./tbody/tr");
-            HtmlNodeCollection homePenaltySummaryNodes = penaltySummaryTableNodes[1].SelectNodes(@"./tbody/tr");
+            HtmlNodeCollection visitorPenaltySummaryNodes = penaltySummaryTableNodes[0].SelectNodes(String.Format(@".{0}/tr", TBODY));
+            HtmlNodeCollection homePenaltySummaryNodes = penaltySummaryTableNodes[1].SelectNodes(String.Format(@".{0}/tr", TBODY));
 
             for (int i = 1; i < visitorPenaltySummaryNodes.Count; i++)
             {
@@ -332,8 +342,8 @@ namespace SportsData.Nhl
             }
 
             // Ignore these sections. They can be calculated by Penalty Summary and Power Play sections.
-            //HtmlNodeCollection visitorPenaltySummaryTotalsNodes = penaltySummaryTableNodes[2].SelectNodes(@"./tbody/tr");
-            //HtmlNodeCollection homePenaltySummaryTotalsNodes = penaltySummaryTableNodes[3].SelectNodes(@"./tbody/tr"); 
+            //HtmlNodeCollection visitorPenaltySummaryTotalsNodes = penaltySummaryTableNodes[2].SelectNodes(String.Format(@".{0}/tr", TBODY));
+            //HtmlNodeCollection homePenaltySummaryTotalsNodes = penaltySummaryTableNodes[3].SelectNodes(String.Format(@".{0}/tr", TBODY)); 
 
             #endregion
 
@@ -615,9 +625,9 @@ namespace SportsData.Nhl
             model.Officials = new List<Nhl_Games_Rtss_Summary_Officials_Item>();
             Nhl_Games_Rtss_Summary_Officials_Item officialsItem;
 
-            HtmlNodeCollection officialsTableRows = officialsAndStarsTableNodes[0].SelectNodes(@"./tbody/tr");
-            HtmlNodeCollection refereesRows = officialsTableRows[1].SelectNodes(@"./td")[0].SelectNodes(@"./table/tbody/tr");
-            HtmlNodeCollection linesmenRows = officialsTableRows[1].SelectNodes(@"./td")[1].SelectNodes(@"./table/tbody/tr");
+            HtmlNodeCollection officialsTableRows = officialsAndStarsTableNodes[0].SelectNodes(String.Format(@".{0}/tr", TBODY));
+            HtmlNodeCollection refereesRows = officialsTableRows[1].SelectNodes(@"./td")[0].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
+            HtmlNodeCollection linesmenRows = officialsTableRows[1].SelectNodes(@"./td")[1].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
 
             for (int i = 0; i < refereesRows.Count; i++)
             {
@@ -636,8 +646,8 @@ namespace SportsData.Nhl
 
             if (officialsTableRows.Count >= 4)
             {
-                HtmlNodeCollection standbyRefereesRows = officialsTableRows[3].SelectNodes(@"./td")[0].SelectNodes(@"./table/tbody/tr");
-                HtmlNodeCollection standbyLinesmenRows = officialsTableRows[3].SelectNodes(@"./td")[1].SelectNodes(@"./table/tbody/tr");
+                HtmlNodeCollection standbyRefereesRows = officialsTableRows[3].SelectNodes(@"./td")[0].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
+                HtmlNodeCollection standbyLinesmenRows = officialsTableRows[3].SelectNodes(@"./td")[1].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
 
                 if (null != standbyRefereesRows)
                 {
