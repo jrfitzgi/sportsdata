@@ -39,8 +39,9 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtssSummary()
         {
-            DateTime fromDate = DateTime.Now.AddDays(-100);
-            NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
+            //DateTime fromDate = DateTime.Now.AddDays(-100);
+            //NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
+            NhlGamesRtssSummary.UpdateSeason(year: 2014, forceOverwrite: true);
         }
 
         /// <summary>
