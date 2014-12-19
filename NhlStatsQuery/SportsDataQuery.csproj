@@ -124,7 +124,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="WebUpdate.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SportsDataModels\SportsDataModels.csproj">
       <Project>{20b982a7-6b2f-40f3-8b98-6c4c887860f1}</Project>

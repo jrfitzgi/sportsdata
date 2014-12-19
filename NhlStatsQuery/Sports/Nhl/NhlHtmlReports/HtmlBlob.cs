@@ -109,9 +109,15 @@ namespace SportsData.Nhl
                           select m).ToList();
             }
 
-            Dictionary<Uri, string> items = new Dictionary<Uri, string>();
-            models.ForEach(m => items.Add(new Uri(m.RosterLink), m.Id.ToString()));
-            HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, items, forceOverwrite);
+            // Game Summary
+            Dictionary<Uri, string> summaryItems = new Dictionary<Uri, string>();
+            models.ForEach(m => summaryItems.Add(new Uri(m.GameLink), m.Id.ToString()));
+            HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlGame, summaryItems, forceOverwrite);
+
+            // Roster
+            Dictionary<Uri, string> rosterItems = new Dictionary<Uri, string>();
+            models.ForEach(m => rosterItems.Add(new Uri(m.RosterLink), m.Id.ToString()));
+            HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, rosterItems, forceOverwrite);
         }
 
         public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, Dictionary<Uri, string> items, [Optional] bool forceOverwrite)
