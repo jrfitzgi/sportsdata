@@ -63,7 +63,7 @@ namespace SportsData.Controllers
 
             if (this.IsKeyValid())
             {
-                results.Add("NhlGamesRtss", this.Update(delegate() { SportsData.Nhl.NhlGamesRtss.GetNewResultsOnly(saveToDb: true); }));
+                //results.Add("NhlGamesRtss", this.Update(delegate() { SportsData.Nhl.NhlGamesRtss.GetNewResultsOnly(saveToDb: true); }));
                 results.Add("HtmlBlob", this.Update(delegate() { HtmlBlob.UpdateSeason(forceOverwrite: false); }));
             }
 

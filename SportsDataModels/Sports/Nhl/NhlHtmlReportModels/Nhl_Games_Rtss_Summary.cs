@@ -85,7 +85,7 @@ namespace SportsData.Models
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_ScoringSummary { get; set; }
 
         public int GoalNumber { get; set; }
-        public int Period { get; set; }
+        public string Period { get; set; }
         public int TimeInSeconds { get; set; }
         public string Strength { get; set; }
         public string Team { get; set; }

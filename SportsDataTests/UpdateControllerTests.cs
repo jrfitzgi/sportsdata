@@ -17,7 +17,7 @@ namespace SportsDataTests
         public void UpdateControllerTest()
         {
             bool useLocalhost = true;
-            string result = WebUpdate.Update("AllNhl", useLocalhost);
+            string result = WebUpdate.Update("NhlGamesSummary", useLocalhost);
         }
     }
 }

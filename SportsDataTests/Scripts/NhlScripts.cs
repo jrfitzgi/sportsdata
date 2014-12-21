@@ -39,9 +39,9 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtssSummary()
         {
-            //DateTime fromDate = DateTime.Now.AddDays(-100);
-            //NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
-            NhlGamesRtssSummary.UpdateSeason(year: 2014, forceOverwrite: true);
+            DateTime fromDate = DateTime.Now.AddDays(-10);
+            NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: false, fromDate: fromDate);
+            //NhlGamesRtssSummary.UpdateSeason(year: 2014, forceOverwrite: true);
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtssRoster()
         {
-            //NhlHtmlReportRoster.UpdateSeason(year: 2008, forceOverwrite: true);
-            DateTime fromDate = DateTime.Now.AddDays(-2);
-            NhlGamesRtssRoster.UpdateSeason(year: 2015, fromDate: fromDate, forceOverwrite: false);
+            NhlGamesRtssRoster.UpdateSeason(year: 2013, forceOverwrite: true);
+            //DateTime fromDate = DateTime.Now.AddDays(-2);
+            //NhlGamesRtssRoster.UpdateSeason(year: 2015, fromDate: fromDate, forceOverwrite: false);
         }
 
         /// <summary>

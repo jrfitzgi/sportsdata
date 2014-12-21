@@ -109,15 +109,26 @@ namespace SportsData.Nhl
                           select m).ToList();
             }
 
-            // Game Summary
+            // Retrieve the links of the blobs
             Dictionary<Uri, string> summaryItems = new Dictionary<Uri, string>();
-            models.ForEach(m => summaryItems.Add(new Uri(m.GameLink), m.Id.ToString()));
-            HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlGame, summaryItems, forceOverwrite);
-
-            // Roster
             Dictionary<Uri, string> rosterItems = new Dictionary<Uri, string>();
-            models.ForEach(m => rosterItems.Add(new Uri(m.RosterLink), m.Id.ToString()));
+            foreach (Nhl_Games_Rtss m in models)
+            {
+                // Game Summary
+                if (Uri.IsWellFormedUriString(m.GameLink, UriKind.Absolute))
+                {
+                    summaryItems.Add(new Uri(m.GameLink), m.Id.ToString());
+                }
+
+                // Roster
+                if (Uri.IsWellFormedUriString(m.RosterLink, UriKind.Absolute))
+                {
+                    rosterItems.Add(new Uri(m.RosterLink), m.Id.ToString());
+                }
+            }
+            HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlGame, summaryItems, forceOverwrite);
             HtmlBlob.GetAndStoreHtmlBlobs(HtmlBlobType.NhlRoster, rosterItems, forceOverwrite);
+
         }
 
         public static void GetAndStoreHtmlBlobs(HtmlBlobType htmlBlobType, Dictionary<Uri, string> items, [Optional] bool forceOverwrite)
@@ -210,10 +221,10 @@ namespace SportsData.Nhl
                 // This method will not do anything if the blob already exists
                 HtmlBlob.GetAndStoreHtmlBlob(htmlBlobType, htmlBlobId, uri);
             }
-            
+
             string blobName = HtmlBlob.ConstructBlobName(htmlBlobType, htmlBlobId, uri);
             CloudBlockBlob cloudBlockBlob = HtmlBlob.CloudBlobContainer.GetBlockBlobReference(blobName);
-            
+
             string result = null;
 
             try

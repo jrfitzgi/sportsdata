@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using EntityFramework.BulkInsert.Extensions;
 using HtmlAgilityPack;
 using SportsData;
 using SportsData.Models;
@@ -19,7 +21,7 @@ namespace SportsData.Nhl
         public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
         {
             // Get the RtssReports for the specified year
-            List<Nhl_Games_Rtss> models = NhlHtmlReportBase.GetRtssReports(year);
+            List<Nhl_Games_Rtss> models = NhlHtmlReportBase.GetRtssReports(year, fromDate);
             List<Nhl_Games_Rtss_Summary> existingModels = null;
             if (forceOverwrite == false)
             {
@@ -53,11 +55,42 @@ namespace SportsData.Nhl
             // Save the reports to the db
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.Nhl_Games_Rtss_Summary_DbSet.AddOrUpdate<Nhl_Games_Rtss_Summary>(
-                    m => m.NhlRtssReportModelId,
-                    results.ToArray());
+                Console.WriteLine("Start saving {0} to {1}", results.Count, db.Database.Connection.ConnectionString);
+
+                db.Configuration.AutoDetectChangesEnabled = false;
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                int counter = 0;
+                int totalCounter = 0;
+                int batchSize = 10;
+                foreach (var model in results)
+                {
+                    counter++;
+                    totalCounter++;
+
+                    if (model.Id != 0)
+                    {
+                        db.Nhl_Games_Rtss_Summary_DbSet.Attach(model);
+                        db.Entry(model).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.Entry(model).State = EntityState.Added;
+                    }
+
+                    if (counter >= batchSize)
+                    {
+                        db.SaveChanges();
+                        counter = 0;
+
+                        Console.WriteLine("Saved {0} of {1}", totalCounter, results.Count);
+                    }
+                }
+
                 db.SaveChanges();
+                Console.WriteLine("Saved {0} of {1}", totalCounter, results.Count);
             }
+
         }
 
         public static Nhl_Games_Rtss_Summary ParseHtmlBlob(int rtssReportId, string html)
@@ -193,7 +226,8 @@ namespace SportsData.Nhl
                     HtmlNodeCollection scoringSummaryRowFields = scoringSummaryTableRows[i].SelectNodes(@".//td");
                     Nhl_Games_Rtss_Summary_ScoringSummary_Item scoringSummaryItem = new Nhl_Games_Rtss_Summary_ScoringSummary_Item();
                     scoringSummaryItem.GoalNumber = NhlBaseClass.ConvertStringToInt(scoringSummaryRowFields[0].InnerText);
-                    scoringSummaryItem.Period = NhlBaseClass.ConvertStringToPeriod(scoringSummaryRowFields[1].InnerText);
+                    //scoringSummaryItem.Period = NhlBaseClass.ConvertStringToPeriod(scoringSummaryRowFields[1].InnerText);
+                    scoringSummaryItem.Period = scoringSummaryRowFields[1].InnerText;
                     scoringSummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(scoringSummaryRowFields[2].InnerText);
                     scoringSummaryItem.Strength = scoringSummaryRowFields[3].InnerText;
                     scoringSummaryItem.Team = scoringSummaryRowFields[4].InnerText;
@@ -635,7 +669,7 @@ namespace SportsData.Nhl
             HtmlNodeCollection refereesRows = officialsTableRows[1].SelectNodes(@"./td")[0].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
             HtmlNodeCollection linesmenRows = officialsTableRows[1].SelectNodes(@"./td")[1].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
 
-            for (int i = 0; i < refereesRows.Count; i++)
+            for (int i = 0; i < (refereesRows == null ? 0 : refereesRows.Count); i++)
             {
                 officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(refereesRows[i].InnerText);
                 officialsItem.OfficialType = Designation.Referee;
@@ -643,7 +677,7 @@ namespace SportsData.Nhl
 
             }
 
-            for (int i = 0; i < linesmenRows.Count; i++)
+            for (int i = 0; i < (linesmenRows == null ? 0 : linesmenRows.Count); i++)
             {
                 officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(linesmenRows[i].InnerText);
                 officialsItem.OfficialType = Designation.Linesman;
@@ -678,7 +712,7 @@ namespace SportsData.Nhl
 
             #endregion
 
-            #region Officials
+            #region Stars
 
             model.Stars = new List<Nhl_Games_Rtss_Summary_Stars_Item>();
             Nhl_Games_Rtss_Summary_Stars_Item starsItem;
@@ -687,7 +721,7 @@ namespace SportsData.Nhl
 
             if (null != starsRows)
             {
-                for (int i = 0; i < starsRows.Count; i++)
+                for (int i = 0; i < (starsRows == null ? 0 : starsRows.Count); i++)
                 {
                     starsItem = new Nhl_Games_Rtss_Summary_Stars_Item();
 

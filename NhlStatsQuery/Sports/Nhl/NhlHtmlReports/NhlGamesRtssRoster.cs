@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.Data.Objects;
+//using System.Data.Objects;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -57,10 +57,17 @@ namespace SportsData.Nhl
             using (SportsDataContext db = new SportsDataContext())
             {
                 int counter = 0;
-                int counterMax = 100;
+                int totalCounter = 0;
+                int batchSize = 10;
                 foreach (Nhl_Games_Rtss_Roster model in results)
                 {
+                    Console.WriteLine("Start saving {0} to {1}", results.Count, db.Database.Connection.ConnectionString);
+
+                    db.Configuration.AutoDetectChangesEnabled = false;
+                    db.Configuration.ValidateOnSaveEnabled = false;
+
                     counter++;
+                    totalCounter++;
 
                     if (model.Id != 0)
                     {
@@ -72,14 +79,17 @@ namespace SportsData.Nhl
                         db.Entry(model).State = EntityState.Added;
                     }
 
-                    if (counter >= counterMax)
+                    if (counter >= batchSize)
                     {
                         db.SaveChanges();
                         counter = 0;
+
+                        Console.WriteLine("Saved {0} of {1}", totalCounter, results.Count);
                     }
                 }
 
                 db.SaveChanges();
+                Console.WriteLine("Saved {0} of {1}", totalCounter, results.Count);
             }
         }
 

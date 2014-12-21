@@ -23,6 +23,7 @@ namespace Gilmour
             }
             else
             {
+                string result = null;
                 string command = args[0].ToLowerInvariant();
 
                 switch (command)
@@ -32,20 +33,20 @@ namespace Gilmour
                         break;
 
                     case "mlb":
-                        Mlb.GetMlbAttendance();
+                        result = Mlb.GetMlbAttendance();
                         break;
 
                     case "nhlgamessummary":
-                        Nhl.GetNhlGamesSummary();
+                        result = Nhl.GetNhlGamesSummary();
                         break;
                     case "nhlgamesrtss":
-                        Nhl.GetNhlGamesRtss();
+                        result = Nhl.GetNhlGamesRtss();
                         break;
                     case "nhlgamesrtssroster":
-                        Nhl.GetNhlGamesRtssRoster();
+                        result = Nhl.GetNhlGamesRtssRoster();
                         break;
                     case "nhlgamesrtsssummary":
-                        Nhl.GetNhlGamesRtssSummary();
+                        result = Nhl.GetNhlGamesRtssSummary();
                         break;
 
                     // Probably should delete these if they are only used once per year
@@ -70,16 +71,15 @@ namespace Gilmour
                         }
                         Nhl.GetNhlPlayersRtssSkater(Int32.Parse(args[1]));
                         break;
-                    
+
                     default:
                         Program.PrintInvalidArgumentsError("Error: Argument '{0}' not recognized", args[0]);
                         break;
                 }
-            }
 
-            Console.WriteLine();
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
+                Console.WriteLine(result);
+                Console.WriteLine();
+            }
         }
 
         private static void PrintInvalidArgumentsError(string formatMessage, params object[] args)
@@ -88,7 +88,7 @@ namespace Gilmour
             Console.WriteLine();
             Program.PrintValidArguments();
         }
-        
+
         private static void PrintValidArguments()
         {
             List<string> validArgs = new List<string>();
@@ -105,7 +105,9 @@ namespace Gilmour
             Console.WriteLine("Valid arguments are:");
             validArgs.ForEach(va => Console.WriteLine("   " + va));
             Console.WriteLine();
-            Console.WriteLine("Example: Gilmour.exe demographics");
+            Console.WriteLine("Example: Gilmour.exe NhlGamesSummary");
+            Console.WriteLine();
+
         }
     }
 }

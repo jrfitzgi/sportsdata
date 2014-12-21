@@ -15,7 +15,7 @@ namespace SportsData
         public static string Update(string controllerActionName, bool useLocalhost)
         {
             HttpClient httpClient = new HttpClient();
-            httpClient.Timeout = new TimeSpan(1, 0, 0);
+            httpClient.Timeout = new TimeSpan(3, 0, 0);
 
             if (useLocalhost)
             {
