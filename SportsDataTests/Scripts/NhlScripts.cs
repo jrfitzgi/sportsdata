@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Objects;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -29,7 +30,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtss()
         {
-            DateTime fromDate = DateTime.Now.AddDays(-100);
+            DateTime fromDate = DateTime.Now.AddDays(-5);
             NhlGamesRtss.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
@@ -39,9 +40,9 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtssSummary()
         {
-            DateTime fromDate = DateTime.Now.AddDays(-10);
+            DateTime fromDate = DateTime.Now.AddDays(-5);
             NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: false, fromDate: fromDate);
-            //NhlGamesRtssSummary.UpdateSeason(year: 2014, forceOverwrite: true);
+            //NhlGamesRtssSummary.UpdateSeason(year: 2013, forceOverwrite: true);
         }
 
         /// <summary>
@@ -98,5 +99,6 @@ namespace SportsDataTests
             string fileName = @"C:\Users\Jordanf\Google Drive\Domi\Draft\NHL Draftbook 2013-1963 (V2.0).csv";
             List<Nhl_Draftbook> results = NhlDraftbook.UpdateDraftbook(fileName, true);
         }
+
     }
 }

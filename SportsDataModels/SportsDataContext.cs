@@ -23,8 +23,18 @@ namespace SportsData.Models
         
         public DbSet<Nhl_Games_Summary> Nhl_Games_Summary_DbSet { get; set; }
         public DbSet<Nhl_Games_Rtss> Nhl_Games_Rtss_DbSet { get; set; }
-        public DbSet<Nhl_Games_Rtss_Summary> Nhl_Games_Rtss_Summary_DbSet { get; set; }
         public DbSet<Nhl_Games_Rtss_Roster> Nhl_Games_Rtss_Roster_DbSet { get; set; }
+
+        public DbSet<Nhl_Games_Rtss_Summary> Nhl_Games_Rtss_Summary_DbSet { get; set; }
+
+        //public DbSet<Nhl_Games_Rtss_Summary_ScoringSummary_Item> Nhl_Games_Rtss_Summary_ScoringSummary_Item_DbSet { get; set; }
+        //public DbSet<Nhl_Games_Rtss_Summary_PenaltySummary_Item> Nhl_Games_Rtss_Summary_PenaltySummary_Item_DbSet { get; set; }
+        //public DbSet<Nhl_Games_Rtss_Summary_PeriodSummary_Item> Nhl_Games_Rtss_Summary_PeriodSummary_Item_DbSet { get; set; }
+        //public DbSet<Nhl_Games_Rtss_Summary_PowerPlaySummary_Item> Nhl_Games_Rtss_Summary_PowerPlaySummary_Item_DbSet { get; set; }
+        //public DbSet<Nhl_Games_Rtss_Summary_GoalieSummary_Item> Nhl_Games_Rtss_Summary_GoalieSummary_Item { get; set; }
+        //public DbSet<Nhl_Games_Rtss_Summary_GoalieSummary_Item.Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item> Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item_DbSet { get; set; }
+        //public DbSet<Nhl_Games_Rtss_Summary_Officials_Item> Nhl_Games_Rtss_Summary_Officials_Item_DbSet { get; set; }
+        //public DbSet<Nhl_Games_Rtss_Summary_Stars_Item> Nhl_Games_Rtss_Summary_Stars_Item_DbSet { get; set; }
 
         public DbSet<Nhl_Draftbook> Nhl_Draftbook_DbSet { get; set; }
 
