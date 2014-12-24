@@ -23,18 +23,8 @@ namespace SportsData.Models
         
         public DbSet<Nhl_Games_Summary> Nhl_Games_Summary_DbSet { get; set; }
         public DbSet<Nhl_Games_Rtss> Nhl_Games_Rtss_DbSet { get; set; }
-        public DbSet<Nhl_Games_Rtss_Roster> Nhl_Games_Rtss_Roster_DbSet { get; set; }
-
         public DbSet<Nhl_Games_Rtss_Summary> Nhl_Games_Rtss_Summary_DbSet { get; set; }
-
-        //public DbSet<Nhl_Games_Rtss_Summary_ScoringSummary_Item> Nhl_Games_Rtss_Summary_ScoringSummary_Item_DbSet { get; set; }
-        //public DbSet<Nhl_Games_Rtss_Summary_PenaltySummary_Item> Nhl_Games_Rtss_Summary_PenaltySummary_Item_DbSet { get; set; }
-        //public DbSet<Nhl_Games_Rtss_Summary_PeriodSummary_Item> Nhl_Games_Rtss_Summary_PeriodSummary_Item_DbSet { get; set; }
-        //public DbSet<Nhl_Games_Rtss_Summary_PowerPlaySummary_Item> Nhl_Games_Rtss_Summary_PowerPlaySummary_Item_DbSet { get; set; }
-        //public DbSet<Nhl_Games_Rtss_Summary_GoalieSummary_Item> Nhl_Games_Rtss_Summary_GoalieSummary_Item { get; set; }
-        //public DbSet<Nhl_Games_Rtss_Summary_GoalieSummary_Item.Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item> Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item_DbSet { get; set; }
-        //public DbSet<Nhl_Games_Rtss_Summary_Officials_Item> Nhl_Games_Rtss_Summary_Officials_Item_DbSet { get; set; }
-        //public DbSet<Nhl_Games_Rtss_Summary_Stars_Item> Nhl_Games_Rtss_Summary_Stars_Item_DbSet { get; set; }
+        public DbSet<Nhl_Games_Rtss_Roster> Nhl_Games_Rtss_Roster_DbSet { get; set; }
 
         public DbSet<Nhl_Draftbook> Nhl_Draftbook_DbSet { get; set; }
 
@@ -194,17 +184,16 @@ namespace SportsData.Models
 
         }
 
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<NhlHtmlReportRosterEntryModel>().HasRequired(x => x.NhlHtmlReportRosterModel)
-        //            .WithMany(x => x.VisitorRoster);
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        //    modelBuilder.Entity<NhlHtmlReportRosterEntryModel>().HasRequired(x => x.NhlHtmlReportRosterModel)
-        //        .WithMany(x => x.VisitorRoster)
-        //        .HasForeignKey(x => x.NhlHtmlReportRosterModelId);
-
-        //    base.OnModelCreating(modelBuilder);
-        //}
+            //modelBuilder.Entity<Nhl_Games_Rtss_Summary_ScoringSummary_Item>()
+            //    .HasRequired(t => t.Nhl_Games_Rtss_Summary)
+            //    .WithMany(t => t.
+            //    //.WithOptionalDependent()
+            //    .WillCascadeOnDelete(true);
+        }
 
     }
 

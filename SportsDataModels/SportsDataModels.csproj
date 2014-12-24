@@ -49,14 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Demographics\DemographicsModel.cs" />
-    <Compile Include="Migrations\201412230817430_InitialCreate2.cs" />
-    <Compile Include="Migrations\201412230817430_InitialCreate2.Designer.cs">
-      <DependentUpon>201412230817430_InitialCreate2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201412230819083_nhl5.cs" />
-    <Compile Include="Migrations\201412230819083_nhl5.Designer.cs">
-      <DependentUpon>201412230819083_nhl5.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_Games_Rtss_Roster.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_Games_Rtss_Summary.cs" />
@@ -81,14 +73,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201412230817430_InitialCreate2.resx">
-      <DependentUpon>201412230817430_InitialCreate2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201412230819083_nhl5.resx">
-      <DependentUpon>201412230819083_nhl5.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

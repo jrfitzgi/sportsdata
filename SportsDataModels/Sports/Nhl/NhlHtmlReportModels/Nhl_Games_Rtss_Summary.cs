@@ -12,8 +12,7 @@ namespace SportsData.Models
             this.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
             this.PenaltySummary = new List<Nhl_Games_Rtss_Summary_PenaltySummary_Item>();
             this.PeriodSummary = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
-            this.VisitorPowerPlaySummary = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
-            this.HomePowerPlaySummary = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
+            this.PowerPlaySummary = new List<Nhl_Games_Rtss_Summary_PowerPlaySummary_Item>();
             this.GoalieSummary = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
             this.OfficialsSummary = new List<Nhl_Games_Rtss_Summary_Officials_Item>();
             this.StarsSummary = new List<Nhl_Games_Rtss_Summary_Stars_Item>();
@@ -88,8 +87,7 @@ namespace SportsData.Models
         public virtual ICollection<Nhl_Games_Rtss_Summary_ScoringSummary_Item> ScoringSummary { get; set; }
         public virtual ICollection<Nhl_Games_Rtss_Summary_PenaltySummary_Item> PenaltySummary { get; set; }
         public virtual ICollection<Nhl_Games_Rtss_Summary_PeriodSummary_Item> PeriodSummary { get; set; }
-        public virtual Nhl_Games_Rtss_Summary_PowerPlaySummary_Item VisitorPowerPlaySummary { get; set; }
-        public virtual Nhl_Games_Rtss_Summary_PowerPlaySummary_Item HomePowerPlaySummary { get; set; }
+        public virtual ICollection<Nhl_Games_Rtss_Summary_PowerPlaySummary_Item> PowerPlaySummary { get; set; }
         public virtual ICollection<Nhl_Games_Rtss_Summary_GoalieSummary_Item> GoalieSummary { get; set; }
         public virtual ICollection<Nhl_Games_Rtss_Summary_Officials_Item> OfficialsSummary { get; set; }
         public virtual ICollection<Nhl_Games_Rtss_Summary_Stars_Item> StarsSummary { get; set; }
@@ -102,6 +100,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         //[InverseProperty("ScoringSummary")]
+        [Required]
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary { get; set; }
 
         public string Team { get; set; }
@@ -132,6 +131,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         //[InverseProperty("PenaltySummary_Home")]
+        [Required]
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary { get; set; }
 
         public string Team { get; set; }
@@ -156,6 +156,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         //[InverseProperty("PeriodSummary_Home")]
+        [Required]
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary { get; set; }
 
         public string Team { get; set; }
@@ -178,6 +179,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         //[InverseProperty("PowerPlaySummary_Home")]
+        [Required]
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary { get; set; }
 
         public string Team { get; set; }
@@ -223,6 +225,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         //[InverseProperty("GoalieSummary_Home")]
+        [Required]
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary { get; set; }
 
         public string Team { get; set; }
@@ -251,6 +254,7 @@ namespace SportsData.Models
             public int Id { get; set; }
 
             //[InverseProperty("GoaliePeriodSummary")]
+            [Required]
             public Nhl_Games_Rtss_Summary_GoalieSummary_Item Nhl_Games_Rtss_Summary_GoalieSummary_Item { get; set; }
 
             public string Team { get; set; }
@@ -269,6 +273,7 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         //[InverseProperty("Officials")]
+        [Required]
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary { get; set; }
 
         public string VisitorTeam { get; set; }
@@ -287,7 +292,9 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         //[InverseProperty("Stars")]
+        [Required]
         public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary { get; set; }
+        
         public DateTime Date { get; set; }
 
         public int StarNumber { get; set; }
