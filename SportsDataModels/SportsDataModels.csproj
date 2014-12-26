@@ -69,6 +69,8 @@
     <Compile Include="Sports\Nhl\Nhl_Players_Bio_Goalie.cs" />
     <Compile Include="Sports\Nhl\Nhl_Players_Bio_Skater.cs" />
     <Compile Include="Sports\Nhl\Nhl_Players_Rtss_Skater.cs" />
+    <Compile Include="Sports\Nhl\Teams\Nhl_TeamModel.cs" />
+    <Compile Include="Sports\Nhl\Teams\Nhl_FranchiseModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

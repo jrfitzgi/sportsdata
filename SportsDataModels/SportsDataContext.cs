@@ -7,8 +7,8 @@ namespace SportsData.Models
     public class SportsDataContext : DbContext
     {
         public SportsDataContext()
-            //: base("DefaultConnection")
-            : base("ProdConnection")
+            : base("DefaultConnection")
+        //: base("ProdConnection")
         {
         }
 
@@ -20,13 +20,16 @@ namespace SportsData.Models
         public DbSet<Nhl_Players_Bio_Skater> Nhl_Players_Bio_Skater_DbSet { get; set; }
         public DbSet<Nhl_Players_Bio_Goalie> Nhl_Players_Bio_Goalie_DbSet { get; set; }
         public DbSet<Nhl_Players_Rtss_Skater> Nhl_Players_Rtss_Skater_DbSet { get; set; }
-        
+
         public DbSet<Nhl_Games_Summary> Nhl_Games_Summary_DbSet { get; set; }
         public DbSet<Nhl_Games_Rtss> Nhl_Games_Rtss_DbSet { get; set; }
         public DbSet<Nhl_Games_Rtss_Summary> Nhl_Games_Rtss_Summary_DbSet { get; set; }
         public DbSet<Nhl_Games_Rtss_Roster> Nhl_Games_Rtss_Roster_DbSet { get; set; }
 
         public DbSet<Nhl_Draftbook> Nhl_Draftbook_DbSet { get; set; }
+
+        public DbSet<Nhl_Franchise> Nhl_Franchise_DbSet { get; set; }
+        public DbSet<Nhl_Team> Nhl_Team_DbSet { get; set; }
 
         // Twitter
         public DbSet<TwitterAccount> TwitterAccount_DbSet { get; set; }
@@ -182,6 +185,50 @@ namespace SportsData.Models
 
             #endregion
 
+            #region Nhl
+
+            Nhl_Franchise torontoMapleLeafs = new Nhl_Franchise
+            {
+                Id = 2,
+                OriginalCity = "Toronto",
+                OriginalName = "St. Pats",
+                YearStarted = 1901,
+                CurrentCity = "Toronto",
+                CurrentName = "Maple Leafs",
+            };
+
+            context.Nhl_Franchise_DbSet.AddOrUpdate(
+                t => t.Id,
+                torontoMapleLeafs
+            );
+
+            Nhl_Team leafsTeam = new Nhl_Team
+            {
+                City = "T-dotssssssssss",
+                Name = "Leaves",
+                StateProvince = "ON",
+                Country = "Canada",
+                YearStarted = 1980,
+                Nhl_Franchise = torontoMapleLeafs
+            };
+
+            Nhl_Team leafsTeam2 = new Nhl_Team
+            {
+                City = "Tor",
+                Name = "Buds",
+                StateProvince = "ON",
+                Country = "Canada",
+                YearStarted = 1981,
+                Nhl_Franchise = torontoMapleLeafs
+            };
+
+            context.Nhl_Team_DbSet.AddOrUpdate(
+                t => t.City,
+                leafsTeam,
+                leafsTeam2
+            );
+
+            #endregion
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

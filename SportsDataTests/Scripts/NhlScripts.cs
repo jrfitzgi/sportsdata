@@ -30,7 +30,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtss()
         {
-            DateTime fromDate = DateTime.Now.AddDays(-5);
+            DateTime fromDate = DateTime.Now.AddDays(-4);
             NhlGamesRtss.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
@@ -42,7 +42,7 @@ namespace SportsDataTests
         {
             //DateTime fromDate = DateTime.Now.AddDays(-5);
             //NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: false, fromDate: fromDate);
-            NhlGamesRtssSummary.UpdateSeason(year: 2013, forceOverwrite: true);
+            NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true);
         }
 
         /// <summary>
