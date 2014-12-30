@@ -8,18 +8,17 @@ namespace SportsData.Models
     public class Nhl_Franchise
     {
         [Key]
-        //[DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int AutoId { get; set; }
+
         public int Id { get; set; }
 
         public string OriginalName { get; set; }
         public string OriginalCity { get; set; }
 
-        public string CurrentCity { get; set; }
-        public string CurrentName { get; set; }
-
         public int YearStarted { get; set; }
         public int YearEnded { get; set; }
 
-        //public List<Nhl_Team> Teams { get; set; }
+        //public virtual ICollection<Nhl_Team> Teams { get; set; }
     }
 }
