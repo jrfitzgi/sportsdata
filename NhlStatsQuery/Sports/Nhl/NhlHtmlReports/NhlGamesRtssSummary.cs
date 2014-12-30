@@ -337,7 +337,7 @@ namespace SportsData.Nhl
                 HtmlNodeCollection penaltySummaryRowFields = visitorPenaltySummaryNodes[i].SelectNodes(@"./td");
 
                 penaltySummaryItem.PenaltyNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[0].InnerText);
-                penaltySummaryItem.Period = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[1].InnerText);
+                penaltySummaryItem.Period = penaltySummaryRowFields[1].InnerText;
                 penaltySummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(penaltySummaryRowFields[2].InnerText);
 
                 HtmlNodeCollection penaltySummaryPlayerTableRows = penaltySummaryRowFields[3].SelectNodes(@".//td");
@@ -361,7 +361,7 @@ namespace SportsData.Nhl
                 penaltySummaryItem.Date = model.Date;
 
                 penaltySummaryItem.PenaltyNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[0].InnerText);
-                penaltySummaryItem.Period = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[1].InnerText);
+                penaltySummaryItem.Period = penaltySummaryRowFields[1].InnerText;
                 penaltySummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(penaltySummaryRowFields[2].InnerText);
 
                 HtmlNodeCollection penaltySummaryPlayerTableRows = penaltySummaryRowFields[3].SelectNodes(@".//td");
@@ -394,7 +394,7 @@ namespace SportsData.Nhl
                 periodSummaryItem.Team = model.Visitor;
                 periodSummaryItem.Date = model.Date;
 
-                periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[0].InnerText);
+                periodSummaryItem.Period = periodSummaryVisitorRowFields[0].InnerText;
                 periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[1].InnerText);
                 periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[2].InnerText);
                 periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[3].InnerText);
@@ -410,7 +410,7 @@ namespace SportsData.Nhl
                 periodSummaryItem.Team = model.Home;
                 periodSummaryItem.Date = model.Date;
 
-                periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[0].InnerText);
+                periodSummaryItem.Period = periodSummaryHomeRowFields[0].InnerText;
                 periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[1].InnerText);
                 periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[2].InnerText);
                 periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[3].InnerText);
@@ -657,7 +657,7 @@ namespace SportsData.Nhl
                     goaliePeriodItem.Team = team;
                     goaliePeriodItem.Date = model.Date;
 
-                    goaliePeriodItem.Period = period;
+                    goaliePeriodItem.Period = period.ToString();
                     period++;
 
                     string goaliePeriodItemText = goaltenderSummaryRowFields[i + offset].InnerText;

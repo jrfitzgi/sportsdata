@@ -49,9 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Demographics\DemographicsModel.cs" />
-    <Compile Include="Migrations\201412300400498_nhl.cs" />
-    <Compile Include="Migrations\201412300400498_nhl.Designer.cs">
-      <DependentUpon>201412300400498_nhl.cs</DependentUpon>
+    <Compile Include="Migrations\201412301628524_nhl.cs" />
+    <Compile Include="Migrations\201412301628524_nhl.Designer.cs">
+      <DependentUpon>201412301628524_nhl.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Sports\Nhl\NhlHtmlReportModels\Nhl_Games_Rtss_Roster.cs" />
@@ -81,8 +81,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201412300400498_nhl.resx">
-      <DependentUpon>201412300400498_nhl.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201412301628524_nhl.resx">
+      <DependentUpon>201412301628524_nhl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

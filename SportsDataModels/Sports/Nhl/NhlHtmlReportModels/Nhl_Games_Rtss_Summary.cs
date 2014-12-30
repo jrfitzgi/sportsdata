@@ -141,7 +141,7 @@ namespace SportsData.Models
         //public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PenaltySummary_Visitor { get; set; }
 
         public int PenaltyNumber { get; set; }
-        public int Period { get; set; }
+        public string Period { get; set; }
         public int TimeInSeconds { get; set; }
         public int PlayerNumber { get; set; }
         public string Name { get; set; }
@@ -165,7 +165,7 @@ namespace SportsData.Models
         //[InverseProperty("PeriodSummary_Visitor")]
         //public Nhl_Games_Rtss_Summary Nhl_Games_Rtss_Summary_PeriodSummary_Visitor { get; set; }
 
-        public int Period { get; set; }
+        public string Period { get; set; }
         public int Goals { get; set; }
         public int Shots { get; set; }
         public int Penalties { get; set; }
@@ -260,7 +260,7 @@ namespace SportsData.Models
             public string Team { get; set; }
             public DateTime Date { get; set; }
 
-            public int Period { get; set; }
+            public string Period { get; set; }
             public int GoalsAgainst { get; set; }
             public int ShotsAgainst { get; set; }
         }
