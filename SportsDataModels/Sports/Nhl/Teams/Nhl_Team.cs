@@ -12,8 +12,6 @@ namespace SportsData.Models
         public int Id { get; set; }
 
         public int Nhl_FranchiseId { get; set; }
-        //[ForeignKey("Nhl_FranchiseId")] // Not needed - done with fluent api
-        //public Nhl_Franchise Nhl_Franchise { get; set; }
 
         public string City { get; set; }
         public string Name { get; set; }

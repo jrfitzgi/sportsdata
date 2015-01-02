@@ -18,7 +18,5 @@ namespace SportsData.Models
 
         public int YearStarted { get; set; }
         public int YearEnded { get; set; }
-
-        //public virtual ICollection<Nhl_Team> Teams { get; set; }
     }
 }
