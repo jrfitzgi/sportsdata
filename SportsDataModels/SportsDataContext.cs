@@ -197,8 +197,6 @@ namespace SportsData.Models
                 OriginalName = "Mighty Ducks",
                 YearStarted = 1899,
                 YearEnded = 0,
-                //CurrentCity = "Anaheim",
-                //CurrentName = "Ducks",
             };
 
             Nhl_Franchise arizonaCoyotes = new Nhl_Franchise
