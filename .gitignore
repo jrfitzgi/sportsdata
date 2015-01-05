@@ -3,8 +3,9 @@
 *.DS_Store
 
 #Config files with passwords
+Gilmour/App.config
+NhlStats/Web.config
 SportsDataTests/App.config
-NhlStats/web.config
 
 #Visual Studio files
 *.[Oo]bj
