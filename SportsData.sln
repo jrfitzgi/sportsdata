@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsData", "NhlStats\SportsData.csproj", "{BC330909-A442-4B9D-AFC1-1EFA610E962A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsDataQuery", "NhlStatsQuery\SportsDataQuery.csproj", "{BDB38E09-D95E-442C-BCDA-8C4986A3BB14}"
@@ -17,6 +19,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{572DA5
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gilmour", "Gilmour\Gilmour.csproj", "{80F244B4-8F7E-4A0B-8684-384DFE025206}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRole1", "WebRole1\WebRole1.csproj", "{62349912-B15D-4E66-B9AC-7185473E0753}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerRole1", "WorkerRole1\WorkerRole1.csproj", "{BCF4496E-9DF0-43CB-B49A-251010F7801F}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Clark", "Clark\Clark.ccproj", "{36A753C1-EC81-44FF-941C-246599FC7567}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClarkWebRole", "ClarkWebRole\ClarkWebRole.csproj", "{66C2791B-FD88-41F0-AC8C-1966FA4CDEF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClarkWorkerRole", "ClarkWorkerRole\ClarkWorkerRole.csproj", "{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +56,26 @@ Global
 		{80F244B4-8F7E-4A0B-8684-384DFE025206}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80F244B4-8F7E-4A0B-8684-384DFE025206}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80F244B4-8F7E-4A0B-8684-384DFE025206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62349912-B15D-4E66-B9AC-7185473E0753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62349912-B15D-4E66-B9AC-7185473E0753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62349912-B15D-4E66-B9AC-7185473E0753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62349912-B15D-4E66-B9AC-7185473E0753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCF4496E-9DF0-43CB-B49A-251010F7801F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCF4496E-9DF0-43CB-B49A-251010F7801F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCF4496E-9DF0-43CB-B49A-251010F7801F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCF4496E-9DF0-43CB-B49A-251010F7801F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A753C1-EC81-44FF-941C-246599FC7567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A753C1-EC81-44FF-941C-246599FC7567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A753C1-EC81-44FF-941C-246599FC7567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A753C1-EC81-44FF-941C-246599FC7567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66C2791B-FD88-41F0-AC8C-1966FA4CDEF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66C2791B-FD88-41F0-AC8C-1966FA4CDEF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66C2791B-FD88-41F0-AC8C-1966FA4CDEF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66C2791B-FD88-41F0-AC8C-1966FA4CDEF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

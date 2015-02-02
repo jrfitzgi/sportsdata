@@ -635,7 +635,7 @@ namespace SportsData.Nhl
             HtmlNodeCollection refereesRows = officialsTableRows[1].SelectNodes(@"./td")[0].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
             HtmlNodeCollection linesmenRows = officialsTableRows[1].SelectNodes(@"./td")[1].SelectNodes(String.Format(@"./table{0}/tr", TBODY));
 
-            for (int i = 0; i < refereesRows.Count; i++)
+            for (int i = 0; i < (refereesRows == null ? 0 : refereesRows.Count); i++)
             {
                 officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(refereesRows[i].InnerText);
                 officialsItem.OfficialType = Designation.Referee;
@@ -643,7 +643,7 @@ namespace SportsData.Nhl
 
             }
 
-            for (int i = 0; i < linesmenRows.Count; i++)
+            for (int i = 0; i < (linesmenRows == null ? 0 : linesmenRows.Count); i++)
             {
                 officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(linesmenRows[i].InnerText);
                 officialsItem.OfficialType = Designation.Linesman;
@@ -678,7 +678,7 @@ namespace SportsData.Nhl
 
             #endregion
 
-            #region Officials
+            #region Stars
 
             model.Stars = new List<Nhl_Games_Rtss_Summary_Stars_Item>();
             Nhl_Games_Rtss_Summary_Stars_Item starsItem;
