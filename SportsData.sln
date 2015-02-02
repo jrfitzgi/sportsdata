@@ -26,8 +26,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClarkWebRole", "ClarkWebRol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClarkWorkerRole", "ClarkWorkerRole\ClarkWorkerRole.csproj", "{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsDataWebJob", "SportsDataWebJob\SportsDataWebJob.csproj", "{861FC9F8-0BD2-4F42-8BE0-AAE20CB0F12A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,10 +64,6 @@ Global
 		{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F96E35E-4B22-474E-86C5-F8B5F390DF3A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{861FC9F8-0BD2-4F42-8BE0-AAE20CB0F12A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{861FC9F8-0BD2-4F42-8BE0-AAE20CB0F12A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{861FC9F8-0BD2-4F42-8BE0-AAE20CB0F12A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{861FC9F8-0BD2-4F42-8BE0-AAE20CB0F12A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
