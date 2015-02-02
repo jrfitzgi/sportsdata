@@ -131,6 +131,8 @@ namespace SportsData.Nhl
 
             using (SportsDataContext db = new SportsDataContext())
             {
+                db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+
                 db.Nhl_Games_Rtss_DbSet.AddOrUpdate<Nhl_Games_Rtss>(g => new { g.Date, g.Visitor, g.Home, g.GameNumber}, downcastSpecialCaseModels.ToArray());
                 db.Nhl_Games_Rtss_DbSet.AddOrUpdate<Nhl_Games_Rtss>(g => new { g.Date, g.Visitor, g.Home }, downcastModels.ToArray());
                 db.SaveChanges();

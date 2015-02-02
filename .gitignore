@@ -2,6 +2,11 @@
 [Tt]humbs.db
 *.DS_Store
 
+#Config files with passwords
+Gilmour/App.config
+NhlStats/Web.config
+SportsDataTests/App.config
+
 #Visual Studio files
 *.[Oo]bj
 *.user

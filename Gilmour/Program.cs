@@ -20,59 +20,94 @@ namespace Gilmour
             {
                 Console.WriteLine("Error: No arguments provided");
                 Program.PrintValidArguments();
-                //return;
             }
             else
             {
+                string result = null;
                 string command = args[0].ToLowerInvariant();
 
                 switch (command)
                 {
                     case "demographics":
-                        Program.GetDemographics();
+                        Demographics.GetDemographics();
                         break;
+
+                    case "mlb":
+                        result = Mlb.GetMlbAttendance();
+                        break;
+
+                    case "nhlgamessummary":
+                        result = Nhl.GetNhlGamesSummary();
+                        break;
+                    case "nhlgamesrtss":
+                        result = Nhl.GetNhlGamesRtss();
+                        break;
+                    case "nhlgamesrtssroster":
+                        result = Nhl.GetNhlGamesRtssRoster();
+                        break;
+                    case "nhlgamesrtsssummary":
+                        result = Nhl.GetNhlGamesRtssSummary();
+                        break;
+
+                    // Probably should delete these if they are only used once per year
+                    case "nhlplayersbiogoalie":
+                        if (args.Length < 2)
+                        {
+                            Program.PrintInvalidArgumentsError("[year] not specified");
+                        }
+                        Nhl.GetNhlPlayersBioGoalie(Int32.Parse(args[1]));
+                        break;
+                    case "nhlplayersbioskater":
+                        if (args.Length < 2)
+                        {
+                            Program.PrintInvalidArgumentsError("[year] not specified");
+                        }
+                        Nhl.GetNhlPlayersBioSkater(Int32.Parse(args[1]));
+                        break;
+                    case "nhlplayersrtssskater":
+                        if (args.Length < 2)
+                        {
+                            Program.PrintInvalidArgumentsError("[year] not specified");
+                        }
+                        Nhl.GetNhlPlayersRtssSkater(Int32.Parse(args[1]));
+                        break;
+
                     default:
-                        Console.WriteLine("Error: Argument '{0}' not recognized");
-                        Program.PrintValidArguments();
+                        Program.PrintInvalidArgumentsError("Error: Argument '{0}' not recognized", args[0]);
                         break;
                 }
-            }
 
+                Console.WriteLine(result);
+                Console.WriteLine();
+            }
+        }
+
+        private static void PrintInvalidArgumentsError(string formatMessage, params object[] args)
+        {
+            Console.WriteLine(formatMessage, args);
             Console.WriteLine();
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
+            Program.PrintValidArguments();
         }
 
         private static void PrintValidArguments()
         {
-            List<string> validArgs = new List<string> { "demographics" };
+            List<string> validArgs = new List<string>();
+            validArgs.Add("Demographics");
+            validArgs.Add("Mlb");
+            validArgs.Add("NhlGamesSummary");
+            validArgs.Add("NhlGamesRtss");
+            validArgs.Add("NhlGamesRtssRoster");
+            validArgs.Add("NhlGamesRtssSummary");
+            validArgs.Add("NhlPlayersBioSkater [year]");
+            validArgs.Add("NhlPlayersBioGoalie [year]");
+            validArgs.Add("NhlPlayersRtssSkater [year]");
+
             Console.WriteLine("Valid arguments are:");
             validArgs.ForEach(va => Console.WriteLine("   " + va));
             Console.WriteLine();
-            Console.WriteLine("Example: Gilmour.exe demographics");
-        }
+            Console.WriteLine("Example: Gilmour.exe NhlGamesSummary");
+            Console.WriteLine();
 
-        private static void GetDemographics()
-        {
-            // Try to read zips from app.config
-            string zipCsv = ConfigurationManager.AppSettings["zipCodes"];
-
-            List<int> allZipCodes = zipCsv.Replace(" ", String.Empty).Split(',').ToList().ConvertAll<int>(x => Convert.ToInt32(x));
-            List<int> missingZipCodes = new List<int>(); //allZipCodes.GetRange(592, 1);
-            using (SportsDataContext db = new SportsDataContext())
-            {
-                missingZipCodes = allZipCodes.Except(db.Demographic_DbSet.Select(z => z.Zip).ToList()).ToList();
-            }
-
-            if (missingZipCodes.Count == 0)
-            {
-                Console.WriteLine("All zip codes have been retrieved and stored in the database. To update existing zip code data, delete it from the database and re-run");
-                Console.WriteLine("Zip codes in the list of zip codes to retrieve:");
-                Console.WriteLine(allZipCodes);
-            }
-             
-            List<DemographicsModel> results = DemographicsQuery.GetDemographics(missingZipCodes, false, 0);
-            DemographicsData.UpdateDatabase(results);
         }
     }
 }

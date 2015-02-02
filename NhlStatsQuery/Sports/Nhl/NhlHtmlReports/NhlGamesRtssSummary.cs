@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using EntityFramework.BulkInsert.Extensions;
 using HtmlAgilityPack;
 using SportsData;
 using SportsData.Models;
@@ -18,8 +20,8 @@ namespace SportsData.Nhl
     {
         public static void UpdateSeason([Optional] int year, [Optional] DateTime fromDate, [Optional] bool forceOverwrite)
         {
-            // Get the RtssReports for the specified year
-            List<Nhl_Games_Rtss> models = NhlHtmlReportBase.GetRtssReports(year);
+            // Get the RtssReports for the specified year. Exclude recent games that may not be done (UtcNow - 1)
+            List<Nhl_Games_Rtss> models = NhlHtmlReportBase.GetRtssReports(year, fromDate).Where(m=>m.Date < DateTime.UtcNow.AddDays(-1).Date).ToList();
             List<Nhl_Games_Rtss_Summary> existingModels = null;
             if (forceOverwrite == false)
             {
@@ -53,11 +55,42 @@ namespace SportsData.Nhl
             // Save the reports to the db
             using (SportsDataContext db = new SportsDataContext())
             {
-                db.Nhl_Games_Rtss_Summary_DbSet.AddOrUpdate<Nhl_Games_Rtss_Summary>(
-                    m => m.NhlRtssReportModelId,
-                    results.ToArray());
+                Console.WriteLine("Start saving {0} to {1}", results.Count, db.Database.Connection.ConnectionString);
+
+                db.Configuration.AutoDetectChangesEnabled = false;
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                int counter = 0;
+                int totalCounter = 0;
+                int batchSize = 10;
+                foreach (var model in results)
+                {
+                    counter++;
+                    totalCounter++;
+
+                    if (model.Id != 0)
+                    {
+                        db.Nhl_Games_Rtss_Summary_DbSet.Attach(model);
+                        db.Entry(model).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.Entry(model).State = EntityState.Added;
+                    }
+
+                    if (counter >= batchSize)
+                    {
+                        db.SaveChanges();
+                        counter = 0;
+
+                        Console.WriteLine("Saved {0} of {1}", totalCounter, results.Count);
+                    }
+                }
+
                 db.SaveChanges();
+                Console.WriteLine("Saved {0} of {1}", totalCounter, results.Count);
             }
+
         }
 
         public static Nhl_Games_Rtss_Summary ParseHtmlBlob(int rtssReportId, string html)
@@ -175,7 +208,7 @@ namespace SportsData.Nhl
 
             #region Scoring Summary
 
-            model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
+            //model.ScoringSummary = new List<Nhl_Games_Rtss_Summary_ScoringSummary_Item>();
 
             HtmlNode scoringSummaryTableNode = mainTableNode.SelectSingleNode(@".//table[.//td[text()[contains(.,'SCORING SUMMARY')]]]/../..").NextSibling.NextSibling.SelectSingleNode(@".//table");
             HtmlNodeCollection scoringSummaryTableRows = scoringSummaryTableNode.SelectNodes(@".//tr");
@@ -192,8 +225,9 @@ namespace SportsData.Nhl
                 {
                     HtmlNodeCollection scoringSummaryRowFields = scoringSummaryTableRows[i].SelectNodes(@".//td");
                     Nhl_Games_Rtss_Summary_ScoringSummary_Item scoringSummaryItem = new Nhl_Games_Rtss_Summary_ScoringSummary_Item();
+                    scoringSummaryItem.Date = model.Date;
                     scoringSummaryItem.GoalNumber = NhlBaseClass.ConvertStringToInt(scoringSummaryRowFields[0].InnerText);
-                    scoringSummaryItem.Period = NhlBaseClass.ConvertStringToPeriod(scoringSummaryRowFields[1].InnerText);
+                    scoringSummaryItem.Period = scoringSummaryRowFields[1].InnerText;
                     scoringSummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(scoringSummaryRowFields[2].InnerText);
                     scoringSummaryItem.Strength = scoringSummaryRowFields[3].InnerText;
                     scoringSummaryItem.Team = scoringSummaryRowFields[4].InnerText;
@@ -288,9 +322,6 @@ namespace SportsData.Nhl
 
             #region Penalty Summary
 
-            model.PenaltySummary_Visitor = new List<Nhl_Games_Rtss_Summary_PenaltySummary_Item>();
-            model.PenaltySummary_Home = new List<Nhl_Games_Rtss_Summary_PenaltySummary_Item>();
-
             // Get the 4 child tables that have width=50%
             HtmlNodeCollection penaltySummaryTableNodes = mainTableNode.SelectNodes(@".//table[@id='PenaltySummary']//table//table//td[@width='50%']/table");
 
@@ -300,11 +331,13 @@ namespace SportsData.Nhl
             for (int i = 1; i < visitorPenaltySummaryNodes.Count; i++)
             {
                 Nhl_Games_Rtss_Summary_PenaltySummary_Item penaltySummaryItem = new Nhl_Games_Rtss_Summary_PenaltySummary_Item();
+                penaltySummaryItem.Team = model.Visitor;
+                penaltySummaryItem.Date = model.Date;
 
                 HtmlNodeCollection penaltySummaryRowFields = visitorPenaltySummaryNodes[i].SelectNodes(@"./td");
 
                 penaltySummaryItem.PenaltyNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[0].InnerText);
-                penaltySummaryItem.Period = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[1].InnerText);
+                penaltySummaryItem.Period = penaltySummaryRowFields[1].InnerText;
                 penaltySummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(penaltySummaryRowFields[2].InnerText);
 
                 HtmlNodeCollection penaltySummaryPlayerTableRows = penaltySummaryRowFields[3].SelectNodes(@".//td");
@@ -315,7 +348,7 @@ namespace SportsData.Nhl
                 penaltySummaryItem.PIM = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[4].InnerText);
                 penaltySummaryItem.Penalty = penaltySummaryRowFields[5].InnerText;
 
-                model.PenaltySummary_Visitor.Add(penaltySummaryItem);
+                model.PenaltySummary.Add(penaltySummaryItem);
 
             }
 
@@ -324,9 +357,11 @@ namespace SportsData.Nhl
                 Nhl_Games_Rtss_Summary_PenaltySummary_Item penaltySummaryItem = new Nhl_Games_Rtss_Summary_PenaltySummary_Item();
 
                 HtmlNodeCollection penaltySummaryRowFields = homePenaltySummaryNodes[i].SelectNodes(@"./td");
+                penaltySummaryItem.Team = model.Home;
+                penaltySummaryItem.Date = model.Date;
 
                 penaltySummaryItem.PenaltyNumber = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[0].InnerText);
-                penaltySummaryItem.Period = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[1].InnerText);
+                penaltySummaryItem.Period = penaltySummaryRowFields[1].InnerText;
                 penaltySummaryItem.TimeInSeconds = NhlBaseClass.ConvertMinutesToSeconds(penaltySummaryRowFields[2].InnerText);
 
                 HtmlNodeCollection penaltySummaryPlayerTableRows = penaltySummaryRowFields[3].SelectNodes(@".//td");
@@ -337,7 +372,7 @@ namespace SportsData.Nhl
                 penaltySummaryItem.PIM = NhlBaseClass.ConvertStringToInt(penaltySummaryRowFields[4].InnerText);
                 penaltySummaryItem.Penalty = penaltySummaryRowFields[5].InnerText;
 
-                model.PenaltySummary_Home.Add(penaltySummaryItem);
+                model.PenaltySummary.Add(penaltySummaryItem);
 
             }
 
@@ -349,9 +384,6 @@ namespace SportsData.Nhl
 
             #region By Period Summary
 
-            model.PeriodSummary_Visitor = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
-            model.PeriodSummary_Home = new List<Nhl_Games_Rtss_Summary_PeriodSummary_Item>();
-
             HtmlNodeCollection periodSummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'BY PERIOD')]]/../..//td[@width='50%']/table");
 
             HtmlNodeCollection periodSummaryVisitorRows = periodSummaryTableNodes[0].SelectNodes(@".//tr");
@@ -359,12 +391,15 @@ namespace SportsData.Nhl
             {
                 HtmlNodeCollection periodSummaryVisitorRowFields = periodSummaryVisitorRows[i].SelectNodes(@".//td");
                 Nhl_Games_Rtss_Summary_PeriodSummary_Item periodSummaryItem = new Nhl_Games_Rtss_Summary_PeriodSummary_Item();
-                periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[0].InnerText);
+                periodSummaryItem.Team = model.Visitor;
+                periodSummaryItem.Date = model.Date;
+
+                periodSummaryItem.Period = periodSummaryVisitorRowFields[0].InnerText;
                 periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[1].InnerText);
                 periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[2].InnerText);
                 periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[3].InnerText);
                 periodSummaryItem.PIM = NhlBaseClass.ConvertStringToInt(periodSummaryVisitorRowFields[4].InnerText);
-                model.PeriodSummary_Visitor.Add(periodSummaryItem);
+                model.PeriodSummary.Add(periodSummaryItem);
             }
 
             HtmlNodeCollection periodSummaryHomeRows = periodSummaryTableNodes[1].SelectNodes(@".//tr");
@@ -372,25 +407,37 @@ namespace SportsData.Nhl
             {
                 HtmlNodeCollection periodSummaryHomeRowFields = periodSummaryHomeRows[i].SelectNodes(@".//td");
                 Nhl_Games_Rtss_Summary_PeriodSummary_Item periodSummaryItem = new Nhl_Games_Rtss_Summary_PeriodSummary_Item();
-                periodSummaryItem.Period = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[0].InnerText);
+                periodSummaryItem.Team = model.Home;
+                periodSummaryItem.Date = model.Date;
+
+                periodSummaryItem.Period = periodSummaryHomeRowFields[0].InnerText;
                 periodSummaryItem.Goals = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[1].InnerText);
                 periodSummaryItem.Shots = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[2].InnerText);
                 periodSummaryItem.Penalties = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[3].InnerText);
                 periodSummaryItem.PIM = NhlBaseClass.ConvertStringToInt(periodSummaryHomeRowFields[4].InnerText);
-                model.PeriodSummary_Home.Add(periodSummaryItem);
+                model.PeriodSummary.Add(periodSummaryItem);
             }
 
             #endregion
 
             #region Power Play and Even Strength Summary
 
-            model.PowerPlaySummary_Visitor = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
-            model.PowerPlaySummary_Home = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
+            //model.PowerPlaySummary.Team = model.Visitor;
+            //model.PowerPlaySummary.Date = model.Date;
+            //model.HomePowerPlaySummary.Team = model.Home;
+            //model.HomePowerPlaySummary.Date = model.Date;
 
             HtmlNodeCollection powerPlaySummaryTableNodes = mainTableNode.SelectNodes(@".//td[text()[contains(.,'POWER PLAY')]]/../..//td[@width='50%']/table");
-
             HtmlNodeCollection powerPlaySummaryVisitorRows = powerPlaySummaryTableNodes[0].SelectNodes(@".//tr");
             HtmlNodeCollection powerPlaySummaryHomeRows = powerPlaySummaryTableNodes[1].SelectNodes(@".//tr");
+
+            Nhl_Games_Rtss_Summary_PowerPlaySummary_Item powerPlayVisitorItem = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
+            powerPlayVisitorItem.Team = model.Visitor;
+            powerPlayVisitorItem.Date = model.Date;
+            
+            Nhl_Games_Rtss_Summary_PowerPlaySummary_Item powerPlayHomeItem = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
+            powerPlayHomeItem.Team = model.Home;
+            powerPlayHomeItem.Date = model.Date;
 
             string powerPlayText = String.Empty;
 
@@ -398,34 +445,33 @@ namespace SportsData.Nhl
             if (powerPlaySummaryVisitorRows != null & powerPlaySummaryVisitorRows.Count >= 2)
             {
                 HtmlNodeCollection powerPlaySummaryVisitorRowFields = powerPlaySummaryVisitorRows[1].SelectNodes(@".//td");
-                model.PowerPlaySummary_Visitor = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
 
                 powerPlayText = powerPlaySummaryVisitorRowFields[0].InnerText;
                 if (powerPlayText.IndexOf('-') >= 0 && powerPlayText.IndexOf('/') >= 0)
                 {
                     int dash = powerPlayText.IndexOf('-');
                     int slash = powerPlayText.IndexOf('/');
-                    model.PowerPlaySummary_Visitor.PowerPlay5v4Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
-                    model.PowerPlaySummary_Visitor.PowerPlay5v4Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Visitor.PowerPlay5v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
+                    powerPlayVisitorItem.PowerPlay5v4Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
+                    powerPlayVisitorItem.PowerPlay5v4Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayVisitorItem.PowerPlay5v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
                 }
                 powerPlayText = powerPlaySummaryVisitorRowFields[1].InnerText;
                 if (powerPlayText.IndexOf('-') >= 0 && powerPlayText.IndexOf('/') >= 0)
                 {
                     int dash = powerPlayText.IndexOf('-');
                     int slash = powerPlayText.IndexOf('/');
-                    model.PowerPlaySummary_Visitor.PowerPlay5v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
-                    model.PowerPlaySummary_Visitor.PowerPlay5v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Visitor.PowerPlay5v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
+                    powerPlayVisitorItem.PowerPlay5v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
+                    powerPlayVisitorItem.PowerPlay5v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayVisitorItem.PowerPlay5v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
                 }
                 powerPlayText = powerPlaySummaryVisitorRowFields[2].InnerText;
                 if (powerPlayText.IndexOf('-') >= 0 && powerPlayText.IndexOf('/') >= 0)
                 {
                     int dash = powerPlayText.IndexOf('-');
                     int slash = powerPlayText.IndexOf('/');
-                    model.PowerPlaySummary_Visitor.PowerPlay4v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
-                    model.PowerPlaySummary_Visitor.PowerPlay4v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Visitor.PowerPlay4v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
+                    powerPlayVisitorItem.PowerPlay4v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
+                    powerPlayVisitorItem.PowerPlay4v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayVisitorItem.PowerPlay4v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
                 }
             }
 
@@ -433,34 +479,33 @@ namespace SportsData.Nhl
             if (powerPlaySummaryHomeRows != null & powerPlaySummaryHomeRows.Count >= 2)
             {
                 HtmlNodeCollection powerPlaySummaryHomeRowFields = powerPlaySummaryHomeRows[1].SelectNodes(@".//td");
-                model.PowerPlaySummary_Home = new Nhl_Games_Rtss_Summary_PowerPlaySummary_Item();
 
                 powerPlayText = powerPlaySummaryHomeRowFields[0].InnerText;
                 if (powerPlayText.IndexOf('-') >= 0 && powerPlayText.IndexOf('/') >= 0)
                 {
                     int dash = powerPlayText.IndexOf('-');
                     int slash = powerPlayText.IndexOf('/');
-                    model.PowerPlaySummary_Home.PowerPlay5v4Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
-                    model.PowerPlaySummary_Home.PowerPlay5v4Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Home.PowerPlay5v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
+                    powerPlayHomeItem.PowerPlay5v4Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
+                    powerPlayHomeItem.PowerPlay5v4Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayHomeItem.PowerPlay5v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
                 }
                 powerPlayText = powerPlaySummaryHomeRowFields[1].InnerText;
                 if (powerPlayText.IndexOf('-') >= 0 && powerPlayText.IndexOf('/') >= 0)
                 {
                     int dash = powerPlayText.IndexOf('-');
                     int slash = powerPlayText.IndexOf('/');
-                    model.PowerPlaySummary_Home.PowerPlay5v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
-                    model.PowerPlaySummary_Home.PowerPlay5v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Home.PowerPlay5v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
+                    powerPlayHomeItem.PowerPlay5v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
+                    powerPlayHomeItem.PowerPlay5v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayHomeItem.PowerPlay5v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
                 }
                 powerPlayText = powerPlaySummaryHomeRowFields[2].InnerText;
                 if (powerPlayText.IndexOf('-') >= 0 && powerPlayText.IndexOf('/') >= 0)
                 {
                     int dash = powerPlayText.IndexOf('-');
                     int slash = powerPlayText.IndexOf('/');
-                    model.PowerPlaySummary_Home.PowerPlay4v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
-                    model.PowerPlaySummary_Home.PowerPlay4v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Home.PowerPlay4v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
+                    powerPlayHomeItem.PowerPlay4v3Goals = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(0, dash));
+                    powerPlayHomeItem.PowerPlay4v3Occurrences = NhlBaseClass.ConvertStringToInt(powerPlayText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayHomeItem.PowerPlay4v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(powerPlayText.Substring(slash + 1, powerPlayText.Length - slash - 1));
                 }
             }
 
@@ -481,27 +526,27 @@ namespace SportsData.Nhl
                 {
                     int dash = evenStrengthText.IndexOf('-');
                     int slash = evenStrengthText.IndexOf('/');
-                    model.PowerPlaySummary_Visitor.EvenStrength5v5Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
-                    model.PowerPlaySummary_Visitor.EvenStrength5v5Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Visitor.EvenStrength5v5ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
+                    powerPlayVisitorItem.EvenStrength5v5Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
+                    powerPlayVisitorItem.EvenStrength5v5Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayVisitorItem.EvenStrength5v5ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
                 }
                 evenStrengthText = evenStrengthSummaryVisitorRowFields[1].InnerText;
                 if (evenStrengthText.IndexOf('-') >= 0 && evenStrengthText.IndexOf('/') >= 0)
                 {
                     int dash = evenStrengthText.IndexOf('-');
                     int slash = evenStrengthText.IndexOf('/');
-                    model.PowerPlaySummary_Visitor.EvenStrength4v4Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
-                    model.PowerPlaySummary_Visitor.EvenStrength4v4Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Visitor.EvenStrength4v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
+                    powerPlayVisitorItem.EvenStrength4v4Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
+                    powerPlayVisitorItem.EvenStrength4v4Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayVisitorItem.EvenStrength4v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
                 }
                 evenStrengthText = evenStrengthSummaryVisitorRowFields[2].InnerText;
                 if (evenStrengthText.IndexOf('-') >= 0 && evenStrengthText.IndexOf('/') >= 0)
                 {
                     int dash = evenStrengthText.IndexOf('-');
                     int slash = evenStrengthText.IndexOf('/');
-                    model.PowerPlaySummary_Visitor.EvenStrength3v3Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
-                    model.PowerPlaySummary_Visitor.EvenStrength3v3Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Visitor.EvenStrength3v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
+                    powerPlayVisitorItem.EvenStrength3v3Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
+                    powerPlayVisitorItem.EvenStrength3v3Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayVisitorItem.EvenStrength3v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
                 }
 
             }
@@ -516,38 +561,40 @@ namespace SportsData.Nhl
                 {
                     int dash = evenStrengthText.IndexOf('-');
                     int slash = evenStrengthText.IndexOf('/');
-                    model.PowerPlaySummary_Home.EvenStrength5v5Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
-                    model.PowerPlaySummary_Home.EvenStrength5v5Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Home.EvenStrength5v5ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
+                    powerPlayHomeItem.EvenStrength5v5Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
+                    powerPlayHomeItem.EvenStrength5v5Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayHomeItem.EvenStrength5v5ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
                 }
                 evenStrengthText = evenStrengthSummaryHomeRowFields[1].InnerText;
                 if (evenStrengthText.IndexOf('-') >= 0 && evenStrengthText.IndexOf('/') >= 0)
                 {
                     int dash = evenStrengthText.IndexOf('-');
                     int slash = evenStrengthText.IndexOf('/');
-                    model.PowerPlaySummary_Home.EvenStrength4v4Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
-                    model.PowerPlaySummary_Home.EvenStrength4v4Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Home.EvenStrength4v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
+                    powerPlayHomeItem.EvenStrength4v4Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
+                    powerPlayHomeItem.EvenStrength4v4Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayHomeItem.EvenStrength4v4ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
                 }
                 evenStrengthText = evenStrengthSummaryHomeRowFields[2].InnerText;
                 if (evenStrengthText.IndexOf('-') >= 0 && evenStrengthText.IndexOf('/') >= 0)
                 {
                     int dash = evenStrengthText.IndexOf('-');
                     int slash = evenStrengthText.IndexOf('/');
-                    model.PowerPlaySummary_Home.EvenStrength3v3Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
-                    model.PowerPlaySummary_Home.EvenStrength3v3Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
-                    model.PowerPlaySummary_Home.EvenStrength3v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
+                    powerPlayHomeItem.EvenStrength3v3Goals = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(0, dash));
+                    powerPlayHomeItem.EvenStrength3v3Occurrences = NhlBaseClass.ConvertStringToInt(evenStrengthText.Substring(dash + 1, slash - dash - 1));
+                    powerPlayHomeItem.EvenStrength3v3ToiSeconds = NhlBaseClass.ConvertMinutesToSeconds(evenStrengthText.Substring(slash + 1, evenStrengthText.Length - slash - 1));
                 }
 
             }
+
+            model.PowerPlaySummary.Add(powerPlayVisitorItem);
+            model.PowerPlaySummary.Add(powerPlayHomeItem);
 
             #endregion
 
             #region Goaltender Summary
 
-            model.GoalieSummary_Visitor = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
-            model.GoalieSummary_Home = new List<Nhl_Games_Rtss_Summary_GoalieSummary_Item>();
-            List<Nhl_Games_Rtss_Summary_GoalieSummary_Item> activeGoalieSummary = model.GoalieSummary_Visitor;
+            // First go through all visitor rows until we encounter end of visitor rows
+            string team = model.Visitor;
 
             HtmlNodeCollection goaltenderSummaryTableNodes = mainTableNode.SelectSingleNode(@".//td[text()[contains(.,'GOALTENDER SUMMARY')]]/..").NextSibling.NextSibling.SelectNodes(@".//table//tr");
 
@@ -557,13 +604,15 @@ namespace SportsData.Nhl
 
                 if (goaltenderSummaryRowFields[0].InnerText.IndexOf("team totals", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
-                    // Switch and start populating the Home Goalie Summary
-                    activeGoalieSummary = model.GoalieSummary_Home;
+                    // Switch the team to the Home team and continue
+                    team = model.Home;
                     j = j + 3;
                     continue;
                 }
 
                 Nhl_Games_Rtss_Summary_GoalieSummary_Item goalieItem = new Nhl_Games_Rtss_Summary_GoalieSummary_Item();
+                goalieItem.Team = team;
+                goalieItem.Date = model.Date;
 
                 // If there was an empty net, there is one fewer columns so need to change the base index
                 int offset = 0;
@@ -605,7 +654,10 @@ namespace SportsData.Nhl
                 for (int i = 7; i < goaltenderSummaryRowFields.Count - 1; i++)
                 {
                     Nhl_Games_Rtss_Summary_GoalieSummary_Item.Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item goaliePeriodItem = new Nhl_Games_Rtss_Summary_GoalieSummary_Item.Nhl_Games_Rtss_Summary_GoaliePeriodSummary_Item();
-                    goaliePeriodItem.Period = period;
+                    goaliePeriodItem.Team = team;
+                    goaliePeriodItem.Date = model.Date;
+
+                    goaliePeriodItem.Period = period.ToString();
                     period++;
 
                     string goaliePeriodItemText = goaltenderSummaryRowFields[i + offset].InnerText;
@@ -619,7 +671,7 @@ namespace SportsData.Nhl
 
                 }
 
-                activeGoalieSummary.Add(goalieItem);
+                model.GoalieSummary.Add(goalieItem);
             }
 
             #endregion
@@ -628,7 +680,6 @@ namespace SportsData.Nhl
 
             #region Officials
 
-            model.Officials = new List<Nhl_Games_Rtss_Summary_Officials_Item>();
             Nhl_Games_Rtss_Summary_Officials_Item officialsItem;
 
             HtmlNodeCollection officialsTableRows = officialsAndStarsTableNodes[0].SelectNodes(String.Format(@".{0}/tr", TBODY));
@@ -638,16 +689,22 @@ namespace SportsData.Nhl
             for (int i = 0; i < (refereesRows == null ? 0 : refereesRows.Count); i++)
             {
                 officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(refereesRows[i].InnerText);
+                officialsItem.VisitorTeam = model.Visitor;
+                officialsItem.HomeTeam = model.Home;
+                officialsItem.Date = model.Date;
                 officialsItem.OfficialType = Designation.Referee;
-                model.Officials.Add(officialsItem);
+                model.OfficialsSummary.Add(officialsItem);
 
             }
 
             for (int i = 0; i < (linesmenRows == null ? 0 : linesmenRows.Count); i++)
             {
                 officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(linesmenRows[i].InnerText);
+                officialsItem.VisitorTeam = model.Visitor;
+                officialsItem.HomeTeam = model.Home;
+                officialsItem.Date = model.Date;
                 officialsItem.OfficialType = Designation.Linesman;
-                model.Officials.Add(officialsItem);
+                model.OfficialsSummary.Add(officialsItem);
             }
 
             if (officialsTableRows.Count >= 4)
@@ -660,8 +717,11 @@ namespace SportsData.Nhl
                     for (int i = 0; i < standbyRefereesRows.Count; i++)
                     {
                         officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(standbyRefereesRows[i].InnerText);
+                        officialsItem.VisitorTeam = model.Visitor;
+                        officialsItem.HomeTeam = model.Home;
+                        officialsItem.Date = model.Date;
                         officialsItem.OfficialType = Designation.StandbyReferee;
-                        model.Officials.Add(officialsItem);
+                        model.OfficialsSummary.Add(officialsItem);
                     }
                 }
 
@@ -670,8 +730,11 @@ namespace SportsData.Nhl
                     for (int i = 0; i < standbyLinesmenRows.Count; i++)
                     {
                         officialsItem = NhlGamesRtssSummary.ParseOfficialsItem(standbyLinesmenRows[i].InnerText);
+                        officialsItem.VisitorTeam = model.Visitor;
+                        officialsItem.HomeTeam = model.Home;
+                        officialsItem.Date = model.Date;
                         officialsItem.OfficialType = Designation.StandbyLinesman;
-                        model.Officials.Add(officialsItem);
+                        model.OfficialsSummary.Add(officialsItem);
                     }
                 }
             }
@@ -680,19 +743,16 @@ namespace SportsData.Nhl
 
             #region Stars
 
-            model.Stars = new List<Nhl_Games_Rtss_Summary_Stars_Item>();
-            Nhl_Games_Rtss_Summary_Stars_Item starsItem;
-
             HtmlNodeCollection starsRows = officialsAndStarsTableNodes[1].SelectNodes(@".//table//tr");
 
             if (null != starsRows)
             {
-                for (int i = 0; i < starsRows.Count; i++)
+                for (int i = 0; i < (starsRows == null ? 0 : starsRows.Count); i++)
                 {
-                    starsItem = new Nhl_Games_Rtss_Summary_Stars_Item();
+                    Nhl_Games_Rtss_Summary_Stars_Item starsItem = new Nhl_Games_Rtss_Summary_Stars_Item();
+                    starsItem.Date = model.Date;
 
                     HtmlNodeCollection starsRowFields = starsRows[i].SelectNodes(@"./td");
-                    starsItem = new Nhl_Games_Rtss_Summary_Stars_Item();
                     starsItem.StarNumber = i + 1;
                     starsItem.Team = starsRowFields[1].InnerText;
                     starsItem.Position = starsRowFields[2].InnerText;
@@ -705,11 +765,16 @@ namespace SportsData.Nhl
                     starsItem.PlayerNumber = playerNumber;
                     starsItem.Name = playerName;
 
-                    model.Stars.Add(starsItem);
+                    model.StarsSummary.Add(starsItem);
                 }
             }
 
             #endregion
+
+            //if (model.StarsSummary.ElementAt(0).Date < new DateTime(1990, 1, 1))
+            //{
+            //    Console.WriteLine("");
+            //}
 
             return model;
         }

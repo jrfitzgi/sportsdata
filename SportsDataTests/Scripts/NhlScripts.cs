@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Objects;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -29,7 +30,7 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtss()
         {
-            DateTime fromDate = DateTime.Now.AddDays(-100);
+            DateTime fromDate = DateTime.Now.AddDays(-4);
             NhlGamesRtss.GetFullSeason(year: 2015, fromDate: fromDate, saveToDb: true);
         }
 
@@ -39,9 +40,9 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtssSummary()
         {
-            //DateTime fromDate = DateTime.Now.AddDays(-100);
-            //NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true, fromDate: fromDate);
-            NhlGamesRtssSummary.UpdateSeason(year: 2014, forceOverwrite: true);
+            //DateTime fromDate = DateTime.Now.AddDays(-5);
+            //NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: false, fromDate: fromDate);
+            NhlGamesRtssSummary.UpdateSeason(year: 2015, forceOverwrite: true);
         }
 
         /// <summary>
@@ -50,9 +51,9 @@ namespace SportsDataTests
         [TestMethod]
         public void Script_NhlGamesRtssRoster()
         {
-            //NhlHtmlReportRoster.UpdateSeason(year: 2008, forceOverwrite: true);
-            DateTime fromDate = DateTime.Now.AddDays(-2);
-            NhlGamesRtssRoster.UpdateSeason(year: 2015, fromDate: fromDate, forceOverwrite: false);
+            NhlGamesRtssRoster.UpdateSeason(year: 2013, forceOverwrite: true);
+            //DateTime fromDate = DateTime.Now.AddDays(-2);
+            //NhlGamesRtssRoster.UpdateSeason(year: 2015, fromDate: fromDate, forceOverwrite: false);
         }
 
         /// <summary>
@@ -98,5 +99,6 @@ namespace SportsDataTests
             string fileName = @"C:\Users\Jordanf\Google Drive\Domi\Draft\NHL Draftbook 2013-1963 (V2.0).csv";
             List<Nhl_Draftbook> results = NhlDraftbook.UpdateDraftbook(fileName, true);
         }
+
     }
 }
